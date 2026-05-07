@@ -88,8 +88,8 @@ export async function googleSignInAction(credential: string, redirectPath?: stri
     await setSession(user);
     return { success: true };
   } catch (error: any) {
-    console.error('Google sign-in error:', error);
-    return { error: 'Google authentication failed' };
+    console.error('CRITICAL GOOGLE AUTH ERROR:', error);
+    return { error: `Authentication failed: ${error.message || 'Unknown server error'}` };
   }
 }
 

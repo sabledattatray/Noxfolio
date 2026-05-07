@@ -62,18 +62,25 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                 GitHub
               </a>
             </Button>
-            <div className="h-11 overflow-hidden rounded-xl border border-border/50 transition-all">
+            <div className="h-11 overflow-hidden rounded-xl border border-border/50 transition-all relative">
+              {pending && (
+                <div className="absolute inset-0 z-50 bg-background/50 flex items-center justify-center">
+                  <Loader2 className="w-5 h-5 animate-spin text-primary" />
+                </div>
+              )}
               <GoogleLogin
                 onSuccess={async (credentialResponse) => {
                   if (credentialResponse.credential) {
                     const result = await googleSignInAction(credentialResponse.credential, redirect || '/dashboard');
                     if (result && 'success' in result && result.success) {
                       window.location.href = redirect || '/dashboard';
+                    } else if (result && 'error' in result) {
+                      alert(result.error);
                     }
                   }
                 }}
                 onError={() => {
-                  console.error('Google Login Failed');
+                  alert('Google Login Failed: Check your browser console or Google Cloud settings.');
                 }}
                 useOneTap
                 theme="outline"
