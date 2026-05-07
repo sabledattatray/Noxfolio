@@ -105,28 +105,38 @@ export async function getOrganizationForUser() {
     return null;
   }
 
-  const result = await db.query.organizationMembers.findFirst({
-    where: eq(organizationMembers.userId, user.id),
-    with: {
-      organization: {
-        with: {
-          organizationMembers: {
-            with: {
-              user: {
-                columns: {
-                  id: true,
-                  name: true,
-                  email: true
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  });
+  const result = await db
+    .select({
+      organization: organizations
+    })
+    .from(organizationMembers)
+    .innerJoin(organizations, eq(organizationMembers.organizationId, organizations.id))
+    .where(eq(organizationMembers.userId, user.id))
+    .limit(1);
 
-  return result?.organization || null;
+  if (result.length === 0) {
+    return null;
+  }
+
+  const organization = result[0].organization;
+
+  // Fetch members separately to match the expected return type if needed
+  const members = await db
+    .select({
+      user: {
+        id: users.id,
+        name: users.name,
+        email: users.email
+      }
+    })
+    .from(organizationMembers)
+    .innerJoin(users, eq(organizationMembers.userId, users.id))
+    .where(eq(organizationMembers.organizationId, organization.id));
+
+  return {
+    ...organization,
+    organizationMembers: members
+  };
 }
 export async function getInvoicesForOrganization() {
   const organization = await getOrganizationForUser();

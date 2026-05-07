@@ -80,7 +80,7 @@ export default async function RootLayout({
           <SWRConfig
             value={{
               fallback: {
-                '/api/user': getUser(),
+                '/api/user': await getUser(),
                 '/api/organization': org
               }
             }}
