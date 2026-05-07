@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "npx tsx lib/db/migrate.ts && next build",
+    "build": "tsx lib/db/migrate.ts && next build",
     "start": "next start",
     "db:setup": "npx tsx lib/db/setup.ts",
     "db:seed": "npx tsx lib/db/seed.ts",
@@ -34,7 +34,8 @@
     "eslint-config-next": "15.6.0-canary.59",
     "husky": "^9.1.7",
     "lint-staged": "^15.2.11",
-    "prettier": "^3.4.2"
+    "prettier": "^3.4.2",
+    "tsx": "^4.19.2"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.0",
