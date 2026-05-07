@@ -28,10 +28,17 @@ async function repair() {
     // 1. Core Table Setup
     await runSafe('ALTER TABLE IF EXISTS teams RENAME TO organizations;');
     await runSafe('ALTER TABLE IF EXISTS users ADD COLUMN IF NOT EXISTS image text;');
+    await runSafe('ALTER TABLE IF EXISTS users ADD COLUMN IF NOT EXISTS deleted_at timestamp;');
     
     // 2. Organization Column Setup
     await runSafe('ALTER TABLE IF EXISTS organizations ADD COLUMN IF NOT EXISTS razorpay_customer_id text;');
     await runSafe('ALTER TABLE IF EXISTS organizations ADD COLUMN IF NOT EXISTS razorpay_subscription_id text;');
+    await runSafe('ALTER TABLE IF EXISTS organizations ADD COLUMN IF NOT EXISTS stripe_customer_id text;');
+    await runSafe('ALTER TABLE IF EXISTS organizations ADD COLUMN IF NOT EXISTS stripe_subscription_id text;');
+    await runSafe('ALTER TABLE IF EXISTS organizations ADD COLUMN IF NOT EXISTS stripe_product_id text;');
+    await runSafe('ALTER TABLE IF EXISTS organizations ADD COLUMN IF NOT EXISTS plan_name varchar(50);');
+    await runSafe('ALTER TABLE IF EXISTS organizations ADD COLUMN IF NOT EXISTS subscription_status varchar(20);');
+    await runSafe('ALTER TABLE IF EXISTS organizations ADD COLUMN IF NOT EXISTS branding jsonb DEFAULT \'{"logo": null, "primaryColor": "#000000", "accentColor": "#f4f4f5", "font": "Inter", "darkMode": true}\'::jsonb;');
     await runSafe('ALTER TABLE IF EXISTS organizations ADD COLUMN IF NOT EXISTS installed_apps jsonb DEFAULT \'[]\'::jsonb;');
     await runSafe('ALTER TABLE IF EXISTS organizations ADD COLUMN IF NOT EXISTS custom_domain varchar(255);');
     await runSafe('ALTER TABLE IF EXISTS organizations ADD COLUMN IF NOT EXISTS balance integer DEFAULT 0;');
@@ -42,7 +49,25 @@ async function repair() {
     await runSafe('ALTER TABLE IF EXISTS organization_members RENAME COLUMN team_id TO organization_id;');
 
     // 4. Create all other missing tables from schema
-    await runSafe('CREATE TABLE IF NOT EXISTS organizations (id serial PRIMARY KEY, name varchar(100) NOT NULL);');
+    await runSafe(`
+      CREATE TABLE IF NOT EXISTS organizations (
+        id serial PRIMARY KEY,
+        name varchar(100) NOT NULL,
+        created_at timestamp DEFAULT now() NOT NULL,
+        updated_at timestamp DEFAULT now() NOT NULL,
+        stripe_customer_id text UNIQUE,
+        stripe_subscription_id text UNIQUE,
+        stripe_product_id text,
+        razorpay_customer_id text UNIQUE,
+        razorpay_subscription_id text UNIQUE,
+        plan_name varchar(50),
+        subscription_status varchar(20),
+        branding jsonb DEFAULT '{"logo": null, "primaryColor": "#000000", "accentColor": "#f4f4f5", "font": "Inter", "darkMode": true}'::jsonb,
+        installed_apps jsonb DEFAULT '[]'::jsonb,
+        custom_domain varchar(255) UNIQUE,
+        balance integer DEFAULT 0
+      );
+    `);
     await runSafe('CREATE TABLE IF NOT EXISTS organization_members (id serial PRIMARY KEY, user_id integer NOT NULL, organization_id integer NOT NULL);');
     await runSafe('CREATE TABLE IF NOT EXISTS notifications (id serial PRIMARY KEY, user_id integer NOT NULL, title varchar(255) NOT NULL, message text NOT NULL, type varchar(50) NOT NULL, is_read integer DEFAULT 0 NOT NULL, created_at timestamp DEFAULT now() NOT NULL);');
     await runSafe('CREATE TABLE IF NOT EXISTS invoices (id serial PRIMARY KEY, organization_id integer NOT NULL, stripe_invoice_id varchar(255) UNIQUE, razorpay_order_id varchar(255) UNIQUE, razorpay_payment_id varchar(255) UNIQUE, number varchar(50), amount integer NOT NULL, currency varchar(10) DEFAULT \'usd\' NOT NULL, status varchar(50) NOT NULL, pdf_url text, hosted_invoice_url text, created_at timestamp DEFAULT now() NOT NULL);');

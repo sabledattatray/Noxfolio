@@ -3,7 +3,11 @@ import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 import { NewUser } from '@/lib/db/schema';
 
-const key = new TextEncoder().encode(process.env.AUTH_SECRET);
+const authSecret = process.env.AUTH_SECRET;
+if (!authSecret) {
+  console.warn('⚠️ AUTH_SECRET is not set. Session authentication will fail.');
+}
+const key = new TextEncoder().encode(authSecret || 'temporary-development-secret-change-me-in-production');
 const SALT_ROUNDS = 10;
 
 export async function hashPassword(password: string) {

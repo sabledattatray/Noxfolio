@@ -120,9 +120,14 @@ export async function getOrganizationForUser() {
 
   const organization = result[0].organization;
 
-  // Fetch members separately to match the expected return type if needed
+  // Fetch members separately to match the expected return type
   const members = await db
     .select({
+      id: organizationMembers.id,
+      role: organizationMembers.role,
+      userId: organizationMembers.userId,
+      organizationId: organizationMembers.organizationId,
+      joinedAt: organizationMembers.joinedAt,
       user: {
         id: users.id,
         name: users.name,
