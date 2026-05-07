@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Shield, Loader2, Github, Mail, Lock } from 'lucide-react';
+import { Shield, Loader2, Github, Mail, Lock, ArrowLeft } from 'lucide-react';
 import { signIn, signUp, googleSignInAction } from './actions';
 import { ActionState } from '@/lib/auth/middleware';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
@@ -24,6 +24,15 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
   return (
     <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ''}>
     <div className="min-h-screen flex items-center justify-center p-4 bg-background overflow-hidden relative">
+      {/* Back to Home */}
+      <Link
+        href="/"
+        className="absolute top-6 left-6 md:top-10 md:left-10 flex items-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors group z-20"
+      >
+        <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
+        Back to Home
+      </Link>
+
       {/* Background Decor */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
         <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px]" />
