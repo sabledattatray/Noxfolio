@@ -13,7 +13,7 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "prepare": "husky",
-    "lint": "next lint"
+    "lint": "eslint ."
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -27,7 +27,7 @@
   "devDependencies": {
     "@commitlint/cli": "^19.6.1",
     "@commitlint/config-conventional": "^19.6.0",
-    "eslint": "^9.16.0",
+    "eslint": "^8.57.0",
     "eslint-config-next": "15.6.0-canary.59",
     "husky": "^9.1.7",
     "lint-staged": "^15.2.11",

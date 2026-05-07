@@ -15,7 +15,8 @@ import {
   Calendar,
   Filter,
   Database,
-  Cloud
+  Cloud,
+  Zap
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
