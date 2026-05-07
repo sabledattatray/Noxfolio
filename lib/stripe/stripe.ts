@@ -149,7 +149,7 @@ export async function handleSubscriptionChange(
 }
 
 export async function getStripePrices() {
-  if (process.env.STRIPE_SECRET_KEY === 'sk_test_mock') {
+  if (stripeApiKey === 'sk_test_mock') {
     return [
       { id: 'price_mock_base', productId: 'prod_mock_base', unitAmount: 800, currency: 'usd', interval: 'month', trialPeriodDays: 7 },
       { id: 'price_mock_plus', productId: 'prod_mock_plus', unitAmount: 1200, currency: 'usd', interval: 'month', trialPeriodDays: 7 }
@@ -174,7 +174,7 @@ export async function getStripePrices() {
 }
 
 export async function getStripeProducts() {
-  if (process.env.STRIPE_SECRET_KEY === 'sk_test_mock') {
+  if (stripeApiKey === 'sk_test_mock') {
     return [
       { id: 'prod_mock_base', name: 'Base', description: 'Base Plan', defaultPriceId: 'price_mock_base' },
       { id: 'prod_mock_plus', name: 'Plus', description: 'Plus Plan', defaultPriceId: 'price_mock_plus' }
