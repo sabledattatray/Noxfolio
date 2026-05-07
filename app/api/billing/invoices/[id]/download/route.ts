@@ -7,14 +7,15 @@ import { InvoiceGenerator } from '@/modules/billing/invoices/generator';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const organization = await getOrganizationForUser();
   if (!organization) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const invoiceId = parseInt(params.id);
+  const invoiceId = parseInt(id);
   
   const invoiceData = await db
     .select()
