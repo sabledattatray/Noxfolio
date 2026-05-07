@@ -25,6 +25,75 @@ import {
   validatedAction,
   validatedActionWithUser
 } from '@/lib/auth/middleware';
+import { OAuth2Client } from 'google-auth-library';
+import crypto from 'crypto';
+
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+export async function googleSignInAction(credential: string, redirectPath?: string) {
+  try {
+    const ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    if (!payload || !payload.email) {
+      return { error: 'Invalid Google token' };
+    }
+
+    const { email, name, picture } = payload;
+
+    const existingUser = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, email))
+      .limit(1);
+    
+    let user = existingUser[0];
+
+    if (!user) {
+      const passwordHash = await hashPassword(crypto.randomBytes(32).toString('hex'));
+      const newUser: NewUser = {
+        email,
+        name: name || '',
+        image: picture || '',
+        passwordHash,
+        role: 'owner'
+      };
+      
+      const [createdUser] = await db.insert(users).values(newUser).returning();
+      user = createdUser;
+
+      const newOrganization: NewOrganization = {
+        name: `${name || email}'s Organization`
+      };
+
+      const [createdOrganization] = await db.insert(organizations).values(newOrganization).returning();
+
+      const newOrganizationMember: NewOrganizationMember = {
+        userId: user.id,
+        organizationId: createdOrganization.id,
+        role: 'owner'
+      };
+
+      await Promise.all([
+        db.insert(organizationMembers).values(newOrganizationMember),
+        logActivity(createdOrganization.id, user.id, ActivityType.SIGN_UP),
+      ]);
+    } else {
+      const userWithOrg = await getUserWithOrganization(user.id);
+      await logActivity(userWithOrg?.organizationId, user.id, ActivityType.SIGN_IN);
+    }
+
+    await setSession(user);
+    
+  } catch (error: any) {
+    console.error('Google sign-in error:', error);
+    return { error: 'Google authentication failed' };
+  }
+  
+  redirect(redirectPath || '/dashboard');
+}
 
 async function logActivity(
   organizationId: number | null | undefined,
