@@ -27,7 +27,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
   );
 
   const isOTPMode = state?.requiresOTP || otpState?.error;
-  const userEmail = state?.email || (formData?.get('email') as string);
+  const userEmail = state?.email;
 
   return (
     <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ''}>

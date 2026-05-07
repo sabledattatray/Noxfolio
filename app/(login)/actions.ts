@@ -182,7 +182,8 @@ const signUpSchema = z.object({
 });
 
 export const signUp = validatedAction(signUpSchema, async (data, formData) => {
-  const { email, password, inviteId } = data;
+  try {
+    const { email, password, inviteId } = data;
 
   const existingUser = await db
     .select()
