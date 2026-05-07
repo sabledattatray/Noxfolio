@@ -8,7 +8,7 @@ import {
 } from '@/lib/db/queries';
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-04-30.basil'
+  apiVersion: '2025-04-30.basil' as any
 });
 
 export async function createCheckoutSession({
@@ -147,6 +147,13 @@ export async function handleSubscriptionChange(
 }
 
 export async function getStripePrices() {
+  if (process.env.STRIPE_SECRET_KEY === 'sk_test_mock') {
+    return [
+      { id: 'price_mock_base', productId: 'prod_mock_base', unitAmount: 800, currency: 'usd', interval: 'month', trialPeriodDays: 7 },
+      { id: 'price_mock_plus', productId: 'prod_mock_plus', unitAmount: 1200, currency: 'usd', interval: 'month', trialPeriodDays: 7 }
+    ];
+  }
+
   const prices = await stripe.prices.list({
     expand: ['data.product'],
     active: true,
@@ -165,6 +172,13 @@ export async function getStripePrices() {
 }
 
 export async function getStripeProducts() {
+  if (process.env.STRIPE_SECRET_KEY === 'sk_test_mock') {
+    return [
+      { id: 'prod_mock_base', name: 'Base', description: 'Base Plan', defaultPriceId: 'price_mock_base' },
+      { id: 'prod_mock_plus', name: 'Plus', description: 'Plus Plan', defaultPriceId: 'price_mock_plus' }
+    ];
+  }
+
   const products = await stripe.products.list({
     active: true,
     expand: ['data.default_price']

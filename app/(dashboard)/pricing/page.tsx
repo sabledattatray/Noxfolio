@@ -154,7 +154,10 @@ function PricingCard({
         ))}
       </ul>
 
-      <form action={checkoutAction}>
+      <form action={async (formData) => {
+        "use server";
+        await checkoutAction(formData);
+      }}>
         <input type="hidden" name="priceId" value={priceId} />
         <SubmitButton className={`w-full h-14 rounded-2xl font-bold text-lg transition-all duration-300 ${highlighted ? 'shadow-xl shadow-primary/20' : ''}`} />
       </form>

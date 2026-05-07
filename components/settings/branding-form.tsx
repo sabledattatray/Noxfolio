@@ -14,7 +14,7 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 export function BrandingForm() {
   const { data: org } = useSWR<Organization>('/api/organization', fetcher);
   const [loading, setLoading] = useState(false);
-  const [branding, setBranding] = useState(org?.branding || {
+  const [branding, setBranding] = useState<any>(org?.branding || {
     primaryColor: '#0f172a',
     accentColor: '#3b82f6',
     font: 'Inter',

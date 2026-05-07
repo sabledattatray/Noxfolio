@@ -68,7 +68,7 @@ export function APIDocumentation() {
                         <div className="flex items-center gap-2 mb-1">
                           <code className="text-xs font-bold text-primary">{p.name}</code>
                           <span className="text-[10px] text-muted-foreground uppercase">{p.type}</span>
-                          {p.required && <span className="text-[10px] text-rose-500 font-bold">REQUIRED</span>}
+                          {('required' in p && p.required) && <span className="text-[10px] text-rose-500 font-bold">REQUIRED</span>}
                         </div>
                         <p className="text-xs text-muted-foreground">{p.description}</p>
                       </div>

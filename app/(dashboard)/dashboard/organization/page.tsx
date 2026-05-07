@@ -55,8 +55,8 @@ function ManageSubscription() {
                 : 'Limited features'}
             </p>
           </div>
-          <form action={customerPortalAction}>
-            <Button type="submit" variant="premium">
+          <form action={async (formData) => { await customerPortalAction(formData); }}>
+            <Button type="submit" variant="default">
               Manage Billing
             </Button>
           </form>

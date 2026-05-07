@@ -14,7 +14,7 @@ import {
   BookOpen,
   Lock,
   Zap,
-  Webhooks
+  Webhook
 } from 'lucide-react';
 import { useState } from 'react';
 
