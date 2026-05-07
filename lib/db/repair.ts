@@ -1,80 +1,45 @@
-import { db } from './drizzle';
-import { users, organizations, organizationMembers } from './schema';
-import { eq, sql } from 'drizzle-orm';
+import postgres from 'postgres';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
 
 async function repair() {
-  console.log('Starting DB repair and schema synchronization...');
-  
-  // Fix for missing organization_id in activity_logs
+  if (!connectionString) {
+    console.error('❌ POSTGRES_URL or DATABASE_URL is not set.');
+    process.exit(1);
+  }
+
+  console.log('🚀 Running Complete Schema Repair...');
+  const sql = postgres(connectionString as string, { max: 1 });
+
   try {
-    console.log('Verifying activity_logs schema...');
-    await db.execute(sql`
-      DO $$ 
-      BEGIN 
-        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='activity_logs' AND column_name='organization_id') THEN
-          ALTER TABLE activity_logs ADD COLUMN organization_id INTEGER REFERENCES organizations(id);
-        END IF;
-      END $$;
-    `);
-    console.log('✅ activity_logs schema synchronized.');
-  } catch (e) {
-    console.warn('⚠️ activity_logs schema sync warning:', e);
+    // 1. Add missing 'image' column to 'users'
+    await sql.unsafe('ALTER TABLE IF EXISTS users ADD COLUMN IF NOT EXISTS image text;');
+    
+    // 2. Rename 'teams' to 'organizations' if it exists (for compatibility with current schema)
+    await sql.unsafe('ALTER TABLE IF EXISTS teams RENAME TO organizations;');
+    
+    // 3. Rename 'team_id' to 'organization_id' in related tables
+    await sql.unsafe('ALTER TABLE IF EXISTS activity_logs RENAME COLUMN team_id TO organization_id;');
+    await sql.unsafe('ALTER TABLE IF EXISTS invitations RENAME COLUMN team_id TO organization_id;');
+    await sql.unsafe('ALTER TABLE IF EXISTS organization_members RENAME COLUMN team_id TO organization_id;');
+
+    // 4. Create missing tables from the schema
+    await sql.unsafe('CREATE TABLE IF NOT EXISTS organizations (id serial PRIMARY KEY, name varchar(100) NOT NULL, created_at timestamp DEFAULT now() NOT NULL, updated_at timestamp DEFAULT now() NOT NULL, stripe_customer_id text UNIQUE, stripe_subscription_id text UNIQUE, stripe_product_id text, razorpay_customer_id text UNIQUE, razorpay_subscription_id text UNIQUE, plan_name varchar(50), subscription_status varchar(20), branding jsonb DEFAULT \'{"logo": null, "primaryColor": "#000000", "accentColor": "#f4f4f5", "font": "Inter", "darkMode": true}\'::jsonb, installed_apps jsonb DEFAULT \'[]\'::jsonb, custom_domain varchar(255) UNIQUE, balance integer DEFAULT 0);');
+    await sql.unsafe('CREATE TABLE IF NOT EXISTS organization_members (id serial PRIMARY KEY, user_id integer NOT NULL REFERENCES users(id), organization_id integer NOT NULL REFERENCES organizations(id), role varchar(50) NOT NULL, joined_at timestamp DEFAULT now() NOT NULL);');
+    await sql.unsafe('CREATE TABLE IF NOT EXISTS notifications (id serial PRIMARY KEY, user_id integer NOT NULL REFERENCES users(id), title varchar(255) NOT NULL, message text NOT NULL, type varchar(50) NOT NULL, is_read integer DEFAULT 0 NOT NULL, created_at timestamp DEFAULT now() NOT NULL);');
+    await sql.unsafe('CREATE TABLE IF NOT EXISTS invoices (id serial PRIMARY KEY, organization_id integer NOT NULL REFERENCES organizations(id), stripe_invoice_id varchar(255) UNIQUE, razorpay_order_id varchar(255) UNIQUE, razorpay_payment_id varchar(255) UNIQUE, number varchar(50), amount integer NOT NULL, currency varchar(10) DEFAULT \'usd\' NOT NULL, status varchar(50) NOT NULL, pdf_url text, hosted_invoice_url text, created_at timestamp DEFAULT now() NOT NULL);');
+
+    console.log('✅ Schema repair completed successfully.');
+    process.exit(0);
+  } catch (error) {
+    console.error('❌ Repair failed:', error);
+    process.exit(1);
+  } finally {
+    await sql.end();
   }
-
-  const allUsers = await db.select().from(users);
-  console.log(`Found ${allUsers.length} users.`);
-
-  for (const user of allUsers) {
-    // Check if user has an organization
-    const membership = await db.select()
-      .from(organizationMembers)
-      .where(eq(organizationMembers.userId, user.id))
-      .limit(1);
-
-    if (membership.length === 0) {
-      console.log(`User ${user.email} has no organization. Creating one...`);
-      const [newOrg] = await db.insert(organizations).values({
-        name: `${user.name || 'User'}'s Organization`,
-        planName: 'Starter',
-        subscriptionStatus: 'active',
-        stripeCustomerId: `cus_mock_${user.id}`,
-        stripeProductId: 'prod_mock_starter'
-      }).returning();
-
-      await db.insert(organizationMembers).values({
-        userId: user.id,
-        organizationId: newOrg.id,
-        role: 'owner'
-      });
-      console.log(`Organization created for ${user.email}.`);
-    } else {
-      console.log(`User ${user.email} already has organization ${membership[0].organizationId}.`);
-      
-      // Ensure organization has Stripe IDs
-      const org = await db.select()
-        .from(organizations)
-        .where(eq(organizations.id, membership[0].organizationId))
-        .limit(1);
-        
-      if (org.length > 0 && (!org[0].stripeCustomerId || !org[0].stripeProductId)) {
-        console.log(`Hydrating Stripe IDs for Org ${org[0].id}`);
-        await db.update(organizations)
-          .set({
-            stripeCustomerId: org[0].stripeCustomerId || `cus_mock_${user.id}`,
-            stripeProductId: org[0].stripeProductId || 'prod_mock_starter',
-            planName: org[0].planName || 'Starter',
-            subscriptionStatus: org[0].subscriptionStatus || 'active'
-          })
-          .where(eq(organizations.id, org[0].id));
-      }
-    }
-  }
-  
-  console.log('DB repair complete.');
-  process.exit();
 }
 
-repair().catch(err => {
-  console.error('Repair failed:', err);
-  process.exit(1);
-});
+repair();
