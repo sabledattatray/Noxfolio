@@ -15,6 +15,9 @@
     "prepare": "husky",
     "lint": "eslint ."
   },
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "prettier --write",
