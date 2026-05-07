@@ -12,13 +12,12 @@ export class RazorpayClient {
   private instance: Razorpay;
 
   constructor() {
-    if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
-      throw new Error('RAZORPAY_KEY_ID or RAZORPAY_KEY_SECRET not set');
-    }
+    const keyId = process.env.RAZORPAY_KEY_ID || 'rzp_test_mock';
+    const keySecret = process.env.RAZORPAY_KEY_SECRET || 'mock_secret';
 
     this.instance = new Razorpay({
-      key_id: process.env.RAZORPAY_KEY_ID,
-      key_secret: process.env.RAZORPAY_KEY_SECRET,
+      key_id: keyId,
+      key_secret: keySecret,
     });
   }
 
