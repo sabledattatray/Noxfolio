@@ -7,7 +7,7 @@ import {
   updateOrganizationSubscription
 } from '@/lib/db/queries';
 
-const stripeApiKey = process.env.STRIPE_SECRET_KEY || 'sk_test_mock';
+const stripeApiKey = process.env.STRIPE_SECRET_KEY?.trim() || 'sk_test_mock';
 
 export const stripe = new Stripe(stripeApiKey, {
   apiVersion: '2025-04-30.basil' as any

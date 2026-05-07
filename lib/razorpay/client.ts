@@ -12,8 +12,8 @@ export class RazorpayClient {
   private instance: Razorpay;
 
   constructor() {
-    const keyId = process.env.RAZORPAY_KEY_ID || 'rzp_test_mock';
-    const keySecret = process.env.RAZORPAY_KEY_SECRET || 'mock_secret';
+    const keyId = process.env.RAZORPAY_KEY_ID?.trim() || 'rzp_test_mock';
+    const keySecret = process.env.RAZORPAY_KEY_SECRET?.trim() || 'mock_secret';
 
     this.instance = new Razorpay({
       key_id: keyId,
