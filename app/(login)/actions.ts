@@ -86,13 +86,11 @@ export async function googleSignInAction(credential: string, redirectPath?: stri
     }
 
     await setSession(user);
-    
+    return { success: true };
   } catch (error: any) {
     console.error('Google sign-in error:', error);
     return { error: 'Google authentication failed' };
   }
-  
-  redirect(redirectPath || '/dashboard');
 }
 
 async function logActivity(

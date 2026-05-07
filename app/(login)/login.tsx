@@ -66,7 +66,10 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
               <GoogleLogin
                 onSuccess={async (credentialResponse) => {
                   if (credentialResponse.credential) {
-                    await googleSignInAction(credentialResponse.credential, redirect || '/dashboard');
+                    const result = await googleSignInAction(credentialResponse.credential, redirect || '/dashboard');
+                    if (result && 'success' in result && result.success) {
+                      window.location.href = redirect || '/dashboard';
+                    }
                   }
                 }}
                 onError={() => {
