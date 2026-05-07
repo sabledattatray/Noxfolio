@@ -185,119 +185,117 @@ export const signUp = validatedAction(signUpSchema, async (data, formData) => {
   try {
     const { email, password, inviteId } = data;
 
-  const existingUser = await db
-    .select()
-    .from(users)
-    .where(eq(users.email, email))
-    .limit(1);
-
-  if (existingUser.length > 0) {
-    return {
-      error: 'Failed to create user. Please try again.',
-      email,
-      password
-    };
-  }
-
-  const passwordHash = await hashPassword(password);
-
-  const newUser: NewUser = {
-    email,
-    passwordHash,
-    role: 'user' // Default system role
-  };
-
-  const [createdUser] = await db.insert(users).values(newUser).returning();
-
-  if (!createdUser) {
-    return {
-      error: 'Failed to create user. Please try again.',
-      email,
-      password
-    };
-  }
-
-  let organizationId: number;
-  let userRole: string;
-  let createdOrganization: typeof organizations.$inferSelect | null = null;
-
-  if (inviteId) {
-    // Check if there's a valid invitation
-    const [invitation] = await db
+    const existingUser = await db
       .select()
-      .from(invitations)
-      .where(
-        and(
-          eq(invitations.id, parseInt(inviteId)),
-          eq(invitations.email, email),
-          eq(invitations.status, 'pending')
-        )
-      )
+      .from(users)
+      .where(eq(users.email, email))
       .limit(1);
 
-    if (invitation) {
-      organizationId = invitation.organizationId;
-      userRole = invitation.role;
-
-      await db
-        .update(invitations)
-        .set({ status: 'accepted' })
-        .where(eq(invitations.id, invitation.id));
-
-      await logActivity(organizationId, createdUser.id, ActivityType.ACCEPT_INVITATION);
-
-      [createdOrganization] = await db
-        .select()
-        .from(organizations)
-        .where(eq(organizations.id, organizationId))
-        .limit(1);
-    } else {
-      return { error: 'Invalid or expired invitation.', email, password };
-    }
-  } else {
-    // Create a new organization if there's no invitation
-    const newOrganization: NewOrganization = {
-      name: `${email}'s Organization`
-    };
-
-    [createdOrganization] = await db.insert(organizations).values(newOrganization).returning();
-
-    if (!createdOrganization) {
+    if (existingUser.length > 0) {
       return {
-        error: 'Failed to create organization. Please try again.',
+        error: 'Failed to create user. Please try again.',
         email,
         password
       };
     }
 
-    organizationId = createdOrganization.id;
-    userRole = 'owner';
+    const passwordHash = await hashPassword(password);
 
-    await logActivity(organizationId, createdUser.id, ActivityType.CREATE_ORGANIZATION);
+    const newUser: NewUser = {
+      email,
+      passwordHash,
+      role: 'user'
+    };
+
+    const [createdUser] = await db.insert(users).values(newUser).returning();
+
+    if (!createdUser) {
+      return {
+        error: 'Failed to create user. Please try again.',
+        email,
+        password
+      };
+    }
+
+    let organizationId: number;
+    let userRole: string;
+    let createdOrganization: typeof organizations.$inferSelect | null = null;
+
+    if (inviteId) {
+      const [invitation] = await db
+        .select()
+        .from(invitations)
+        .where(
+          and(
+            eq(invitations.id, parseInt(inviteId)),
+            eq(invitations.email, email),
+            eq(invitations.status, 'pending')
+          )
+        )
+        .limit(1);
+
+      if (invitation) {
+        organizationId = invitation.organizationId;
+        userRole = invitation.role;
+
+        await db
+          .update(invitations)
+          .set({ status: 'accepted' })
+          .where(eq(invitations.id, invitation.id));
+
+        await logActivity(organizationId, createdUser.id, ActivityType.ACCEPT_INVITATION);
+
+        [createdOrganization] = await db
+          .select()
+          .from(organizations)
+          .where(eq(organizations.id, organizationId))
+          .limit(1);
+      } else {
+        return { error: 'Invalid or expired invitation.', email, password };
+      }
+    } else {
+      const newOrganization: NewOrganization = {
+        name: `${email}'s Organization`
+      };
+
+      [createdOrganization] = await db.insert(organizations).values(newOrganization).returning();
+
+      if (!createdOrganization) {
+        return {
+          error: 'Failed to create organization. Please try again.',
+          email,
+          password
+        };
+      }
+
+      organizationId = createdOrganization.id;
+      userRole = 'owner';
+
+      await logActivity(organizationId, createdUser.id, ActivityType.CREATE_ORGANIZATION);
+    }
+
+    const newOrganizationMember: NewOrganizationMember = {
+      userId: createdUser.id,
+      organizationId: organizationId,
+      role: userRole
+    };
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+    await Promise.all([
+      db.insert(organizationMembers).values(newOrganizationMember),
+      logActivity(organizationId, createdUser.id, ActivityType.SIGN_UP),
+      db.update(users).set({ otp, otpExpiresAt }).where(eq(users.id, createdUser.id)),
+      setSession(createdUser)
+    ]);
+
+    console.log(`DEBUG: OTP for ${email}: ${otp}`);
+
+    return { success: true, requiresOTP: true, email };
+  } catch (error: any) {
+    return { error: error.message };
   }
-
-  const newOrganizationMember: NewOrganizationMember = {
-    userId: createdUser.id,
-    organizationId: organizationId,
-    role: userRole
-  };
-
-  const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
-
-  await Promise.all([
-    db.insert(organizationMembers).values(newOrganizationMember),
-    logActivity(organizationId, createdUser.id, ActivityType.SIGN_UP),
-    db.update(users).set({ otp, otpExpiresAt }).where(eq(users.id, createdUser.id)),
-    setSession(createdUser)
-  ]);
-
-  console.log(`DEBUG: OTP for ${email}: ${otp}`);
-
-  return { success: true, requiresOTP: true, email };
-} catch (error: any) {
-  return { error: error.message };
-}
 });
 
 const verifyOTPSchema = z.object({
