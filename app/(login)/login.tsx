@@ -6,8 +6,8 @@ import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Shield, Loader2, Github, Mail, Lock, ArrowLeft } from 'lucide-react';
-import { signIn, signUp, googleSignInAction } from './actions';
+import { Shield, Loader2, Github, Mail, Lock, ArrowLeft, KeyRound } from 'lucide-react';
+import { signIn, signUp, googleSignInAction, verifyOTP } from './actions';
 import { ActionState } from '@/lib/auth/middleware';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
@@ -20,6 +20,14 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
     mode === 'signin' ? signIn : signUp,
     { error: '' }
   );
+
+  const [otpState, otpAction, otpPending] = useActionState<ActionState, FormData>(
+    verifyOTP,
+    { error: '' }
+  );
+
+  const isOTPMode = state?.requiresOTP || otpState?.error;
+  const userEmail = state?.email || (formData?.get('email') as string);
 
   return (
     <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ''}>
@@ -100,73 +108,118 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
             </div>
           </div>
 
-          <form action={formAction} className="space-y-4">
-            <input type="hidden" name="redirect" value={redirect || ''} />
-            <input type="hidden" name="priceId" value={priceId || ''} />
-            <input type="hidden" name="inviteId" value={inviteId || ''} />
-            
-            <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
-              <div className="relative group">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="name@company.com"
-                  defaultValue={state.email}
-                  required
-                  className="h-11 pl-10 rounded-xl border-border/50 bg-accent/20 focus-visible:bg-background transition-all"
-                />
+          {isOTPMode ? (
+            <form action={otpAction} className="space-y-4">
+              <input type="hidden" name="email" value={userEmail || ''} />
+              <div className="space-y-2">
+                <Label htmlFor="otp">Enter Verification Code</Label>
+                <div className="relative group">
+                  <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                  <Input
+                    id="otp"
+                    name="otp"
+                    type="text"
+                    placeholder="123456"
+                    required
+                    maxLength={6}
+                    className="h-11 pl-10 rounded-xl border-border/50 bg-accent/20 focus-visible:bg-background transition-all text-center tracking-[1em] font-black text-xl"
+                  />
+                </div>
+                <p className="text-[10px] text-muted-foreground text-center font-bold">
+                  Check your console/logs for the OTP code (Development Mode)
+                </p>
               </div>
-            </div>
 
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
-                {mode === 'signin' && (
-                  <Link href="#" className="text-xs font-medium text-primary hover:underline">
-                    Forgot password?
-                  </Link>
-                )}
-              </div>
-              <div className="relative group">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="••••••••"
-                  defaultValue={state.password}
-                  required
-                  className="h-11 pl-10 rounded-xl border-border/50 bg-accent/20 focus-visible:bg-background transition-all"
-                />
-              </div>
-            </div>
-
-            {state?.error && (
-              <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-xs font-medium animate-in fade-in slide-in-from-top-1">
-                {state.error}
-              </div>
-            )}
-
-            <Button
-              type="submit"
-              className="w-full h-11 rounded-xl shadow-lg shadow-primary/20 font-bold"
-              disabled={pending}
-            >
-              {pending ? (
-                <>
-                  <Loader2 className="animate-spin mr-2 h-4 w-4" />
-                  Please wait...
-                </>
-              ) : mode === 'signin' ? (
-                'Sign In'
-              ) : (
-                'Create Account'
+              {(otpState?.error || state?.error) && (
+                <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-xs font-medium animate-in fade-in slide-in-from-top-1">
+                  {otpState?.error || state?.error}
+                </div>
               )}
-            </Button>
-          </form>
+
+              <Button
+                type="submit"
+                className="w-full h-11 rounded-xl shadow-lg shadow-primary/20 font-bold"
+                disabled={otpPending}
+              >
+                {otpPending ? (
+                  <>
+                    <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                    Verifying...
+                  </>
+                ) : (
+                  'Verify & Continue'
+                )}
+              </Button>
+            </form>
+          ) : (
+            <form action={formAction} className="space-y-4">
+              <input type="hidden" name="redirect" value={redirect || ''} />
+              <input type="hidden" name="priceId" value={priceId || ''} />
+              <input type="hidden" name="inviteId" value={inviteId || ''} />
+              
+              <div className="space-y-2">
+                <Label htmlFor="email">Email Address</Label>
+                <div className="relative group">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="name@company.com"
+                    defaultValue={state.email}
+                    required
+                    className="h-11 pl-10 rounded-xl border-border/50 bg-accent/20 focus-visible:bg-background transition-all"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password">Password</Label>
+                  {mode === 'signin' && (
+                    <Link href="#" className="text-xs font-medium text-primary hover:underline">
+                      Forgot password?
+                    </Link>
+                  )}
+                </div>
+                <div className="relative group">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                  <Input
+                    id="password"
+                    name="password"
+                    type="password"
+                    placeholder="••••••••"
+                    defaultValue={state.password}
+                    required
+                    className="h-11 pl-10 rounded-xl border-border/50 bg-accent/20 focus-visible:bg-background transition-all"
+                  />
+                </div>
+              </div>
+
+              {state?.error && (
+                <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-xs font-medium animate-in fade-in slide-in-from-top-1">
+                  {state.error}
+                </div>
+              )}
+
+              <Button
+                type="submit"
+                className="w-full h-11 rounded-xl shadow-lg shadow-primary/20 font-bold"
+                disabled={pending}
+              >
+                {pending ? (
+                  <>
+                    <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                    Please wait...
+                  </>
+                ) : mode === 'signin' ? (
+                  'Sign In'
+                ) : (
+                  'Create Account'
+                )}
+              </Button>
+            </form>
+          )}
         </div>
 
         <p className="text-center text-sm text-muted-foreground">

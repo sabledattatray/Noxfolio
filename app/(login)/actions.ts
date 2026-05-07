@@ -60,7 +60,8 @@ export async function googleSignInAction(credential: string, redirectPath?: stri
         name: name || '',
         image: picture || '',
         passwordHash,
-        role: 'owner'
+        role: 'user',
+        emailVerifiedAt: new Date()
       };
       
       const [createdUser] = await db.insert(users).values(newUser).returning();
@@ -202,7 +203,7 @@ export const signUp = validatedAction(signUpSchema, async (data, formData) => {
   const newUser: NewUser = {
     email,
     passwordHash,
-    role: 'owner' // Default role, will be overridden if there's an invitation
+    role: 'user' // Default system role
   };
 
   const [createdUser] = await db.insert(users).values(newUser).returning();
@@ -280,19 +281,52 @@ export const signUp = validatedAction(signUpSchema, async (data, formData) => {
     role: userRole
   };
 
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
   await Promise.all([
     db.insert(organizationMembers).values(newOrganizationMember),
     logActivity(organizationId, createdUser.id, ActivityType.SIGN_UP),
+    db.update(users).set({ otp, otpExpiresAt }).where(eq(users.id, createdUser.id)),
     setSession(createdUser)
   ]);
 
-  const redirectTo = formData.get('redirect') as string | null;
-  if (redirectTo === 'checkout') {
-    const priceId = formData.get('priceId') as string;
-    return createCheckoutSession({ organization: createdOrganization, priceId });
+  console.log(`DEBUG: OTP for ${email}: ${otp}`);
+
+  return { success: true, requiresOTP: true, email };
+} catch (error: any) {
+  return { error: error.message };
+}
+});
+
+const verifyOTPSchema = z.object({
+  email: z.string().email(),
+  otp: z.string().length(6)
+});
+
+export const verifyOTP = validatedAction(verifyOTPSchema, async (data) => {
+  const { email, otp } = data;
+
+  const [user] = await db
+    .select()
+    .from(users)
+    .where(eq(users.email, email))
+    .limit(1);
+
+  if (!user || user.otp !== otp || (user.otpExpiresAt && user.otpExpiresAt < new Date())) {
+    return { error: 'Invalid or expired OTP.' };
   }
 
-  redirect('/dashboard');
+  await db
+    .update(users)
+    .set({ 
+      emailVerifiedAt: new Date(),
+      otp: null,
+      otpExpiresAt: null
+    })
+    .where(eq(users.id, user.id));
+
+  return { success: true };
 });
 
 export async function signOut() {

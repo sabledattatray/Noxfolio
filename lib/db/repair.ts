@@ -29,6 +29,9 @@ async function repair() {
     await runSafe('ALTER TABLE IF EXISTS teams RENAME TO organizations;');
     await runSafe('ALTER TABLE IF EXISTS users ADD COLUMN IF NOT EXISTS image text;');
     await runSafe('ALTER TABLE IF EXISTS users ADD COLUMN IF NOT EXISTS deleted_at timestamp;');
+    await runSafe('ALTER TABLE IF EXISTS users ADD COLUMN IF NOT EXISTS email_verified_at timestamp;');
+    await runSafe('ALTER TABLE IF EXISTS users ADD COLUMN IF NOT EXISTS otp varchar(6);');
+    await runSafe('ALTER TABLE IF EXISTS users ADD COLUMN IF NOT EXISTS otp_expires_at timestamp;');
     
     // 2. Organization Column Setup
     await runSafe('ALTER TABLE IF EXISTS organizations ADD COLUMN IF NOT EXISTS razorpay_customer_id text;');

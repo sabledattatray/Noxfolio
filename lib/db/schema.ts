@@ -18,6 +18,9 @@ export const users = pgTable('users', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
   deletedAt: timestamp('deleted_at'),
+  emailVerifiedAt: timestamp('email_verified_at'),
+  otp: varchar('otp', { length: 6 }),
+  otpExpiresAt: timestamp('otp_expires_at'),
   image: text('image'),
 });
 
