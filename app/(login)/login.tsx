@@ -47,9 +47,11 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
 
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
-            <Button variant="outline" className="h-11 rounded-xl border-border/50 hover:bg-accent/50 transition-all">
-              <Github className="w-4 h-4 mr-2" />
-              GitHub
+            <Button asChild variant="outline" className="h-11 rounded-xl border-border/50 hover:bg-accent/50 transition-all">
+              <a href="/api/auth/github">
+                <Github className="w-4 h-4 mr-2" />
+                GitHub
+              </a>
             </Button>
             <div className="h-11 overflow-hidden rounded-xl border border-border/50 transition-all">
               <GoogleLogin
