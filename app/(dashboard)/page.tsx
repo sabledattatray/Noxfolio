@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { ArrowRight, CreditCard, Database, Shield, Zap, Code, ChevronRight, Play, Layout, Cpu, Globe } from 'lucide-react';
+import { ArrowRight, CreditCard, Database, Shield, Zap, Code, ChevronRight, Play, Layout, Cpu, Globe, Github } from 'lucide-react';
 import { Terminal } from './terminal';
 import Link from 'next/link';
 
