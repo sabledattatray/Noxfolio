@@ -39,7 +39,7 @@ function AccountFormWithData({ state }: { state: ActionState }) {
     <div className="space-y-6">
       <div className="flex items-center gap-6 mb-8">
         <div className="relative group">
-          <div className="w-24 h-24 rounded-2xl bg-gradient-to-tr from-primary/20 to-blue-400/20 flex items-center justify-center text-primary border-2 border-dashed border-primary/30 group-hover:border-primary transition-colors overflow-hidden">
+          <div className="w-24 h-24 rounded-2xl bg-gradient-to-tr from-primary/10 to-primary/30 flex items-center justify-center text-primary border-2 border-dashed border-border/50 group-hover:border-primary transition-colors overflow-hidden">
             {imagePreview || user?.image ? (
               <img src={imagePreview || user?.image || ''} alt="Profile" className="w-full h-full object-cover" />
             ) : (

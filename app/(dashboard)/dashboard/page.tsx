@@ -126,7 +126,7 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, i) => (
-          <Card key={i} className="group relative overflow-hidden bg-card/30 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all duration-500">
+          <Card key={i} className="group relative overflow-hidden bg-card border-border/50 hover:border-primary/30 transition-all duration-500 shadow-sm">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/0 to-transparent group-hover:via-primary/40 transition-all duration-1000" />
             <CardHeader className="space-y-4 pb-2">
               <div className={`p-3 w-fit rounded-2xl shadow-lg ${stat.bg} ${stat.color} group-hover:scale-110 transition-transform duration-500`}>
@@ -156,7 +156,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <Card className="lg:col-span-2 bg-card/10 backdrop-blur-md border-border/40 overflow-hidden rounded-[32px]">
+        <Card className="lg:col-span-2 bg-card border-border/40 overflow-hidden rounded-[32px] shadow-sm">
           <CardHeader>
             <CardTitle className="text-xl font-bold tracking-tight">Usage Overview</CardTitle>
             <CardDescription className="font-medium">System performance and request volume across all endpoints.</CardDescription>
@@ -183,7 +183,7 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-card/30 backdrop-blur-sm border-border/50 rounded-[32px]">
+        <Card className="bg-card border-border/50 rounded-[32px] shadow-sm">
           <CardHeader>
             <CardTitle className="text-xl font-bold tracking-tight">Quick Actions</CardTitle>
             <CardDescription className="font-medium">Common tasks and configurations.</CardDescription>
@@ -191,7 +191,7 @@ export default function DashboardPage() {
           <CardContent className="space-y-4">
             <Link href="/dashboard/organization" className="block">
               <Button variant="outline" className="w-full justify-start h-14 rounded-2xl border-border/50 hover:border-primary/40 bg-background/30 hover:bg-primary/5 group transition-all">
-                <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center mr-4 group-hover:scale-110 transition-transform shadow-sm">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center mr-4 group-hover:scale-110 transition-transform shadow-sm">
                   <Users className="w-5 h-5" />
                 </div>
                 <span className="font-bold">Manage Team</span>

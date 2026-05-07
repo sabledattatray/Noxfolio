@@ -59,20 +59,22 @@ export default async function RootLayout({
       <head>
         <style dangerouslySetInnerHTML={{ __html: `
           :root {
-            ${primaryHsl ? `--primary: ${primaryHsl};` : ''}
-            ${accentHsl ? `--accent: ${accentHsl};` : ''}
+            --primary: 240 10% 3.9%; /* Pure Black override */
+            --accent: 240 4.8% 95.9%; /* Pure Zinc override */
           }
           .dark {
-            ${primaryHsl ? `--primary: ${primaryHsl};` : ''}
-            ${accentHsl ? `--accent: ${accentHsl};` : ''}
+            --primary: 0 0% 98%; /* Pure White override */
+            --accent: 240 3.7% 15.9%; /* Dark Zinc override */
           }
+
         ` }} />
       </head>
       <body className="min-h-[100dvh] bg-background text-foreground antialiased" suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="dark"
+          forcedTheme="dark"
+          enableSystem={false}
           disableTransitionOnChange
         >
           <SWRConfig

@@ -1,28 +1,13 @@
 'use client';
 
 import { useEffect, ReactNode } from 'react';
-import useSWR from 'swr';
-import { Organization } from '@/lib/db/schema';
-
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
-
 export function DynamicThemeProvider({ children }: { children: ReactNode }) {
-  const { data: org } = useSWR<Organization>('/api/organization', fetcher);
-
   useEffect(() => {
-    if (org?.branding) {
-      const { primaryColor, accentColor } = org.branding as any;
-      
-      if (primaryColor) {
-        document.documentElement.style.setProperty('--primary', hexToHsl(primaryColor));
-        document.documentElement.style.setProperty('--primary-foreground', '0 0% 100%');
-      }
-      
-      if (accentColor) {
-        document.documentElement.style.setProperty('--accent', hexToHsl(accentColor));
-      }
-    }
-  }, [org]);
+    // FORCE neutral palette regardless of organization settings to satisfy professional design requirements
+    document.documentElement.style.setProperty('--primary', '0 0% 98%'); // Force White in Dark Mode
+    document.documentElement.style.setProperty('--primary-foreground', '240 10% 3.9%');
+    document.documentElement.style.setProperty('--accent', '240 3.7% 15.9%');
+  }, []);
 
   return <>{children}</>;
 }

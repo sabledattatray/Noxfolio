@@ -35,8 +35,8 @@ export const organizations = pgTable('organizations', {
   subscriptionStatus: varchar('subscription_status', { length: 20 }),
   branding: jsonb('branding').default({
     logo: null,
-    primaryColor: '#0f172a',
-    accentColor: '#3b82f6',
+    primaryColor: '#000000',
+    accentColor: '#f4f4f5',
     font: 'Inter',
     darkMode: true
   }),

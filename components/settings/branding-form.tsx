@@ -15,8 +15,8 @@ export function BrandingForm() {
   const { data: org } = useSWR<Organization>('/api/organization', fetcher);
   const [loading, setLoading] = useState(false);
   const [branding, setBranding] = useState<any>(org?.branding || {
-    primaryColor: '#0f172a',
-    accentColor: '#3b82f6',
+    primaryColor: '#000000',
+    accentColor: '#f4f4f5',
     font: 'Inter',
     darkMode: true
   });
@@ -42,8 +42,8 @@ export function BrandingForm() {
 
   const resetToDefault = () => {
     setBranding({
-      primaryColor: '#0f172a',
-      accentColor: '#3b82f6',
+      primaryColor: '#000000',
+      accentColor: '#f4f4f5',
       font: 'Inter',
       darkMode: true
     });
@@ -81,12 +81,12 @@ export function BrandingForm() {
                     <Input 
                       type="color" 
                       id="primaryColor"
-                      value={branding.primaryColor || '#0f172a'}
+                      value={branding.primaryColor || '#000000'}
                       onChange={(e) => setBranding({ ...branding, primaryColor: e.target.value })}
                       className="w-12 h-10 p-1 rounded-lg cursor-pointer border-border/50"
                     />
                     <Input 
-                      value={branding.primaryColor || '#0f172a'}
+                      value={branding.primaryColor || '#000000'}
                       onChange={(e) => setBranding({ ...branding, primaryColor: e.target.value })}
                       className="font-mono text-xs rounded-lg"
                     />
@@ -98,12 +98,12 @@ export function BrandingForm() {
                     <Input 
                       type="color" 
                       id="accentColor"
-                      value={branding.accentColor || '#3b82f6'}
+                      value={branding.accentColor || '#f4f4f5'}
                       onChange={(e) => setBranding({ ...branding, accentColor: e.target.value })}
                       className="w-12 h-10 p-1 rounded-lg cursor-pointer border-border/50"
                     />
                     <Input 
-                      value={branding.accentColor || '#3b82f6'}
+                      value={branding.accentColor || '#f4f4f5'}
                       onChange={(e) => setBranding({ ...branding, accentColor: e.target.value })}
                       className="font-mono text-xs rounded-lg"
                     />

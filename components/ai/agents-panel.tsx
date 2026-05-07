@@ -120,7 +120,7 @@ export function AIAgentsPanel() {
 
         <div className="space-y-4">
           {insights.map((insight) => (
-            <Card key={insight.id} className="p-6 group hover:border-primary/30 transition-all duration-300">
+            <Card key={insight.id} className="p-6 group hover:border-primary/30 transition-all duration-300 bg-card/50 shadow-sm">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex gap-4">
                   <div className={`mt-1 p-3 rounded-2xl transition-transform group-hover:scale-110 ${

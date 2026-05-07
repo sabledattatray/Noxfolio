@@ -19,6 +19,7 @@ import { signOut } from '@/app/(login)/actions';
 import { useRouter } from 'next/navigation';
 import useSWR from 'swr';
 import { User as DBUser } from '@/lib/db/schema';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -84,7 +85,7 @@ export function Topbar() {
           </Link>
         </Button>
 
-        <div className="h-8 w-[1px] bg-border mx-2" />
+
 
         {mounted ? (
           <DropdownMenu>
@@ -92,7 +93,7 @@ export function Topbar() {
               <Button variant="ghost" className="pl-1 pr-3 py-1 h-10 rounded-xl hover:bg-accent/50 flex items-center gap-2">
                 <Avatar className="w-8 h-8 rounded-lg shadow-inner">
                   <AvatarImage src={user?.image || ''} />
-                  <AvatarFallback className="bg-gradient-to-tr from-primary to-blue-400 text-white font-bold text-xs uppercase">
+                  <AvatarFallback className="bg-gradient-to-tr from-primary to-primary/60 text-primary-foreground font-bold text-xs uppercase">
                     {user?.name?.substring(0, 2) || user?.email?.substring(0, 2) || 'JD'}
                   </AvatarFallback>
                 </Avatar>
