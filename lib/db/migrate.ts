@@ -8,15 +8,15 @@ dotenv.config();
 
 const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
 
-if (!connectionString) {
-  console.error('❌ POSTGRES_URL or DATABASE_URL is not set.');
-  process.exit(1);
-}
-
 async function runMigration() {
+  if (!connectionString) {
+    console.error('❌ POSTGRES_URL or DATABASE_URL is not set.');
+    process.exit(1);
+  }
+
   console.log('🚀 Running production migrations...');
   
-  const sql = postgres(connectionString, { max: 1 });
+  const sql = postgres(connectionString as string, { max: 1 });
   const db = drizzle(sql);
 
   try {
