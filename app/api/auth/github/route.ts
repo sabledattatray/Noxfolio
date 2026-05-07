@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
-  const origin = request.nextUrl.origin;
-  const redirectUri = `${origin}/api/auth/callback/github`;
+  const baseUrl = process.env.BASE_URL || request.nextUrl.origin;
+  const redirectUri = `${baseUrl}/api/auth/callback/github`;
   const clientId = process.env.GITHUB_CLIENT_ID;
 
   if (!clientId) {

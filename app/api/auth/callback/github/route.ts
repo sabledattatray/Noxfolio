@@ -24,7 +24,9 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // 1. Exchange code for access token
+    const baseUrl = process.env.BASE_URL || request.nextUrl.origin;
+    const redirectUri = `${baseUrl}/api/auth/callback/github`;
+
     const tokenResponse = await fetch('https://github.com/login/oauth/access_token', {
       method: 'POST',
       headers: {
@@ -35,6 +37,7 @@ export async function GET(request: NextRequest) {
         client_id: process.env.GITHUB_CLIENT_ID,
         client_secret: process.env.GITHUB_CLIENT_SECRET,
         code,
+        redirect_uri: redirectUri,
       }),
     });
 
