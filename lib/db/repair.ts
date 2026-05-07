@@ -18,10 +18,15 @@ async function repair() {
     // 1. Add missing 'image' column to 'users'
     await sql.unsafe('ALTER TABLE IF EXISTS users ADD COLUMN IF NOT EXISTS image text;');
     
-    // 2. Rename 'teams' to 'organizations' if it exists (for compatibility with current schema)
+    // 2. Ensure 'organizations' table has all columns
     await sql.unsafe('ALTER TABLE IF EXISTS teams RENAME TO organizations;');
+    await sql.unsafe('ALTER TABLE IF EXISTS organizations ADD COLUMN IF NOT EXISTS razorpay_customer_id text UNIQUE;');
+    await sql.unsafe('ALTER TABLE IF EXISTS organizations ADD COLUMN IF NOT EXISTS razorpay_subscription_id text UNIQUE;');
+    await sql.unsafe('ALTER TABLE IF EXISTS organizations ADD COLUMN IF NOT EXISTS installed_apps jsonb DEFAULT \'[]\'::jsonb;');
+    await sql.unsafe('ALTER TABLE IF EXISTS organizations ADD COLUMN IF NOT EXISTS custom_domain varchar(255) UNIQUE;');
+    await sql.unsafe('ALTER TABLE IF EXISTS organizations ADD COLUMN IF NOT EXISTS balance integer DEFAULT 0;');
     
-    // 3. Rename 'team_id' to 'organization_id' in related tables
+    // 3. Rename columns in related tables if needed
     await sql.unsafe('ALTER TABLE IF EXISTS activity_logs RENAME COLUMN team_id TO organization_id;');
     await sql.unsafe('ALTER TABLE IF EXISTS invitations RENAME COLUMN team_id TO organization_id;');
     await sql.unsafe('ALTER TABLE IF EXISTS organization_members RENAME COLUMN team_id TO organization_id;');
