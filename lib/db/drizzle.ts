@@ -5,16 +5,14 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-if (!process.env.POSTGRES_URL) {
-  throw new Error('POSTGRES_URL environment variable is not set');
-}
+const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL || 'postgres://localhost:5432/dummy';
 
 // Global singleton to prevent connection leaks in development
 const globalForDb = global as unknown as {
   client: postgres.Sql<{}> | undefined;
 };
 
-export const client = globalForDb.client ?? postgres(process.env.POSTGRES_URL, {
+export const client = globalForDb.client ?? postgres(connectionString, {
   max: process.env.NODE_ENV === 'production' ? undefined : 1, // Limit connections in dev
 });
 
