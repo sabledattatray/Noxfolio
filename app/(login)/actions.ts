@@ -31,6 +31,8 @@ import crypto from 'crypto';
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export async function googleSignInAction(credential: string, redirectPath?: string) {
+  console.log('DEBUG: googleSignInAction triggered');
+  console.log('DEBUG: DB URL:', process.env.POSTGRES_URL?.split('@').pop()); // Log only host/db part for safety
   try {
     const ticket = await googleClient.verifyIdToken({
       idToken: credential,
