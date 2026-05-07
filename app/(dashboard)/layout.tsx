@@ -35,7 +35,7 @@ function UserMenu() {
       <>
         <Link
           href="/pricing"
-          className="text-sm font-medium text-gray-700 hover:text-gray-900"
+          className="text-sm font-medium text-gray-700 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white"
         >
           Pricing
         </Link>
@@ -79,15 +79,18 @@ function UserMenu() {
   );
 }
 
+import { ThemeToggle } from '@/components/theme-toggle';
+
 function Header() {
   return (
-    <header className="border-b border-gray-200">
+    <header className="border-b border-gray-200 dark:border-zinc-800 bg-white dark:bg-black transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
         <Link href="/" className="flex items-center">
-          <Shield className="h-6 w-6 text-blue-600" />
-          <span className="ml-2 text-xl font-semibold text-gray-900">BillForge</span>
+          <Shield className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+          <span className="ml-2 text-xl font-semibold text-gray-900 dark:text-white">BillForge</span>
         </Link>
         <div className="flex items-center space-x-4">
+          <ThemeToggle />
           <Suspense fallback={<div className="h-9" />}>
             <UserMenu />
           </Suspense>

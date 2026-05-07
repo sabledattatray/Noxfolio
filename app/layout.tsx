@@ -15,6 +15,8 @@ export const viewport: Viewport = {
 
 const manrope = Manrope({ subsets: ['latin'] });
 
+import { ThemeProvider } from '@/components/theme-provider';
+
 export default async function RootLayout({
   children
 }: {
@@ -51,7 +53,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`bg-white dark:bg-gray-950 text-black dark:text-white ${manrope.className} ${branding.darkMode !== false ? 'dark' : ''}`}
+      className={`${manrope.className}`}
       suppressHydrationWarning
     >
       <head>
@@ -66,17 +68,24 @@ export default async function RootLayout({
           }
         ` }} />
       </head>
-      <body className="min-h-[100dvh] bg-gray-50" suppressHydrationWarning>
-        <SWRConfig
-          value={{
-            fallback: {
-              '/api/user': getUser(),
-              '/api/organization': org
-            }
-          }}
+      <body className="min-h-[100dvh] bg-background text-foreground antialiased" suppressHydrationWarning>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
         >
-          {children}
-        </SWRConfig>
+          <SWRConfig
+            value={{
+              fallback: {
+                '/api/user': getUser(),
+                '/api/organization': org
+              }
+            }}
+          >
+            {children}
+          </SWRConfig>
+        </ThemeProvider>
       </body>
     </html>
   );
