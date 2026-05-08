@@ -8,8 +8,8 @@ const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
 
 async function runMigration() {
   if (!connectionString) {
-    console.error('❌ POSTGRES_URL or DATABASE_URL is not set.');
-    process.exit(1);
+    console.warn('⚠️ POSTGRES_URL or DATABASE_URL is not set. Skipping migrations.');
+    return;
   }
 
   console.log('🚀 Running production migrations...');

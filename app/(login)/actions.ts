@@ -84,6 +84,15 @@ export async function googleSignInAction(credential: string, redirectPath?: stri
         logActivity(createdOrganization.id, user.id, ActivityType.SIGN_UP),
       ]);
     } else {
+      // If user exists but email is not verified, verify it now since they're using Google
+      if (!user.emailVerifiedAt) {
+        const [updatedUser] = await db
+          .update(users)
+          .set({ emailVerifiedAt: new Date() })
+          .where(eq(users.id, user.id))
+          .returning();
+        user = updatedUser;
+      }
       const userWithOrg = await getUserWithOrganization(user.id);
       await logActivity(userWithOrg?.organizationId, user.id, ActivityType.SIGN_IN);
     }
@@ -327,6 +336,33 @@ export const verifyOTP = validatedAction(verifyOTPSchema, async (data) => {
 
   return { success: true };
 });
+
+export const resendVerificationAction = validatedAction(
+  z.object({ email: z.string().email() }),
+  async (data) => {
+    const { email } = data;
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, email))
+      .limit(1);
+
+    if (!user) {
+      return { error: 'User not found.' };
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+    await db
+      .update(users)
+      .set({ otp, otpExpiresAt })
+      .where(eq(users.id, user.id));
+
+    console.log(`DEBUG: New OTP for ${email}: ${otp}`);
+    return { success: 'Verification code sent! Check your console/logs.' };
+  }
+);
 
 export async function signOut() {
   try {
