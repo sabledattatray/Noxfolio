@@ -99,10 +99,16 @@ export async function googleSignInAction(credential: string, redirectPath?: stri
     }
 
     await setSession(user);
-    return { success: true };
   } catch (error: any) {
+    if (error.digest?.startsWith('NEXT_REDIRECT')) throw error;
     console.error('CRITICAL GOOGLE AUTH ERROR:', error);
     return { error: `Authentication failed: ${error.message || 'Unknown server error'}` };
+  }
+
+  if (redirectPath) {
+    redirect(redirectPath);
+  } else {
+    redirect('/dashboard');
   }
 }
 
