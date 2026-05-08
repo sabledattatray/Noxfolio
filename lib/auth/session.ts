@@ -57,8 +57,6 @@ export async function setSession(user: NewUser) {
   (await cookies()).set('session', encryptedSession, {
     expires: expiresInOneDay,
     httpOnly: true,
-    secure: true,
-    sameSite: 'lax',
     path: '/',
   });
 }
