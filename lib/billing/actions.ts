@@ -7,9 +7,9 @@ import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-export async function simulateUpgradeAction(formData: FormData) {
+export async function simulateUpgradeAction(prevState: any, formData: FormData) {
   const organization = await getOrganizationForUser();
-  if (!organization) throw new Error('Not authenticated');
+  if (!organization) return { error: 'Not authenticated' };
 
   const planId = formData.get('planId') as string;
   console.log(`[Billing] Upgrading organization ${organization.id} to plan: ${planId}`);

@@ -1,6 +1,6 @@
 'use client';
 
-import { useTransition, useState } from 'react';
+import { useActionState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -21,37 +21,7 @@ interface SubscriptionCardProps {
 
 export function SubscriptionCard({ plan, isCurrent, action }: SubscriptionCardProps) {
   const Icon = plan.id === 'community' ? Zap : plan.id === 'pro' ? Star : Shield;
-  const [isPending, setIsPending] = useState(false);
-  const [feedback, setFeedback] = useState<{ type: 'success' | 'error', message: string } | null>(null);
-
-  const handleAction = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    setFeedback(null);
-    setIsPending(true);
-    
-    try {
-      const formData = new FormData();
-      formData.append('priceId', plan.stripePriceId);
-      formData.append('planId', plan.id);
-      
-      const result = await action(null, formData);
-      
-      if (result?.success) {
-        setFeedback({ type: 'success', message: result.success });
-      } else if (result?.error) {
-        setFeedback({ type: 'error', message: result.error });
-      }
-    } catch (err: any) {
-      if (err.message?.includes('NEXT_REDIRECT') || err.digest?.includes('NEXT_REDIRECT')) {
-        throw err;
-      }
-      setFeedback({ type: 'error', message: err.message || 'Action failed' });
-    } finally {
-      setIsPending(false);
-    }
-  };
+  const [state, formAction, isPending] = useActionState(action, null);
 
   return (
     <Card className={`group relative overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 ${isCurrent ? 'ring-2 ring-primary border-primary bg-primary/[0.02]' : 'bg-card/30'}`}>
@@ -63,13 +33,14 @@ export function SubscriptionCard({ plan, isCurrent, action }: SubscriptionCardPr
         )}
 
         <div className="space-y-6 flex-1">
-          {feedback && (
-            <div className={`p-4 rounded-2xl text-xs font-semibold animate-in fade-in zoom-in-95 slide-in-from-top-2 duration-500 border ${
-              feedback.type === 'success' 
-                ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' 
-                : 'bg-destructive/10 text-destructive border-destructive/20'
-            }`}>
-              {feedback.message}
+          {state?.error && (
+            <div className="p-4 rounded-2xl text-xs font-semibold animate-in fade-in zoom-in-95 slide-in-from-top-2 duration-500 border bg-destructive/10 text-destructive border-destructive/20">
+              {state.error}
+            </div>
+          )}
+          {state?.success && (
+            <div className="p-4 rounded-2xl text-xs font-semibold animate-in fade-in zoom-in-95 slide-in-from-top-2 duration-500 border bg-emerald-500/10 text-emerald-500 border-emerald-500/20">
+              {state.success}
             </div>
           )}
 
@@ -104,7 +75,7 @@ export function SubscriptionCard({ plan, isCurrent, action }: SubscriptionCardPr
           </ul>
         </div>
 
-        <form action={action} className="pt-6 mt-auto">
+        <form action={formAction} className="pt-6 mt-auto">
           <input type="hidden" name="planId" value={plan.id} />
           <Button 
             type="submit"

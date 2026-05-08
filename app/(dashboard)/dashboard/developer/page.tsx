@@ -11,7 +11,8 @@ import {
   Terminal, 
   BookOpen, 
   Settings2,
-  Box
+  Box,
+  Copy
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
