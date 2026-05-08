@@ -1,36 +1,39 @@
 <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
+    <!-- Left Pillar Gradient (Cyan-Blue) -->
     <linearGradient id="fold1" x1="20" y1="20" x2="20" y2="80" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#2563EB"/>
-      <stop offset="1" stop-color="#1E40AF"/>
+      <stop stop-color="#06B6D4"/>
+      <stop offset="1" stop-color="#3B82F6"/>
     </linearGradient>
+    <!-- Diagonal Gradient (Orange-Pink) -->
     <linearGradient id="fold2" x1="20" y1="20" x2="80" y2="80" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#3B82F6"/>
-      <stop offset="1" stop-color="#7C3AED"/>
+      <stop stop-color="#F59E0B"/>
+      <stop offset="0.5" stop-color="#EC4899"/>
+      <stop offset="1" stop-color="#D946EF"/>
     </linearGradient>
+    <!-- Right Pillar Gradient (Purple-Magenta) -->
     <linearGradient id="fold3" x1="80" y1="20" x2="80" y2="80" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#7C3AED"/>
-      <stop offset="1" stop-color="#4C1D95"/>
+      <stop stop-color="#8B5CF6"/>
+      <stop offset="1" stop-color="#EC4899"/>
     </linearGradient>
+    <filter id="designer_glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
     <filter id="depth" x="-10%" y="-10%" width="120%" height="120%">
       <feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.3"/>
     </filter>
   </defs>
 
-  <!-- Origami N Structure -->
-  
-  <!-- Right Pillar (Bottom Layer) -->
+  <!-- Right Pillar -->
   <path d="M65 20C65 18.8954 65.8954 18 67 18H78C79.1046 18 80 18.8954 80 20V80C80 81.1046 79.1046 82 78 82H67C65.8954 82 65 81.1046 65 80V20Z" fill="url(#fold3)" />
 
   <!-- Left Pillar -->
   <path d="M20 20C20 18.8954 20.8954 18 22 18H33C34.1046 18 35 18.8954 35 20V80C35 81.1046 34.1046 82 33 82H22C20.8954 82 20 81.1046 20 80V20Z" fill="url(#fold1)" filter="url(#depth)" />
 
-  <!-- The Folded Diagonal (Top Layer) -->
-  <path d="M20 20L80 75V82H65L20 27V20Z" fill="url(#fold2)" filter="url(#depth)" />
+  <!-- The Folded Diagonal (Designer Style) -->
+  <path d="M20 20L80 75V82H65L20 27V20Z" fill="url(#fold2)" filter="url(#designer_glow)" />
   
-  <!-- Highlight Shimmer -->
-  <path d="M20 20L35 20L80 75V65L35 25V20Z" fill="white" fill-opacity="0.1" />
-  
-  <!-- Accent Point -->
-  <circle cx="27.5" cy="24" r="3" fill="white" fill-opacity="0.2" />
+  <!-- Bright Shimmer -->
+  <path d="M20 20L35 20L80 75V65L35 25V20Z" fill="white" fill-opacity="0.2" />
 </svg>
