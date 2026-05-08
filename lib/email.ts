@@ -5,7 +5,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export async function sendVerificationEmail(email: string, otp: string) {
   try {
     const { data, error } = await resend.emails.send({
-      from: 'Noxfolio <onboarding@resend.dev>', // Replace with your verified domain in production
+      from: 'Noxfolio <noreply@noxfolio.com>',
       to: [email],
       subject: 'Verify your Noxfolio account',
       html: `
