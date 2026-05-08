@@ -8,7 +8,7 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-white dark:bg-black text-black dark:text-white selection:bg-black dark:selection:bg-white selection:text-white dark:selection:text-black overflow-x-hidden">
       {/* Navigation (Next.js style: Transparent then Blurred) */}
-      <nav className="fixed top-0 w-full z-50 transition-all duration-300 border-b border-transparent hover:border-zinc-200 dark:hover:border-white/10 hover:bg-white/80 dark:hover:bg-black/50 hover:backdrop-blur-md group/nav">
+      <nav className="fixed top-0 w-full z-50 transition-all duration-300 border-b border-zinc-200/50 dark:border-white/10 bg-white/80 dark:bg-black/50 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tighter">
