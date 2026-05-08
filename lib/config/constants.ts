@@ -5,7 +5,7 @@ export const APP_CONFIG = {
   contactEmail: 'support@noxfolio.com',
   links: {
     twitter: 'https://twitter.com/noxfolio',
-    github: 'https://github.com/noxfolio',
+    github: 'https://github.com/sabledattatray/Noxfolio',
     docs: 'https://docs.noxfolio.com',
   },
 };

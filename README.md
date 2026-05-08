@@ -135,7 +135,7 @@ Every high-privilege event is logged in our **Audit Ledger**. This provides the 
 ### Local Development
 ```bash
 # 1. Clone and install
-git clone https://github.com/youruser/noxfolio.git
+git clone https://github.com/sabledattatray/Noxfolio.git
 pnpm install
 
 # 2. Setup Environment
