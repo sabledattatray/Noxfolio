@@ -12,7 +12,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tighter">
-              <Shield className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+              <img src="/logo.svg" alt="Noxfolio Logo" className="w-8 h-8" />
               <span>Noxfolio</span>
             </Link>
             <div className="hidden md:flex items-center gap-6 text-sm text-zinc-500 dark:text-zinc-400 font-medium">

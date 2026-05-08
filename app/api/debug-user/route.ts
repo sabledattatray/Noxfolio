@@ -40,5 +40,8 @@ export async function GET() {
     return Response.json({ status: 'user_not_found_in_db', userId: sessionData.user.id });
   }
 
-  return Response.json({ status: 'success', user: user[0] });
+  // Set a test cookie to see if the browser accepts it
+  (await cookies()).set('test_cookie', 'works', { path: '/' });
+
+  return Response.json({ status: 'success', user: user[0], testCookieSet: true });
 }

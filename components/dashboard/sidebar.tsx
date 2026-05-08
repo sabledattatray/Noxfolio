@@ -56,16 +56,12 @@ export function Sidebar({ className }: { className?: string }) {
       <div className="p-6 flex items-center justify-between">
         {!isCollapsed && (
           <Link href="/dashboard" className="flex items-center gap-2 font-bold text-xl tracking-tight">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20">
-              <Shield className="w-5 h-5" />
-            </div>
+            <img src="/logo.svg" alt="Noxfolio Logo" className="w-8 h-8 rounded-lg" />
             <span>Noxfolio</span>
           </Link>
         )}
         {isCollapsed && (
-          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20 mx-auto">
-            <Shield className="w-5 h-5" />
-          </div>
+          <img src="/logo.svg" alt="Noxfolio Logo" className="w-8 h-8 rounded-lg mx-auto" />
         )}
       </div>
 

@@ -6,7 +6,10 @@ import { SWRConfig } from 'swr';
 
 export const metadata: Metadata = {
   title: 'Noxfolio - Enterprise SaaS Billing Foundation',
-  description: 'The ultimate enterprise-grade SaaS billing and management foundation.'
+  description: 'The ultimate enterprise-grade SaaS billing and management foundation.',
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export const viewport: Viewport = {

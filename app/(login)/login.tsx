@@ -49,9 +49,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
 
       <div className="w-full max-w-[440px] space-y-8 animate-in fade-in zoom-in-95 duration-500">
         <div className="flex flex-col items-center text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground shadow-xl shadow-primary/20 mb-4">
-            <Shield className="w-6 h-6" />
-          </div>
+          <img src="/logo.svg" alt="Noxfolio Logo" className="w-12 h-12 mb-4" />
           <h1 className="text-3xl font-bold tracking-tight">
             {mode === 'signin' ? 'Welcome back' : 'Create your account'}
           </h1>
