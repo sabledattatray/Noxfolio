@@ -21,6 +21,7 @@ import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { createCheckoutSession } from '@/lib/stripe/stripe';
 import { getUser, getUserWithOrganization } from '@/lib/db/queries';
+import { sendVerificationEmail } from '@/lib/email';
 import {
   validatedAction,
   validatedActionWithUser
@@ -296,7 +297,8 @@ export const signUp = validatedAction(signUpSchema, async (data, formData) => {
       db.insert(organizationMembers).values(newOrganizationMember),
       logActivity(organizationId, createdUser.id, ActivityType.SIGN_UP),
       db.update(users).set({ otp, otpExpiresAt }).where(eq(users.id, createdUser.id)),
-      setSession(createdUser)
+      setSession(createdUser),
+      sendVerificationEmail(email, otp)
     ]);
 
     console.log(`DEBUG: OTP for ${email}: ${otp}`);
@@ -354,10 +356,13 @@ export const resendVerificationAction = validatedAction(
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-    await db
-      .update(users)
-      .set({ otp, otpExpiresAt })
-      .where(eq(users.id, user.id));
+    await Promise.all([
+      db
+        .update(users)
+        .set({ otp, otpExpiresAt })
+        .where(eq(users.id, user.id)),
+      sendVerificationEmail(email, otp)
+    ]);
 
     console.log(`DEBUG: New OTP for ${email}: ${otp}`);
     return { success: 'Verification code sent! Check your console/logs.' };
