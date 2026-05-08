@@ -58,15 +58,15 @@ function PlatformStatus() {
           <div className="p-3 rounded-xl bg-accent/30 border border-border/50 flex items-center gap-3 group hover:border-primary/50 transition-colors cursor-pointer">
             <Box className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
             <div>
-              <p className="text-xs font-bold">TypeScript SDK</p>
-              <p className="text-[10px] text-muted-foreground">npm install @billforge/sdk</p>
+              <p className="text-xs font-bold">Noxfolio SDK</p>
+              <p className="text-[10px] text-muted-foreground">npm install @noxfolio/sdk</p>
             </div>
           </div>
           <div className="p-3 rounded-xl bg-accent/30 border border-border/50 flex items-center gap-3 group hover:border-primary/50 transition-colors cursor-pointer">
             <Terminal className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
             <div>
               <p className="text-xs font-bold">CLI Tool</p>
-              <p className="text-[10px] text-muted-foreground">curl -sL billforge.sh | sh</p>
+              <p className="text-[10px] text-muted-foreground">curl -sL noxfolio.sh | sh</p>
             </div>
           </div>
         </CardContent>
@@ -81,7 +81,7 @@ export default function DeveloperPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Developer Platform</h1>
-          <p className="text-muted-foreground mt-1">Integrate BillForge into your applications using our APIs and Webhooks.</p>
+          <p className="text-muted-foreground mt-1">Integrate Noxfolio into your applications using our APIs and Webhooks.</p>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" className="rounded-xl border-border/50">
@@ -103,9 +103,48 @@ export default function DeveloperPage() {
         </TabsList>
 
         <TabsContent value="keys" className="space-y-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="md:col-span-2 space-y-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-8">
               <APIKeyManager />
+              
+              <Card className="border-border/50 bg-card/50 backdrop-blur-sm overflow-hidden">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-primary/10 text-primary">
+                      <Terminal className="w-5 h-5" />
+                    </div>
+                    <CardTitle>Site Connection Guide</CardTitle>
+                  </div>
+                  <CardDescription>Connect your external site to Noxfolio in minutes.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="space-y-4">
+                    <p className="text-sm font-medium">1. Verify Connection (Node.js)</p>
+                    <div className="p-4 rounded-2xl bg-black/40 border border-white/5 font-mono text-[11px] leading-relaxed text-zinc-300">
+                      <pre>
+{`const res = await fetch('https://noxfolio.app/api/v1/auth/verify', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ apiKey: 'YOUR_API_KEY' })
+});
+
+const { valid, plan } = await res.json();
+console.log(\`Connected to Noxfolio: \${valid} (\${plan})\`);`}
+                      </pre>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <p className="text-sm font-medium">2. Quick Test (Curl)</p>
+                    <div className="p-4 rounded-2xl bg-black/40 border border-white/5 font-mono text-[11px] leading-relaxed text-zinc-300 flex justify-between items-center group">
+                      <code>curl -X POST https://noxfolio.app/api/v1/auth/verify -d '{"apiKey":"YOUR_KEY"}'</code>
+                      <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity rounded-lg h-7">
+                        <Copy className="w-3 h-3" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
             <div className="space-y-8">
               <PlatformStatus />
@@ -125,7 +164,7 @@ export default function DeveloperPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <CardTitle>Webhook Endpoints</CardTitle>
-                      <CardDescription>Receive real-time event notifications.</CardDescription>
+                      <CardDescription>Receive real-time event notifications from Noxfolio.</CardDescription>
                     </div>
                     <Button variant="outline" size="sm" className="rounded-xl">
                       Add Endpoint
@@ -146,3 +185,4 @@ export default function DeveloperPage() {
     </div>
   );
 }
+

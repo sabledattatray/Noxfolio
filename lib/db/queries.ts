@@ -1,6 +1,6 @@
 import { desc, and, eq, isNull } from 'drizzle-orm';
 import { db } from './drizzle';
-import { activityLogs, organizationMembers, organizations, users, invoices } from './schema';
+import { activityLogs, organizationMembers, organizations, users, invoices, apiKeys } from './schema';
 import { cookies } from 'next/headers';
 import { verifyToken } from '@/lib/auth/session';
 
@@ -153,3 +153,37 @@ export async function getInvoicesForOrganization() {
     .where(eq(invoices.organizationId, organization.id))
     .orderBy(desc(invoices.createdAt));
 }
+
+export async function getApiKeys() {
+  const organization = await getOrganizationForUser();
+  if (!organization) return [];
+
+  return await db
+    .select()
+    .from(apiKeys)
+    .where(eq(apiKeys.organizationId, organization.id))
+    .orderBy(desc(apiKeys.createdAt));
+}
+
+export async function createApiKey(name: string) {
+  const organization = await getOrganizationForUser();
+  if (!organization) throw new Error('Not authenticated');
+
+  const prefix = 'nox_live_';
+  const randomBytes = Array.from(crypto.getRandomValues(new Uint8Array(24)))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+  const key = `${prefix}${randomBytes}`;
+
+  await db.insert(apiKeys).values({
+    organizationId: organization.id,
+    name,
+    key,
+    prefix,
+    scopes: ['all'],
+    environment: 'live',
+  });
+
+  return key;
+}
+

@@ -9,6 +9,7 @@ import { PLANS } from '@/modules/billing/plans/config';
 import { OrganizationDataWithMembers } from '@/lib/db/schema';
 import { BillingInvoice } from '@/modules/billing/types';
 import { customerPortalAction, checkoutAction } from '@/lib/stripe/actions';
+import { simulateUpgradeAction } from '@/lib/billing/actions';
 import { CheckCircle2, PartyPopper } from 'lucide-react';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -105,14 +106,13 @@ function BillingOverview() {
           </div>
         </div>
       </div>
-
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {Object.values(PLANS).map((plan) => (
           <SubscriptionCard 
             key={plan.id} 
             plan={plan} 
             isCurrent={plan.id === currentPlanId}
-            action={plan.id === currentPlanId ? customerPortalAction : checkoutAction}
+            action={simulateUpgradeAction}
           />
         ))}
       </div>

@@ -34,6 +34,7 @@ export function SubscriptionCard({ plan, isCurrent, action }: SubscriptionCardPr
     try {
       const formData = new FormData();
       formData.append('priceId', plan.stripePriceId);
+      formData.append('planId', plan.id);
       
       const result = await action(null, formData);
       
