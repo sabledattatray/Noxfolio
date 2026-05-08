@@ -87,7 +87,7 @@ function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
         <Link href="/" className="flex items-center">
           <img src="/logo.svg" alt="Noxfolio Logo" className="w-8 h-8" />
-          <span className="ml-2 text-xl font-semibold text-gray-900 dark:text-white">Noxfolio</span>
+          <span className="ml-1 text-xl font-semibold text-gray-900 dark:text-white">Noxfolio</span>
         </Link>
         <div className="flex items-center space-x-4">
           <ThemeToggle />

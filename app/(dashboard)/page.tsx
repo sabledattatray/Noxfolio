@@ -11,7 +11,7 @@ export default function HomePage() {
       <nav className="fixed top-0 w-full z-50 transition-all duration-300 border-b border-zinc-200/50 dark:border-white/10 bg-white/80 dark:bg-black/50 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-8">
-            <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tighter">
+            <Link href="/" className="flex items-center gap-1 font-bold text-xl tracking-tighter">
               <img src="/logo.svg" alt="Noxfolio Logo" className="w-8 h-8" />
               <span>Noxfolio</span>
             </Link>

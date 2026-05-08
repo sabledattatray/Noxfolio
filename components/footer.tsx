@@ -51,7 +51,7 @@ export function Footer() {
           <div className="col-span-2">
             <Link href="/" className="flex items-center mb-6">
               <img src="/logo.svg" alt="Noxfolio Logo" className="h-10 w-10" />
-              <span className="ml-2 text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Noxfolio</span>
+              <span className="ml-1 text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Noxfolio</span>
             </Link>
             <p className="text-gray-500 dark:text-zinc-400 text-sm max-w-xs mb-6 leading-relaxed">
               The ultimate enterprise billing foundation for modern SaaS. Built for scale, security, and developer happiness.

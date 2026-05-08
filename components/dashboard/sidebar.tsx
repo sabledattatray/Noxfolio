@@ -55,7 +55,7 @@ export function Sidebar({ className }: { className?: string }) {
     >
       <div className="p-6 flex items-center justify-between">
         {!isCollapsed && (
-          <Link href="/dashboard" className="flex items-center gap-2 font-bold text-xl tracking-tight">
+          <Link href="/dashboard" className="flex items-center gap-1 font-bold text-xl tracking-tight">
             <img src="/logo.svg" alt="Noxfolio Logo" className="w-8 h-8 rounded-lg" />
             <span>Noxfolio</span>
           </Link>
