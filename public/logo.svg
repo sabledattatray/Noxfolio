@@ -1,27 +1,22 @@
 <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="grad1" x1="20" y1="20" x2="80" y2="80" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#3B82F6"/>
-      <stop offset="1" stop-color="#8B5CF6"/>
+    <linearGradient id="n_grad" x1="20" y1="20" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2563EB"/>
+      <stop offset="0.5" stop-color="#7C3AED"/>
+      <stop offset="1" stop-color="#06B6D4"/>
     </linearGradient>
-    <linearGradient id="grad2" x1="80" y1="20" x2="20" y2="80" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#06B6D4"/>
-      <stop offset="1" stop-color="#3B82F6"/>
-    </linearGradient>
-    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.2"/>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
     </filter>
   </defs>
-  
-  <!-- Left Pillar -->
-  <path d="M25 20C22.2386 20 20 22.2386 20 25V75C20 77.7614 22.2386 80 25 80H30C32.7614 80 35 77.7614 35 75V25C35 22.2386 32.7614 20 30 20H25Z" fill="url(#grad1)" filter="url(#shadow)"/>
-  
-  <!-- Diagonal -->
-  <path d="M30 25L70 75C71.5 76.5 73.5 77 75 77C77.7614 77 80 74.7614 80 72V28C80 25.2386 77.7614 23 75 23H70L30 72V25Z" fill="url(#grad2)" fill-opacity="0.9" style="mix-blend-mode: overlay" />
-  
-  <!-- Right Pillar -->
-  <path d="M70 20C67.2386 20 65 22.2386 65 25V75C65 77.7614 67.2386 80 70 80H75C77.7614 80 80 77.7614 80 75V25C80 22.2386 77.7614 20 75 20H70Z" fill="url(#grad1)" filter="url(#shadow)"/>
 
-  <!-- Fluid Accent Curve -->
-  <path d="M20 25C20 22.2386 22.2386 20 25 20H30L70 70V75C70 77.7614 67.7614 80 65 80H60L20 30V25Z" fill="white" fill-opacity="0.1" />
+  <!-- Premium N Structure -->
+  <path d="M20 25C20 22.2386 22.2386 20 25 20H32C33.8565 20 35.5848 21.0326 36.4567 22.6732L63.5433 73.3268C64.4152 74.9674 66.1435 76 68 76H75C77.7614 76 80 73.7614 80 71V25C80 22.2386 77.7614 20 75 20H72C69.2386 20 67 22.2386 67 25V55L33 25V25C33 22.2386 30.7614 20 28 20H25" fill="none" />
+  
+  <!-- Main N Path -->
+  <path d="M22 20H32C34 20 36 21 37 23L63 72V25C63 22 65 20 68 20H78V80H68C66 80 64 79 63 77L37 28V75C37 78 35 80 32 80H22V20Z" fill="url(#n_grad)" filter="url(#glow)"/>
+  
+  <!-- Fluid Overlap Accent -->
+  <path d="M63 72L37 28C36 26.5 35 25.5 33 25.5V20H40L67 71V80H63V72Z" fill="white" fill-opacity="0.15" />
 </svg>
