@@ -58,8 +58,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="text-center">
             <h1 className="text-3xl sm:text-5xl md:text-8xl lg:text-[112px] font-extrabold tracking-tight mb-8 leading-[1.1] md:leading-[0.9] text-balance animate-in fade-in slide-in-from-bottom-8 duration-1000">
-              <span className="whitespace-nowrap">The Billing Infrastructure</span> <br />
-              <span className="text-zinc-400 dark:text-zinc-500 italic font-medium whitespace-nowrap">for the Web.</span>
+              <span className="whitespace-nowrap">The Billing Infrastructure</span>
             </h1>
             
             <p className="max-w-2xl mx-auto text-lg md:text-xl text-zinc-600 dark:text-zinc-400 mb-12 text-balance animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-200">
