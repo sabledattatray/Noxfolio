@@ -80,7 +80,7 @@ function BillingOverview() {
     if (success) mutate();
   }, [success, mutate]);
 
-  const currentPlanId = organizationData?.planName?.toLowerCase() || 'starter';
+  const currentPlanId = organizationData?.planName?.toLowerCase() || 'community';
   
   if (orgError || invError) {
     console.error('Billing data fetch error:', orgError || invError);

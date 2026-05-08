@@ -12,6 +12,8 @@ export async function simulateUpgradeAction(formData: FormData) {
   if (!organization) throw new Error('Not authenticated');
 
   const planId = formData.get('planId') as string;
+  console.log(`[Billing] Upgrading organization ${organization.id} to plan: ${planId}`);
+
   if (!planId) throw new Error('Plan ID is required');
 
   await db
@@ -22,6 +24,8 @@ export async function simulateUpgradeAction(formData: FormData) {
       updatedAt: new Date(),
     })
     .where(eq(organizations.id, organization.id));
+
+  console.log(`[Billing] Upgrade successful for organization ${organization.id}`);
 
   revalidatePath('/dashboard/billing');
   redirect('/dashboard/billing?success=plan_updated');

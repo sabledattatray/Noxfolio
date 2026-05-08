@@ -20,7 +20,7 @@ interface SubscriptionCardProps {
 }
 
 export function SubscriptionCard({ plan, isCurrent, action }: SubscriptionCardProps) {
-  const Icon = plan.id === 'starter' ? Zap : plan.id === 'growth' ? Star : Shield;
+  const Icon = plan.id === 'community' ? Zap : plan.id === 'pro' ? Star : Shield;
   const [isPending, setIsPending] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error', message: string } | null>(null);
 
@@ -104,9 +104,10 @@ export function SubscriptionCard({ plan, isCurrent, action }: SubscriptionCardPr
           </ul>
         </div>
 
-        <div className="pt-6 mt-auto">
+        <form action={action} className="pt-6 mt-auto">
+          <input type="hidden" name="planId" value={plan.id} />
           <Button 
-            onClick={handleAction}
+            type="submit"
             disabled={isPending}
             variant={isCurrent ? 'outline' : 'default'}
             className={`w-full py-6 rounded-2xl font-bold text-sm transition-all duration-300 relative overflow-hidden group/btn ${
@@ -115,8 +116,8 @@ export function SubscriptionCard({ plan, isCurrent, action }: SubscriptionCardPr
           >
             {isPending ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Processing Connection...
+                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                Connecting...
               </>
             ) : (
               <>
@@ -124,7 +125,7 @@ export function SubscriptionCard({ plan, isCurrent, action }: SubscriptionCardPr
               </>
             )}
           </Button>
-        </div>
+        </form>
       </div>
     </Card>
   );
