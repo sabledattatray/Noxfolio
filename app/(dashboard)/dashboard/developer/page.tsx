@@ -137,7 +137,7 @@ console.log(\`Connected to Noxfolio: \${valid} (\${plan})\`);`}
                   <div className="space-y-4">
                     <p className="text-sm font-medium">2. Quick Test (Curl)</p>
                     <div className="p-4 rounded-2xl bg-black/40 border border-white/5 font-mono text-[11px] leading-relaxed text-zinc-300 flex justify-between items-center group">
-                      <code>curl -X POST https://noxfolio.app/api/v1/auth/verify -d '{"apiKey":"YOUR_KEY"}'</code>
+                      <code>{`curl -X POST https://noxfolio.app/api/v1/auth/verify -d '{"apiKey":"YOUR_KEY"}'`}</code>
                       <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity rounded-lg h-7">
                         <Copy className="w-3 h-3" />
                       </Button>
