@@ -342,7 +342,7 @@ export const verifyOTP = validatedAction(verifyOTPSchema, async (data) => {
     })
     .where(eq(users.id, user.id));
 
-  return { success: true };
+  redirect('/dashboard');
 });
 
 export const resendVerificationAction = validatedAction(
