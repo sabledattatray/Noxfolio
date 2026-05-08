@@ -1,4 +1,4 @@
-# <div align="center">⚡ BillForge</div>
+# <div align="center">⚡ Noxfolio</div>
 ### <div align="center">The Autonomous Revenue Infrastructure for Enterprise SaaS</div>
 
 <div align="center">
@@ -15,7 +15,7 @@
 
 <div align="center">
   <p><b>The Interactive Control Center</b></p>
-  <img src="./assets/dashboard-main.png" alt="BillForge Dashboard" width="800px" />
+  <img src="./assets/dashboard-main.png" alt="Noxfolio Dashboard" width="800px" />
   <br />
   <p><i>Premium dark-mode dashboard with real-time revenue analytics and glassmorphism.</i></p>
 </div>
@@ -29,10 +29,10 @@
 
 ---
 
-## 🔥 Why BillForge?
+## 🔥 Why Noxfolio?
 The SaaS billing landscape is broken. You're either stuck with basic checkout buttons or complex enterprise monsters that take 6 months to integrate.
 
-BillForge bridges the gap:
+Noxfolio bridges the gap:
 - **Autonomous**: AI doesn't just show data; it acts on it.
 - **Open Core**: Full transparency with an MIT core.
 - **Enterprise Ready**: SOC2-compliant audit trails and RBAC out of the box.
@@ -42,7 +42,7 @@ BillForge bridges the gap:
 
 ## 🏗️ System Architecture
 
-BillForge is engineered for high-availability and extreme observability.
+Noxfolio is engineered for high-availability and extreme observability.
 
 ```mermaid
 graph TD
@@ -84,7 +84,7 @@ graph TD
 ---
 
 ## ⚡ Performance Benchmarks
-BillForge is optimized for the **Edge**.
+Noxfolio is optimized for the **Edge**.
 
 - **Lighthouse Performance**: 98/100
 - **API Latency (P99)**: < 45ms
@@ -96,17 +96,17 @@ BillForge is optimized for the **Edge**.
 
 ## 📖 Developer Interface (API)
 
-BillForge is **API-First**. Integrate with your existing systems in seconds.
+Noxfolio is **API-First**. Integrate with your existing systems in seconds.
 
 ```bash
 # Retrieve real-time usage metrics
-curl -X GET https://api.billforge.com/v1/billing/usage \
+curl -X GET https://api.noxfolio.com/v1/billing/usage \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
 ```bash
 # Initialize a new customer identity
-curl -X POST https://api.billforge.com/v1/customers/create \
+curl -X POST https://api.noxfolio.com/v1/customers/create \
   -H "Content-Type: application/json" \
   -d '{
     "email": "jane@company.com",
@@ -120,7 +120,7 @@ curl -X POST https://api.billforge.com/v1/customers/create \
 ## 🛠️ Infrastructure & Scaling
 
 ### 1. Connection Singleton
-In high-concurrency environments, database connection leaks are fatal. BillForge implements a strict **Singleton Pattern** for the Drizzle client to ensure stable pooling even under heavy load.
+In high-concurrency environments, database connection leaks are fatal. Noxfolio implements a strict **Singleton Pattern** for the Drizzle client to ensure stable pooling even under heavy load.
 
 ### 2. Event-Driven Workflow
 All non-critical tasks (Invoicing, AI Analysis, Webhooks) are offloaded to **BullMQ**. This ensures your user-facing API remains snappy while the heavy lifting happens in isolated workers.
@@ -135,7 +135,7 @@ Every high-privilege event is logged in our **Audit Ledger**. This provides the 
 ### Local Development
 ```bash
 # 1. Clone and install
-git clone https://github.com/youruser/billforge.git
+git clone https://github.com/youruser/noxfolio.git
 pnpm install
 
 # 2. Setup Environment
@@ -150,8 +150,8 @@ pnpm dev
 
 ### Production (Docker)
 ```bash
-docker build -t billforge .
-docker run -p 3000:3000 billforge
+docker build -t noxfolio .
+docker run -p 3000:3000 noxfolio
 ```
 
 ---

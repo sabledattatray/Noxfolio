@@ -39,7 +39,7 @@ export function Footer() {
       links: [
         { name: 'Help Center', href: '/docs' },
         { name: 'Community', href: '#' },
-        { name: 'Support Email', href: 'mailto:support@billforge.com' },
+        { name: 'Support Email', href: 'mailto:support@noxfolio.com' },
       ],
     },
   ];
@@ -51,7 +51,7 @@ export function Footer() {
           <div className="col-span-2">
             <Link href="/" className="flex items-center mb-6">
               <Shield className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-              <span className="ml-2 text-2xl font-bold text-gray-900 dark:text-white tracking-tight">BillForge</span>
+              <span className="ml-2 text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Noxfolio</span>
             </Link>
             <p className="text-gray-500 dark:text-zinc-400 text-sm max-w-xs mb-6 leading-relaxed">
               The ultimate enterprise billing foundation for modern SaaS. Built for scale, security, and developer happiness.
@@ -66,7 +66,7 @@ export function Footer() {
               <Link href="#" className="text-gray-400 hover:text-blue-700 dark:hover:text-blue-500 transition-colors">
                 <Linkedin className="h-5 w-5" />
               </Link>
-              <Link href="mailto:hello@billforge.com" className="text-gray-400 hover:text-red-500 transition-colors">
+              <Link href="mailto:hello@noxfolio.com" className="text-gray-400 hover:text-red-500 transition-colors">
                 <Mail className="h-5 w-5" />
               </Link>
             </div>
@@ -101,7 +101,7 @@ export function Footer() {
 
         <div className="pt-8 border-t border-gray-100 dark:border-zinc-900 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-400 dark:text-zinc-500 text-xs">
-            © {currentYear} BillForge Foundation, Inc. All rights reserved.
+            © {currentYear} Noxfolio Foundation, Inc. All rights reserved.
           </p>
           <div className="flex items-center space-x-6">
             <span className="flex items-center text-[10px] text-gray-400 dark:text-zinc-500 font-medium">

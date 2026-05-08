@@ -1,12 +1,12 @@
 export const APP_CONFIG = {
-  name: 'BillForge',
+  name: 'Noxfolio',
   description: 'Enterprise SaaS Billing Foundation',
   version: '1.0.0',
-  contactEmail: 'support@billforge.com',
+  contactEmail: 'support@noxfolio.com',
   links: {
-    twitter: 'https://twitter.com/billforge',
-    github: 'https://github.com/billforge',
-    docs: 'https://docs.billforge.com',
+    twitter: 'https://twitter.com/noxfolio',
+    github: 'https://github.com/noxfolio',
+    docs: 'https://docs.noxfolio.com',
   },
 };
 

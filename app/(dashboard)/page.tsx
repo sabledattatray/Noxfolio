@@ -13,7 +13,7 @@ export default function HomePage() {
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tighter">
               <Shield className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-              <span>BillForge</span>
+              <span>Noxfolio</span>
             </Link>
             <div className="hidden md:flex items-center gap-6 text-sm text-zinc-500 dark:text-zinc-400 font-medium">
               <Link href="#features" className="hover:text-black dark:hover:text-white transition-colors">Features</Link>
@@ -63,7 +63,7 @@ export default function HomePage() {
             </h1>
             
             <p className="max-w-2xl mx-auto text-lg md:text-xl text-zinc-600 dark:text-zinc-400 mb-12 text-balance animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-200">
-              BillForge is a sovereign financial stack for modern software companies. 
+              Noxfolio is a sovereign financial stack for modern software companies. 
               Engineered for high-performance revenue management and enterprise scale.
             </p>
             
@@ -75,7 +75,7 @@ export default function HomePage() {
               </Link>
               <Link href="/dashboard/docs">
                 <Button size="lg" variant="outline" className="h-12 px-10 text-base rounded-md border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black text-black dark:text-white hover:bg-zinc-50 dark:hover:bg-zinc-900 font-medium transition-all shadow-sm">
-                  Learn BillForge
+                  Learn Noxfolio
                 </Button>
               </Link>
             </div>
@@ -109,7 +109,7 @@ export default function HomePage() {
                   <div className="w-3.5 h-3.5 rounded-full bg-zinc-200 dark:bg-zinc-800" />
                   <div className="w-3.5 h-3.5 rounded-full bg-zinc-200 dark:bg-zinc-800" />
                 </div>
-                <span className="text-[10px] text-zinc-400 font-mono font-medium uppercase tracking-[0.2em]">bash — billforge@latest</span>
+                <span className="text-[10px] text-zinc-400 font-mono font-medium uppercase tracking-[0.2em]">bash — noxfolio@latest</span>
                 <div className="w-12" />
               </div>
               <div className="p-10 font-mono text-sm leading-relaxed text-zinc-800 dark:text-zinc-200">

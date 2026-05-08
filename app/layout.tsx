@@ -5,7 +5,7 @@ import { getUser, getOrganizationForUser } from '@/lib/db/queries';
 import { SWRConfig } from 'swr';
 
 export const metadata: Metadata = {
-  title: 'BillForge - Enterprise SaaS Billing Foundation',
+  title: 'Noxfolio - Enterprise SaaS Billing Foundation',
   description: 'The ultimate enterprise-grade SaaS billing and management foundation.'
 };
 
