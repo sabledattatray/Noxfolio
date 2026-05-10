@@ -1,6 +1,13 @@
 import { desc, and, eq, isNull } from 'drizzle-orm';
 import { db } from './drizzle';
-import { activityLogs, organizationMembers, organizations, users, invoices, apiKeys } from './schema';
+import {
+  activityLogs,
+  organizationMembers,
+  organizations,
+  users,
+  invoices,
+  apiKeys,
+} from './schema';
 import { cookies } from 'next/headers';
 import { verifyToken } from '@/lib/auth/session';
 
@@ -53,13 +60,13 @@ export async function updateOrganizationSubscription(
     stripeProductId: string | null;
     planName: string | null;
     subscriptionStatus: string;
-  }
+  },
 ) {
   await db
     .update(organizations)
     .set({
       ...subscriptionData,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     })
     .where(eq(organizations.id, organizationId));
 }
@@ -68,10 +75,15 @@ export async function getUserWithOrganization(userId: number) {
   const result = await db
     .select({
       user: users,
-      organizationId: organizationMembers.organizationId
+      organizationId: organizationMembers.organizationId,
+      organization: organizations,
     })
     .from(users)
     .leftJoin(organizationMembers, eq(users.id, organizationMembers.userId))
+    .leftJoin(
+      organizations,
+      eq(organizationMembers.organizationId, organizations.id),
+    )
     .where(eq(users.id, userId))
     .limit(1);
 
@@ -90,7 +102,7 @@ export async function getActivityLogs() {
       action: activityLogs.action,
       timestamp: activityLogs.timestamp,
       ipAddress: activityLogs.ipAddress,
-      userName: users.name
+      userName: users.name,
     })
     .from(activityLogs)
     .leftJoin(users, eq(activityLogs.userId, users.id))
@@ -107,10 +119,13 @@ export async function getOrganizationForUser() {
 
   const result = await db
     .select({
-      organization: organizations
+      organization: organizations,
     })
     .from(organizationMembers)
-    .innerJoin(organizations, eq(organizationMembers.organizationId, organizations.id))
+    .innerJoin(
+      organizations,
+      eq(organizationMembers.organizationId, organizations.id),
+    )
     .where(eq(organizationMembers.userId, user.id))
     .limit(1);
 
@@ -131,8 +146,8 @@ export async function getOrganizationForUser() {
       user: {
         id: users.id,
         name: users.name,
-        email: users.email
-      }
+        email: users.email,
+      },
     })
     .from(organizationMembers)
     .innerJoin(users, eq(organizationMembers.userId, users.id))
@@ -140,7 +155,7 @@ export async function getOrganizationForUser() {
 
   return {
     ...organization,
-    organizationMembers: members
+    organizationMembers: members,
   };
 }
 export async function getInvoicesForOrganization() {
@@ -171,7 +186,7 @@ export async function createApiKey(name: string) {
 
   const prefix = 'nox_live_';
   const randomBytes = Array.from(crypto.getRandomValues(new Uint8Array(24)))
-    .map(b => b.toString(16).padStart(2, '0'))
+    .map((b) => b.toString(16).padStart(2, '0'))
     .join('');
   const key = `${prefix}${randomBytes}`;
 
@@ -186,4 +201,3 @@ export async function createApiKey(name: string) {
 
   return key;
 }
-

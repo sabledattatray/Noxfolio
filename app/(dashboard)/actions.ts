@@ -674,7 +674,7 @@ export const inviteOrganizationMember = validatedActionWithUser(
       ActivityType.INVITE_ORGANIZATION_MEMBER,
     );
 
-    if (invitation) {
+    if (invitation && userWithOrganization.organization) {
       await sendInvitationEmail(
         email,
         userWithOrganization.organization.name,
