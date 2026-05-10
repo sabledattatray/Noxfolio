@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useState, Suspense, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Play } from 'lucide-react';
+import { Play, ArrowRight } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { User } from '@/lib/db/schema';
 import useSWR from 'swr';
@@ -176,68 +176,79 @@ function Header() {
         </div>
       </header>
 
-      {/* Mobile Drawer - Moved outside <header> to prevent transparency inheritance */}
+      {/* Mobile Drawer - Optimized for Pro Dark/Light Themes */}
       <div
-        className={`fixed inset-0 top-16 z-[100] bg-white transition-transform duration-500 lg:hidden dark:bg-black ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`fixed inset-0 top-16 z-[100] bg-white transition-transform duration-500 lg:hidden dark:bg-[#050510] ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
-        <div className="flex h-[calc(100vh-64px)] flex-col p-6">
-          <nav className="flex flex-col space-y-4 pt-4">
+        <div className="flex h-[calc(100vh-64px)] flex-col p-8">
+          <div className="text-muted-foreground/50 mb-4 text-[10px] font-black tracking-[0.2em] uppercase">
+            Navigation
+          </div>
+          <nav className="flex flex-col space-y-5">
             <Link
               href="/features"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="hover:text-primary text-xl font-bold transition-colors"
+              className="group hover:text-primary flex items-center justify-between text-2xl font-black tracking-tight transition-colors"
             >
               Features
+              <ArrowRight className="h-5 w-5 -translate-x-4 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
             </Link>
             <Link
               href="/industries"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="hover:text-primary text-xl font-bold transition-colors"
+              className="group hover:text-primary flex items-center justify-between text-2xl font-black tracking-tight transition-colors"
             >
               Industries
+              <ArrowRight className="h-5 w-5 -translate-x-4 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
             </Link>
             <Link
               href="/pricing"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="hover:text-primary text-xl font-bold transition-colors"
+              className="group hover:text-primary flex items-center justify-between text-2xl font-black tracking-tight transition-colors"
             >
               Pricing
+              <ArrowRight className="h-5 w-5 -translate-x-4 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
             </Link>
             <Link
               href="/pricing-calculator"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="hover:text-primary text-xl font-bold transition-colors"
+              className="group hover:text-primary flex items-center justify-between text-2xl font-black tracking-tight transition-colors"
             >
-              Pricing Calculator
+              Calculator
+              <ArrowRight className="h-5 w-5 -translate-x-4 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
             </Link>
             <Link
               href="/contact"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="hover:text-primary text-xl font-bold transition-colors"
+              className="group hover:text-primary flex items-center justify-between text-2xl font-black tracking-tight transition-colors"
             >
               Contact Us
+              <ArrowRight className="h-5 w-5 -translate-x-4 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
             </Link>
           </nav>
 
-          <div className="border-border mt-auto space-y-4 border-t pt-6 pb-8">
+          <div className="border-border/50 mt-auto space-y-6 border-t pt-8 pb-4">
             <div className="flex items-center justify-between">
-              <span className="text-muted-foreground text-sm font-bold">
-                Appearance
-              </span>
+              <div className="flex flex-col">
+                <span className="text-sm font-bold">Theme</span>
+                <span className="text-muted-foreground text-[10px]">
+                  Switch between light and dark
+                </span>
+              </div>
               <ThemeToggle />
             </div>
-            <div className="grid grid-cols-1 gap-3">
+            <div className="flex flex-col gap-3">
               <Link href="/sign-in" onClick={() => setIsMobileMenuOpen(false)}>
                 <Button
                   variant="outline"
-                  className="h-12 w-full rounded-xl font-bold"
+                  className="h-14 w-full rounded-2xl border-2 font-bold transition-all active:scale-95"
                 >
                   Sign In
                 </Button>
               </Link>
               <Link href="/sign-up" onClick={() => setIsMobileMenuOpen(false)}>
-                <Button className="bg-brand-gradient shadow-primary/20 h-12 w-full rounded-xl border-0 font-bold text-white shadow-xl">
-                  Start Free Trial
+                <Button className="bg-brand-gradient shadow-primary/20 h-14 w-full rounded-2xl border-0 font-bold text-white shadow-xl transition-all active:scale-95">
+                  Get Started Free
                 </Button>
               </Link>
             </div>
