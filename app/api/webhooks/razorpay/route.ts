@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { db } from '@/lib/db/drizzle';
-import { invoices, organizations } from '@/lib/db/schema';
+import { invoices, organizations, activityLogs } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 
 export async function POST(req: Request) {
