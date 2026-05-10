@@ -178,7 +178,7 @@ function Header() {
 
       {/* Mobile Drawer - Optimized for Pro Dark/Light Themes */}
       <div
-        className={`border-border fixed inset-0 top-16 z-[999] border-t bg-white !opacity-100 transition-transform duration-500 lg:hidden dark:bg-[#050510] ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`bg-background border-border fixed inset-0 top-16 z-[999] border-t !opacity-100 transition-transform duration-500 lg:hidden ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
         <div className="flex h-[calc(100vh-64px)] flex-col p-8">
           <div className="text-muted-foreground/50 mb-4 text-[10px] font-black tracking-[0.2em] uppercase">
