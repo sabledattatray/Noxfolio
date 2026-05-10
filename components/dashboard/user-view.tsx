@@ -22,49 +22,24 @@ import {
   Calendar,
   CheckCircle2,
   FileText,
+  Coins,
 } from 'lucide-react';
 import { User } from '@/lib/db/schema';
 
-const stats = [
-  {
-    title: 'Monthly Revenue',
-    value: '$12,450',
-    change: '+12.5%',
-    trend: 'up',
-    icon: CreditCard,
-    color: 'text-blue-500',
-    bg: 'bg-blue-500/10',
-  },
-  {
-    title: 'Active Members',
-    value: '24',
-    change: '+3',
-    trend: 'up',
-    icon: Users,
-    color: 'text-purple-500',
-    bg: 'bg-purple-500/10',
-  },
-  {
-    title: 'API Requests',
-    value: '1.2M',
-    change: '+18.2%',
-    trend: 'up',
-    icon: Zap,
-    color: 'text-amber-500',
-    bg: 'bg-amber-500/10',
-  },
-  {
-    title: 'Success Rate',
-    value: '99.9%',
-    change: '0.0%',
-    trend: 'neutral',
-    icon: Activity,
-    color: 'text-emerald-500',
-    bg: 'bg-emerald-500/10',
-  },
-];
-
-export function DashboardUser({ user }: { user: User | null | undefined }) {
+export function DashboardUser({
+  user,
+}: {
+  user:
+    | (User & {
+        organization?: any;
+        stats?: {
+          memberCount: number;
+          recentActivities: any[];
+        };
+      })
+    | null
+    | undefined;
+}) {
   const [mounted, setMounted] = useState(false);
   const [chartData, setChartData] = useState<number[]>([]);
   const [showReportSuccess, setShowReportSuccess] = useState(false);
@@ -74,10 +49,51 @@ export function DashboardUser({ user }: { user: User | null | undefined }) {
     setChartData([...Array(12)].map(() => 40 + Math.random() * 60));
   }, []);
 
+  const stats = user?.stats;
+
+  const dynamicStats = [
+    {
+      title: 'Current Plan',
+      value: user?.organization?.planName || 'Free Trial',
+      change: 'Active',
+      trend: 'up',
+      icon: Shield,
+      color: 'text-blue-500',
+      bg: 'bg-blue-500/10',
+    },
+    {
+      title: 'Active Members',
+      value: stats?.memberCount?.toString() || '1',
+      change: 'Real-time',
+      trend: 'neutral',
+      icon: Users,
+      color: 'text-purple-500',
+      bg: 'bg-purple-500/10',
+    },
+    {
+      title: 'Monthly Usage',
+      value: stats?.recentActivities?.length?.toString() || '0',
+      change: 'Events',
+      trend: 'up',
+      icon: Zap,
+      color: 'text-amber-500',
+      bg: 'bg-amber-500/10',
+    },
+    {
+      title: 'Credits Left',
+      value: user?.organization?.balance?.toString() || '50',
+      change: 'Trial',
+      trend: 'neutral',
+      icon: Coins,
+      color: 'text-emerald-500',
+      bg: 'bg-emerald-500/10',
+    },
+  ];
+
   const handleDownloadReport = () => {
     const csvContent = [
       ['Metric', 'Value', 'Change'],
-      ...stats.map((s) => [s.title, s.value, s.change]),
+      ...dynamicStats.map((s) => [s.title, s.value, s.change]),
       ['Month', 'Usage Volume'],
       ...['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'].map(
         (m, i) => [m, `${Math.floor((chartData[i] || 40) * 10)}k`],
@@ -139,7 +155,7 @@ export function DashboardUser({ user }: { user: User | null | undefined }) {
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat, i) => (
+        {dynamicStats.map((stat, i) => (
           <Card
             key={i}
             className="group bg-card border-border/50 hover:border-primary/30 relative overflow-hidden shadow-sm transition-all duration-500"
@@ -167,7 +183,9 @@ export function DashboardUser({ user }: { user: User | null | undefined }) {
                   {stat.change}
                 </div>
                 <span className="text-muted-foreground text-[10px] font-bold tracking-widest uppercase opacity-60">
-                  vs last month
+                  {stat.title === 'Credits Left'
+                    ? 'Free Trial'
+                    : 'vs last month'}
                 </span>
               </div>
             </CardContent>
@@ -177,9 +195,54 @@ export function DashboardUser({ user }: { user: User | null | undefined }) {
 
       <div className="space-y-6">
         <h2 className="text-2xl font-bold tracking-tight">
-          AI Autonomous Insights
+          Live System Activity
         </h2>
-        <AIAgentsPanel />
+        <Card className="bg-card border-border/50 relative overflow-hidden rounded-[32px] shadow-sm">
+          <CardContent className="p-0">
+            <div className="divide-border/50 divide-y">
+              {user?.stats?.recentActivities &&
+              user.stats.recentActivities.length > 0 ? (
+                user.stats.recentActivities.map((activity, i) => (
+                  <div
+                    key={activity.id}
+                    className="hover:bg-muted/30 group flex items-center gap-4 p-6 transition-colors"
+                  >
+                    <div className="bg-primary/10 text-primary flex h-12 w-12 items-center justify-center rounded-2xl shadow-sm transition-transform group-hover:scale-110">
+                      <Activity className="h-5 w-5" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm font-black tracking-tight">
+                          {activity.action.replace(/_/g, ' ')}
+                        </p>
+                        <span className="text-muted-foreground text-[10px] font-bold uppercase italic">
+                          {new Date(activity.timestamp).toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
+                        </span>
+                      </div>
+                      <p className="text-muted-foreground text-xs font-medium">
+                        Triggered by{' '}
+                        <span className="text-foreground font-bold">
+                          {activity.userName || 'System'}
+                        </span>
+                      </p>
+                    </div>
+                    <div className="h-2 w-2 animate-pulse rounded-full bg-emerald-500/10 ring-4 ring-emerald-500/5" />
+                  </div>
+                ))
+              ) : (
+                <div className="flex flex-col items-center justify-center py-20 text-center">
+                  <Activity className="text-muted-foreground/20 mb-4 h-12 w-12" />
+                  <p className="text-muted-foreground text-sm font-bold">
+                    No recent activity detected.
+                  </p>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">

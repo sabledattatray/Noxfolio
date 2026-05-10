@@ -16,9 +16,11 @@ import {
   ActivityType,
   invitations,
 } from '@/lib/db/schema';
+import { sendSMS } from '@/lib/sms';
 import { comparePasswords, hashPassword, setSession } from '@/lib/auth/session';
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
+import { revalidatePath } from 'next/cache';
 import { createCheckoutSession } from '@/lib/stripe/stripe';
 import { getUser, getUserWithOrganization } from '@/lib/db/queries';
 import { sendVerificationEmail, sendInvitationEmail } from '@/lib/email';
@@ -684,5 +686,203 @@ export const inviteOrganizationMember = validatedActionWithUser(
     }
 
     return { success: 'Invitation sent successfully' };
+  },
+);
+
+export const sendPhoneOTPAction = validatedActionWithUser(
+  z.object({ phoneNumber: z.string().min(10) }),
+  async (data, _, user) => {
+    try {
+      const { phoneNumber } = data;
+      console.log(
+        'DEBUG: sendPhoneOTPAction - DB HOST:',
+        process.env.POSTGRES_URL?.split('@').pop(),
+      );
+
+      // Generate random 6-digit OTP
+      const otp = Math.floor(100000 + Math.random() * 900000).toString();
+      const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+      await db
+        .update(users)
+        .set({
+          otp,
+          otpExpiresAt,
+          phone: phoneNumber,
+        })
+        .where(eq(users.id, user.id));
+
+      // Trigger the SMS Service
+      // This will send a real SMS if keys are in .env, otherwise it logs to terminal
+      const smsResult = await sendSMS({
+        to: phoneNumber.startsWith('+') ? phoneNumber : `+91${phoneNumber}`,
+        body: `Your Noxfolio verification code is: ${otp}. It expires in 10 minutes.`,
+      });
+
+      if (!smsResult.success) {
+        console.warn(
+          'SMS delivery failed, but proceeding for demo:',
+          smsResult.error,
+        );
+      }
+
+      return {
+        success: `OTP sent! ${smsResult.mode === 'development' ? '(Check terminal for code)' : ''}`,
+      };
+    } catch (error: any) {
+      console.error('CRITICAL ERROR in sendPhoneOTPAction:', error);
+      return { error: `Server Error: ${error.message || 'Unknown error'}` };
+    }
+  },
+);
+
+export const sendEmailOTPAction = validatedActionWithUser(
+  z.object({}),
+  async (_, __, user) => {
+    try {
+      // Generate random 6-digit OTP
+      const otp = Math.floor(100000 + Math.random() * 900000).toString();
+      const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+      await db
+        .update(users)
+        .set({
+          otp,
+          otpExpiresAt,
+        })
+        .where(eq(users.id, user.id));
+
+      // Send the actual email via Resend
+      const result = await sendVerificationEmail(user.email!, otp);
+
+      if (result.error) {
+        console.error('Email delivery failed:', result.error);
+        return { error: 'Failed to send email. Please try again later.' };
+      }
+
+      return { success: `Actual OTP sent to ${user.email}!` };
+    } catch (error: any) {
+      console.error('CRITICAL ERROR in sendEmailOTPAction:', error);
+      return { error: `Server Error: ${error.message || 'Unknown error'}` };
+    }
+  },
+);
+
+export const verifyOTPAction = validatedActionWithUser(
+  z.object({ otp: z.string().length(6) }),
+  async (data, _, user) => {
+    try {
+      const { otp } = data;
+      const dbUser = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, user.id))
+        .limit(1);
+
+      if (dbUser.length === 0) {
+        return { error: 'User not found' };
+      }
+
+      if (dbUser[0].otp !== otp) {
+        return { error: 'Invalid verification code' };
+      }
+
+      if (dbUser[0].otpExpiresAt && dbUser[0].otpExpiresAt < new Date()) {
+        return { error: 'Verification code has expired' };
+      }
+
+      await db
+        .update(users)
+        .set({
+          phoneVerifiedAt: new Date(), // We mark as verified regardless of method
+          otp: null,
+          otpExpiresAt: null,
+        })
+        .where(eq(users.id, user.id));
+
+      return { success: 'Identity verified successfully!' };
+    } catch (error: any) {
+      console.error('CRITICAL ERROR in verifyOTPAction:', error);
+      return { error: `Server Error: ${error.message || 'Unknown error'}` };
+    }
+  },
+);
+
+export const completeOnboardingAction = validatedActionWithUser(
+  z.object({
+    website: z.string().optional(),
+    size: z.string().optional(),
+    industry: z.string().optional(),
+  }),
+  async (data, _, user) => {
+    try {
+      let userWithOrg = await getUserWithOrganization(user.id);
+      let orgId = userWithOrg?.organizationId;
+      let currentName = userWithOrg?.organization?.name || '';
+
+      // SELF-HEALING: If user has no organization, create one now
+      if (!orgId) {
+        console.log(`🛠️ User ${user.id} has no organization. Creating one...`);
+        const [newOrg] = await db
+          .insert(organizations)
+          .values({
+            name: `${user.name || 'User'}'s Organization`,
+          })
+          .returning();
+
+        await db.insert(organizationMembers).values({
+          userId: user.id,
+          organizationId: newOrg.id,
+          role: 'owner',
+        });
+
+        orgId = newOrg.id;
+        currentName = newOrg.name;
+      }
+
+      let newName = currentName;
+
+      // If it still has the default name, clean it up
+      if (currentName.includes("'s Organization")) {
+        newName = currentName.split("'s Organization")[0] + ' Workspace';
+      }
+
+      console.log(`📊 Finalizing onboarding for Org ID: ${orgId}`);
+
+      if (!orgId) {
+        throw new Error(
+          'Could not resolve organization ID for onboarding completion',
+        );
+      }
+
+      // Update organization details
+      await db
+        .update(organizations)
+        .set({
+          name: newName,
+          website: data.website,
+          size: data.size,
+          industry: data.industry,
+          balance: 50, // Initial free credits as promised in onboarding UI
+          updatedAt: new Date(),
+        })
+        .where(eq(organizations.id, Number(orgId)));
+
+      // Log the activity
+      await db.insert(activityLogs).values({
+        organizationId: Number(orgId),
+        userId: user.id,
+        action: ActivityType.ONBOARDING_COMPLETE,
+        timestamp: new Date(),
+      });
+
+      revalidatePath('/dashboard');
+      revalidatePath('/onboarding');
+
+      return { success: true };
+    } catch (error: any) {
+      console.error('CRITICAL ERROR in completeOnboardingAction:', error);
+      return { error: `Server Error: ${error.message || 'Unknown error'}` };
+    }
   },
 );

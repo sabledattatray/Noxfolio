@@ -39,3 +39,10 @@ next-env.d.ts
 # Docker
 postgres_data/
 .env*.local
+
+# Scratch
+scratch/
+*.ts-debug
+inspect-orgs.ts
+test-update.ts
+check-members.ts

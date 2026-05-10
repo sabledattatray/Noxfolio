@@ -14,7 +14,8 @@ export default async function DashboardLayout({
   const org = await getOrganizationForUser();
 
   // Enforce onboarding for new/unconfigured organizations
-  if (!org || org.name.includes("'s Organization") || !org.name) {
+  // We check for website because it's a required field in our new onboarding flow
+  if (!org || !org.website) {
     redirect('/onboarding');
   }
 

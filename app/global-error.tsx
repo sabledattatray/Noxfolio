@@ -27,7 +27,13 @@ export default function GlobalError({
             {error.message}
           </div>
           <button
-            onClick={() => reset()}
+            onClick={() => {
+              if (typeof reset === 'function') {
+                reset();
+              } else {
+                window.location.reload();
+              }
+            }}
             className="h-12 w-full rounded-xl bg-black font-bold text-white transition-transform active:scale-95"
           >
             Try Again

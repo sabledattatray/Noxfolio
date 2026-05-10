@@ -1,4 +1,4 @@
-import { desc, and, eq, isNull } from 'drizzle-orm';
+import { desc, and, eq, isNull, count } from 'drizzle-orm';
 import { db } from './drizzle';
 import {
   activityLogs,
@@ -200,4 +200,39 @@ export async function createApiKey(name: string) {
   });
 
   return key;
+}
+export async function getDashboardStats() {
+  const user = await getUser();
+  if (!user) return null;
+
+  const org = await getOrganizationForUser();
+  if (!org) return null;
+
+  // 1. Get Member Count
+  const membersResult = await db
+    .select({ count: count() })
+    .from(organizationMembers)
+    .where(eq(organizationMembers.organizationId, org.id));
+
+  const memberCount = Number(membersResult[0]?.count || 0);
+
+  // 2. Get Recent Activities
+  const recentActivities = await db
+    .select({
+      id: activityLogs.id,
+      action: activityLogs.action,
+      timestamp: activityLogs.timestamp,
+      userName: users.name,
+    })
+    .from(activityLogs)
+    .leftJoin(users, eq(activityLogs.userId, users.id))
+    .where(eq(activityLogs.organizationId, org.id))
+    .orderBy(desc(activityLogs.timestamp))
+    .limit(5);
+
+  return {
+    memberCount,
+    recentActivities,
+    organization: org,
+  };
 }

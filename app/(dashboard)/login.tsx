@@ -47,6 +47,9 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
   return (
     <GoogleOAuthProvider
       clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ''}
+      onScriptLoadError={() =>
+        console.error('Google Sign-In Script failed to load')
+      }
     >
       <div className="bg-background flex min-h-[calc(100vh-64px)] flex-col md:flex-row">
         {/* Left Column: Branding & Features (Visible on Desktop) */}
@@ -149,6 +152,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                 <div className="border-border bg-card hover:bg-accent/50 group relative flex h-12 cursor-pointer items-center justify-center rounded-2xl border transition-all">
                   <div className="absolute inset-0 z-10">
                     <GoogleLogin
+                      use_fedcm_for_prompt={true}
                       onSuccess={async (credentialResponse) => {
                         if (credentialResponse.credential) {
                           const result = await googleSignInAction(
@@ -162,7 +166,12 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                           }
                         }
                       }}
-                      onError={() => alert('Google Login Failed')}
+                      onError={() => {
+                        // Silent fail for abort errors to clean up console
+                        console.debug(
+                          'Google Sign-In prompt dismissed or aborted',
+                        );
+                      }}
                       useOneTap
                       theme="outline"
                       shape="pill"

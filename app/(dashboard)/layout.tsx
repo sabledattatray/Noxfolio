@@ -17,6 +17,13 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 function UserActions() {
   const { data: user } = useSWR<User>('/api/user', fetcher);
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return <div className="h-9 w-40" />;
 
   return (
     <div className="flex items-center gap-6">
@@ -24,7 +31,7 @@ function UserActions() {
         href={user ? '/dashboard' : '/sign-in'}
         className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors"
       >
-        Sign In
+        {user ? 'Dashboard' : 'Sign In'}
       </Link>
       <Link href="/#overview">
         <Button
@@ -123,10 +130,18 @@ function Header() {
             </nav>
           </div>
 
-          <div className="flex items-center gap-4 lg:gap-6">
-            <div className="hidden sm:block">
-              <ThemeToggle />
-            </div>
+          <div className="flex items-center gap-2 sm:gap-4 lg:gap-6">
+            <ThemeToggle />
+
+            {/* Mobile Start Free Trial Button */}
+            <Link href="/sign-up" className="lg:hidden">
+              <Button
+                size="sm"
+                className="bg-brand-gradient shadow-primary/20 h-9 rounded-full border-0 px-4 text-xs font-bold text-white shadow-lg transition-all active:scale-95"
+              >
+                Free Trial
+              </Button>
+            </Link>
 
             <div className="hidden lg:block">
               <Suspense
@@ -235,31 +250,20 @@ function Header() {
             </Link>
           </nav>
 
-          <div className="border-border/50 mt-auto space-y-6 border-t pt-8 pb-4">
-            <div className="flex items-center justify-between">
-              <div className="flex flex-col">
-                <span className="text-sm font-bold">Theme</span>
-                <span className="text-muted-foreground text-[10px]">
-                  Switch between light and dark
-                </span>
-              </div>
-              <ThemeToggle />
-            </div>
-            <div className="flex flex-col gap-3">
-              <Link href="/sign-in" onClick={() => setIsMobileMenuOpen(false)}>
-                <Button
-                  variant="outline"
-                  className="h-14 w-full rounded-2xl border-2 font-bold transition-all active:scale-95"
-                >
-                  Sign In
-                </Button>
-              </Link>
-              <Link href="/sign-up" onClick={() => setIsMobileMenuOpen(false)}>
-                <Button className="bg-brand-gradient shadow-primary/20 h-14 w-full rounded-2xl border-0 font-bold text-white shadow-xl transition-all active:scale-95">
-                  Get Started Free
-                </Button>
-              </Link>
-            </div>
+          <div className="flex flex-col gap-3">
+            <Link href="/sign-in" onClick={() => setIsMobileMenuOpen(false)}>
+              <Button
+                variant="outline"
+                className="h-14 w-full rounded-2xl border-2 font-bold transition-all active:scale-95"
+              >
+                Sign In
+              </Button>
+            </Link>
+            <Link href="/sign-up" onClick={() => setIsMobileMenuOpen(false)}>
+              <Button className="bg-brand-gradient shadow-primary/20 h-14 w-full rounded-2xl border-0 font-bold text-white shadow-xl transition-all active:scale-95">
+                Get Started Free
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

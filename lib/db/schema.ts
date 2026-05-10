@@ -21,6 +21,8 @@ export const users = pgTable('users', {
   emailVerifiedAt: timestamp('email_verified_at'),
   otp: varchar('otp', { length: 6 }),
   otpExpiresAt: timestamp('otp_expires_at'),
+  phone: varchar('phone', { length: 20 }),
+  phoneVerifiedAt: timestamp('phone_verified_at'),
   image: text('image'),
 });
 
@@ -41,10 +43,13 @@ export const organizations = pgTable('organizations', {
     primaryColor: '#000000',
     accentColor: '#f4f4f5',
     font: 'Inter',
-    darkMode: true
+    darkMode: true,
   }),
   installedApps: jsonb('installed_apps').default([]),
   customDomain: varchar('custom_domain', { length: 255 }).unique(),
+  website: varchar('website', { length: 255 }),
+  size: varchar('size', { length: 50 }),
+  industry: varchar('industry', { length: 50 }),
   balance: integer('balance').default(0),
 });
 
@@ -258,16 +263,19 @@ export const invitationsRelations = relations(invitations, ({ one }) => ({
   }),
 }));
 
-export const organizationMembersRelations = relations(organizationMembers, ({ one }) => ({
-  user: one(users, {
-    fields: [organizationMembers.userId],
-    references: [users.id],
+export const organizationMembersRelations = relations(
+  organizationMembers,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [organizationMembers.userId],
+      references: [users.id],
+    }),
+    organization: one(organizations, {
+      fields: [organizationMembers.organizationId],
+      references: [organizations.id],
+    }),
   }),
-  organization: one(organizations, {
-    fields: [organizationMembers.organizationId],
-    references: [organizations.id],
-  }),
-}));
+);
 
 export const activityLogsRelations = relations(activityLogs, ({ one }) => ({
   organization: one(organizations, {
@@ -328,4 +336,5 @@ export enum ActivityType {
   REMOVE_ORGANIZATION_MEMBER = 'REMOVE_ORGANIZATION_MEMBER',
   INVITE_ORGANIZATION_MEMBER = 'INVITE_ORGANIZATION_MEMBER',
   ACCEPT_INVITATION = 'ACCEPT_INVITATION',
+  ONBOARDING_COMPLETE = 'ONBOARDING_COMPLETE',
 }
