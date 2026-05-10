@@ -49,6 +49,7 @@ function UserActions() {
 
 function Header() {
   const [mounted, setMounted] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -119,15 +120,124 @@ function Header() {
           </nav>
         </div>
 
-        <div className="flex items-center gap-6">
-          <ThemeToggle />
-          <Suspense
-            fallback={
-              <div className="bg-muted h-9 w-40 animate-pulse rounded-full" />
-            }
+        <div className="flex items-center gap-4 lg:gap-6">
+          <div className="hidden sm:block">
+            <ThemeToggle />
+          </div>
+
+          <div className="hidden lg:block">
+            <Suspense
+              fallback={
+                <div className="bg-muted h-9 w-40 animate-pulse rounded-full" />
+              }
+            >
+              <UserActions />
+            </Suspense>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="bg-muted/50 text-foreground hover:bg-muted rounded-xl p-2 transition-all lg:hidden"
+            aria-label="Toggle menu"
           >
-            <UserActions />
-          </Suspense>
+            {isMobileMenuOpen ? (
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            ) : (
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Drawer */}
+      <div
+        className={`bg-background/95 fixed inset-0 top-16 z-40 backdrop-blur-xl transition-all duration-500 lg:hidden ${isMobileMenuOpen ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}`}
+      >
+        <div className="flex h-full flex-col space-y-8 overflow-y-auto p-8">
+          <nav className="flex flex-col space-y-6">
+            <Link
+              href="/features"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="hover:text-primary text-2xl font-bold transition-colors"
+            >
+              Features
+            </Link>
+            <Link
+              href="/industries"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="hover:text-primary text-2xl font-bold transition-colors"
+            >
+              Industries
+            </Link>
+            <Link
+              href="/pricing"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="hover:text-primary text-2xl font-bold transition-colors"
+            >
+              Pricing
+            </Link>
+            <Link
+              href="/pricing-calculator"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="hover:text-primary text-2xl font-bold transition-colors"
+            >
+              Pricing Calculator
+            </Link>
+            <Link
+              href="/contact"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="hover:text-primary text-2xl font-bold transition-colors"
+            >
+              Contact Us
+            </Link>
+          </nav>
+
+          <div className="border-border flex flex-col gap-4 border-t pt-8">
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground font-bold">
+                Appearance
+              </span>
+              <ThemeToggle />
+            </div>
+            <Link href="/sign-in" onClick={() => setIsMobileMenuOpen(false)}>
+              <Button
+                variant="outline"
+                className="h-14 w-full rounded-2xl font-bold"
+              >
+                Sign In
+              </Button>
+            </Link>
+            <Link href="/sign-up" onClick={() => setIsMobileMenuOpen(false)}>
+              <Button className="bg-brand-gradient shadow-primary/20 h-14 w-full rounded-2xl border-0 font-bold text-white shadow-xl">
+                Start Free Trial
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     </header>
