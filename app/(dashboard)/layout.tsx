@@ -176,67 +176,69 @@ function Header() {
 
       {/* Mobile Drawer */}
       <div
-        className={`bg-background/95 fixed inset-0 top-16 z-40 backdrop-blur-xl transition-all duration-500 lg:hidden ${isMobileMenuOpen ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}`}
+        className={`bg-background/98 fixed inset-0 top-16 z-40 backdrop-blur-2xl transition-all duration-500 lg:hidden ${isMobileMenuOpen ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}`}
       >
-        <div className="flex h-full flex-col space-y-8 overflow-y-auto p-8">
-          <nav className="flex flex-col space-y-6">
+        <div className="flex h-[calc(100vh-64px)] flex-col p-6">
+          <nav className="flex flex-col space-y-4 pt-4">
             <Link
               href="/features"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="hover:text-primary text-2xl font-bold transition-colors"
+              className="hover:text-primary text-xl font-bold transition-colors"
             >
               Features
             </Link>
             <Link
               href="/industries"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="hover:text-primary text-2xl font-bold transition-colors"
+              className="hover:text-primary text-xl font-bold transition-colors"
             >
               Industries
             </Link>
             <Link
               href="/pricing"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="hover:text-primary text-2xl font-bold transition-colors"
+              className="hover:text-primary text-xl font-bold transition-colors"
             >
               Pricing
             </Link>
             <Link
               href="/pricing-calculator"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="hover:text-primary text-2xl font-bold transition-colors"
+              className="hover:text-primary text-xl font-bold transition-colors"
             >
               Pricing Calculator
             </Link>
             <Link
               href="/contact"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="hover:text-primary text-2xl font-bold transition-colors"
+              className="hover:text-primary text-xl font-bold transition-colors"
             >
               Contact Us
             </Link>
           </nav>
 
-          <div className="border-border flex flex-col gap-4 border-t pt-8">
+          <div className="border-border mt-auto space-y-4 border-t pt-6 pb-8">
             <div className="flex items-center justify-between">
-              <span className="text-muted-foreground font-bold">
+              <span className="text-muted-foreground text-sm font-bold">
                 Appearance
               </span>
               <ThemeToggle />
             </div>
-            <Link href="/sign-in" onClick={() => setIsMobileMenuOpen(false)}>
-              <Button
-                variant="outline"
-                className="h-14 w-full rounded-2xl font-bold"
-              >
-                Sign In
-              </Button>
-            </Link>
-            <Link href="/sign-up" onClick={() => setIsMobileMenuOpen(false)}>
-              <Button className="bg-brand-gradient shadow-primary/20 h-14 w-full rounded-2xl border-0 font-bold text-white shadow-xl">
-                Start Free Trial
-              </Button>
-            </Link>
+            <div className="grid grid-cols-1 gap-3">
+              <Link href="/sign-in" onClick={() => setIsMobileMenuOpen(false)}>
+                <Button
+                  variant="outline"
+                  className="h-12 w-full rounded-xl font-bold"
+                >
+                  Sign In
+                </Button>
+              </Link>
+              <Link href="/sign-up" onClick={() => setIsMobileMenuOpen(false)}>
+                <Button className="bg-brand-gradient shadow-primary/20 h-12 w-full rounded-xl border-0 font-bold text-white shadow-xl">
+                  Start Free Trial
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
