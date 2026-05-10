@@ -180,11 +180,11 @@ export function IntegrationMarquee() {
                 >
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white p-2 shadow-inner transition-transform duration-500 group-hover/logo:scale-110">
                     <img
-                      src={`https://unavatar.io/google/${item.domain}`}
+                      src={`https://www.google.com/s2/favicons?domain=${item.domain}&sz=128`}
                       alt={item.name}
                       className="h-full w-full object-contain"
                       onError={(e: any) => {
-                        e.target.src = `https://ui-avatars.com/api/?name=${item.name}&background=random`;
+                        e.target.src = `https://ui-avatars.com/api/?name=${item.name}&background=ED0600&color=fff&bold=true`;
                       }}
                     />
                   </div>
@@ -209,11 +209,11 @@ export function IntegrationMarquee() {
                 >
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white p-2 shadow-inner transition-transform duration-500 group-hover/logo:scale-110">
                     <img
-                      src={`https://unavatar.io/google/${item.domain}`}
+                      src={`https://www.google.com/s2/favicons?domain=${item.domain}&sz=128`}
                       alt={item.name}
                       className="h-full w-full object-contain"
                       onError={(e: any) => {
-                        e.target.src = `https://ui-avatars.com/api/?name=${item.name}&background=random`;
+                        e.target.src = `https://ui-avatars.com/api/?name=${item.name}&background=ED0600&color=fff&bold=true`;
                       }}
                     />
                   </div>
