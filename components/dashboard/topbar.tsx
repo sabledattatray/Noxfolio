@@ -1,8 +1,17 @@
 'use client';
- 
+
 import { useState, useEffect } from 'react';
 
-import { Search, Bell, Command, Settings, LogOut, User, Shield, CreditCard } from 'lucide-react';
+import {
+  Search,
+  Bell,
+  Command,
+  Settings,
+  LogOut,
+  User,
+  Shield,
+  CreditCard,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -15,7 +24,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
-import { signOut } from '@/app/(login)/actions';
+import { signOut } from '@/app/(dashboard)/actions';
 import { useRouter } from 'next/navigation';
 import useSWR from 'swr';
 import { User as DBUser } from '@/lib/db/schema';
@@ -39,16 +48,16 @@ export function Topbar() {
   }
 
   return (
-    <header className="h-16 border-b border-border bg-card/50 backdrop-blur-xl sticky top-0 z-30 flex items-center justify-between px-8">
-      <div className="flex items-center gap-4 flex-1 max-w-xl">
-        <div className="relative w-full group">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground transition-colors group-focus-within:text-primary" />
-          <Input 
-            placeholder="Search anything... (⌘K)" 
-            className="pl-10 pr-12 h-10 bg-accent/50 border-transparent focus-visible:bg-background transition-all duration-200 rounded-xl"
+    <header className="border-border bg-card/50 sticky top-0 z-30 flex h-16 items-center justify-between border-b px-8 backdrop-blur-xl">
+      <div className="flex max-w-xl flex-1 items-center gap-4">
+        <div className="group relative w-full">
+          <Search className="text-muted-foreground group-focus-within:text-primary absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transition-colors" />
+          <Input
+            placeholder="Search anything... (⌘K)"
+            className="bg-accent/50 focus-visible:bg-background h-10 rounded-xl border-transparent pr-12 pl-10 transition-all duration-200"
           />
-          <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
-            <kbd className="pointer-events-none hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
+          <div className="absolute top-1/2 right-3 flex -translate-y-1/2 items-center gap-1">
+            <kbd className="bg-muted pointer-events-none hidden h-5 items-center gap-1 rounded border px-1.5 font-mono text-[10px] font-medium opacity-100 select-none sm:flex">
               <span className="text-xs">⌘</span>K
             </kbd>
           </div>
@@ -59,76 +68,124 @@ export function Topbar() {
         {mounted ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="relative rounded-xl text-muted-foreground hover:text-foreground">
-                <Bell className="w-5 h-5" />
-                <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-primary rounded-full border-2 border-card" />
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-muted-foreground hover:text-foreground relative rounded-xl"
+              >
+                <Bell className="h-5 w-5" />
+                <span className="bg-primary border-card absolute top-2.5 right-2.5 h-2 w-2 rounded-full border-2" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-80 p-2 rounded-2xl border-border/50 backdrop-blur-xl bg-card/80">
-              <DropdownMenuLabel className="px-2 py-1.5 text-xs font-bold uppercase tracking-wider text-muted-foreground">Notifications</DropdownMenuLabel>
+            <DropdownMenuContent
+              align="end"
+              className="border-border/50 bg-card/80 w-80 rounded-2xl p-2 backdrop-blur-xl"
+            >
+              <DropdownMenuLabel className="text-muted-foreground px-2 py-1.5 text-xs font-bold tracking-wider uppercase">
+                Notifications
+              </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <div className="py-8 text-center space-y-2">
-                <Bell className="w-8 h-8 text-muted-foreground/20 mx-auto" />
-                <p className="text-sm text-muted-foreground">No new notifications</p>
+              <div className="space-y-2 py-8 text-center">
+                <Bell className="text-muted-foreground/20 mx-auto h-8 w-8" />
+                <p className="text-muted-foreground text-sm">
+                  No new notifications
+                </p>
               </div>
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <Button variant="ghost" size="icon" className="relative rounded-xl text-muted-foreground">
-            <Bell className="w-5 h-5" />
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-muted-foreground relative rounded-xl"
+          >
+            <Bell className="h-5 w-5" />
           </Button>
         )}
 
-        <Button variant="ghost" size="icon" className="rounded-xl text-muted-foreground hover:text-foreground" asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-muted-foreground hover:text-foreground rounded-xl"
+          asChild
+        >
           <Link href="/dashboard/settings">
-            <Settings className="w-5 h-5" />
+            <Settings className="h-5 w-5" />
           </Link>
         </Button>
-
-
 
         {mounted ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="pl-1 pr-3 py-1 h-10 rounded-xl hover:bg-accent/50 flex items-center gap-2">
-                <Avatar className="w-8 h-8 rounded-lg shadow-inner">
+              <Button
+                variant="ghost"
+                className="hover:bg-accent/50 flex h-10 items-center gap-2 rounded-xl py-1 pr-3 pl-1"
+              >
+                <Avatar className="h-8 w-8 rounded-lg shadow-inner">
                   <AvatarImage src={user?.image || ''} />
-                  <AvatarFallback className="bg-gradient-to-tr from-primary to-primary/60 text-primary-foreground font-bold text-xs uppercase">
-                    {user?.name?.substring(0, 2) || user?.email?.substring(0, 2) || 'JD'}
+                  <AvatarFallback className="from-primary to-primary/60 text-primary-foreground bg-gradient-to-tr text-xs font-bold uppercase">
+                    {user?.name?.substring(0, 2) ||
+                      user?.email?.substring(0, 2) ||
+                      'JD'}
                   </AvatarFallback>
                 </Avatar>
-                <div className="flex flex-col items-start text-xs text-left">
-                  <span className="font-semibold text-foreground truncate max-w-[100px]">
+                <div className="flex flex-col items-start text-left text-xs">
+                  <span className="text-foreground max-w-[100px] truncate font-semibold">
                     {user?.name || user?.email?.split('@')[0] || 'John Doe'}
                   </span>
-                  <span className="text-muted-foreground capitalize">{user?.role || 'Admin'}</span>
+                  <span className="text-muted-foreground capitalize">
+                    {user?.role || 'Admin'}
+                  </span>
                 </div>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 p-2 rounded-2xl border-border/50 backdrop-blur-xl bg-card/80">
-              <DropdownMenuLabel className="px-2 py-1.5 text-xs font-bold uppercase tracking-wider text-muted-foreground">My Account</DropdownMenuLabel>
+            <DropdownMenuContent
+              align="end"
+              className="border-border/50 bg-card/80 w-56 rounded-2xl p-2 backdrop-blur-xl"
+            >
+              <DropdownMenuLabel className="text-muted-foreground px-2 py-1.5 text-xs font-bold tracking-wider uppercase">
+                My Account
+              </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="rounded-xl cursor-pointer py-2" asChild>
-                <Link href="/dashboard/settings" className="flex w-full items-center">
+              <DropdownMenuItem
+                className="cursor-pointer rounded-xl py-2"
+                asChild
+              >
+                <Link
+                  href="/dashboard/settings"
+                  className="flex w-full items-center"
+                >
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="rounded-xl cursor-pointer py-2" asChild>
-                <Link href="/dashboard/organization" className="flex w-full items-center">
+              <DropdownMenuItem
+                className="cursor-pointer rounded-xl py-2"
+                asChild
+              >
+                <Link
+                  href="/dashboard/organization"
+                  className="flex w-full items-center"
+                >
                   <Shield className="mr-2 h-4 w-4" />
                   <span>Organization</span>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="rounded-xl cursor-pointer py-2" asChild>
-                <Link href="/dashboard/billing" className="flex w-full items-center">
+              <DropdownMenuItem
+                className="cursor-pointer rounded-xl py-2"
+                asChild
+              >
+                <Link
+                  href="/dashboard/billing"
+                  className="flex w-full items-center"
+                >
                   <CreditCard className="mr-2 h-4 w-4" />
                   <span>Billing</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem 
-                className="rounded-xl cursor-pointer py-2 text-destructive focus:text-destructive focus:bg-destructive/10"
+              <DropdownMenuItem
+                className="text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer rounded-xl py-2"
                 onClick={handleSignOut}
               >
                 <LogOut className="mr-2 h-4 w-4" />
@@ -137,7 +194,7 @@ export function Topbar() {
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <div className="w-10 h-10 rounded-xl bg-accent animate-pulse" />
+          <div className="bg-accent h-10 w-10 animate-pulse rounded-xl" />
         )}
       </div>
     </header>

@@ -21,7 +21,7 @@ import {
   Zap,
   Puzzle,
 } from 'lucide-react';
-import { signOut } from '@/app/(login)/actions';
+import { signOut } from '@/app/(dashboard)/actions';
 import { useRouter } from 'next/navigation';
 
 const sidebarItems = [
@@ -48,24 +48,35 @@ export function Sidebar({ className }: { className?: string }) {
   return (
     <aside
       className={cn(
-        'relative flex flex-col border-r border-border bg-card transition-all duration-300 ease-in-out h-screen sticky top-0',
+        'border-border bg-card relative sticky top-0 flex h-screen flex-col border-r transition-all duration-300 ease-in-out',
         isCollapsed ? 'w-[80px]' : 'w-[280px]',
-        className
+        className,
       )}
     >
-      <div className="p-6 flex items-center justify-between">
+      <div className="flex items-center justify-between p-6">
         {!isCollapsed && (
-          <Link href="/dashboard" className="flex items-center gap-1 font-bold text-xl tracking-tight">
-            <img src="/logo.svg" alt="Noxfolio Logo" className="w-10 h-10 rounded-lg" />
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-1 text-xl font-bold tracking-tight"
+          >
+            <img
+              src="/logo.svg"
+              alt="Noxfolio Logo"
+              className="h-10 w-10 rounded-lg"
+            />
             <span>Noxfolio</span>
           </Link>
         )}
         {isCollapsed && (
-          <img src="/logo.svg" alt="Noxfolio Logo" className="w-10 h-10 rounded-lg mx-auto" />
+          <img
+            src="/logo.svg"
+            alt="Noxfolio Logo"
+            className="mx-auto h-10 w-10 rounded-lg"
+          />
         )}
       </div>
 
-      <div className="flex-1 px-4 space-y-2">
+      <div className="flex-1 space-y-2 px-4">
         {sidebarItems.map((item) => {
           const isActive = pathname === item.href;
           return (
@@ -73,48 +84,58 @@ export function Sidebar({ className }: { className?: string }) {
               <Button
                 variant="ghost"
                 className={cn(
-                  'w-full justify-start gap-4 h-11 px-4 rounded-xl transition-all duration-300 group relative overflow-hidden',
-                  isActive 
-                    ? 'bg-primary/10 text-primary shadow-inner' 
+                  'group relative h-11 w-full justify-start gap-4 overflow-hidden rounded-xl px-4 transition-all duration-300',
+                  isActive
+                    ? 'bg-primary/10 text-primary shadow-inner'
                     : 'text-muted-foreground hover:text-foreground hover:bg-accent/50',
-                  isCollapsed && 'justify-center px-0'
+                  isCollapsed && 'justify-center px-0',
                 )}
               >
                 {isActive && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-full animate-in slide-in-from-left-full duration-500" />
+                  <div className="bg-primary animate-in slide-in-from-left-full absolute top-1/2 left-0 h-6 w-1 -translate-y-1/2 rounded-r-full duration-500" />
                 )}
-                <item.icon className={cn(
-                  'w-5 h-5 transition-all duration-300',
-                  !isActive && 'group-hover:scale-110 group-hover:rotate-3',
-                  isActive && 'scale-110'
-                )} />
-                {!isCollapsed && <span className="font-medium tracking-tight">{item.label}</span>}
+                <item.icon
+                  className={cn(
+                    'h-5 w-5 transition-all duration-300',
+                    !isActive && 'group-hover:scale-110 group-hover:rotate-3',
+                    isActive && 'scale-110',
+                  )}
+                />
+                {!isCollapsed && (
+                  <span className="font-medium tracking-tight">
+                    {item.label}
+                  </span>
+                )}
               </Button>
             </Link>
           );
         })}
       </div>
 
-      <div className="p-4 border-t border-border mt-auto space-y-2">
+      <div className="border-border mt-auto space-y-2 border-t p-4">
         <Button
           variant="ghost"
           onClick={handleSignOut}
           className={cn(
-            'w-full justify-start gap-4 h-11 px-4 rounded-xl text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200',
-            isCollapsed && 'justify-center px-0'
+            'text-muted-foreground hover:text-destructive hover:bg-destructive/10 h-11 w-full justify-start gap-4 rounded-xl px-4 transition-all duration-200',
+            isCollapsed && 'justify-center px-0',
           )}
         >
-          <LogOut className="w-5 h-5" />
+          <LogOut className="h-5 w-5" />
           {!isCollapsed && <span className="font-medium">Sign Out</span>}
         </Button>
-        
+
         <Button
           variant="ghost"
           size="icon"
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="absolute -right-3 top-20 w-6 h-6 rounded-full border border-border bg-background shadow-sm hover:bg-accent hidden lg:flex items-center justify-center"
+          className="border-border bg-background hover:bg-accent absolute top-20 -right-3 hidden h-6 w-6 items-center justify-center rounded-full border shadow-sm lg:flex"
         >
-          {isCollapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
+          {isCollapsed ? (
+            <ChevronRight className="h-3 w-3" />
+          ) : (
+            <ChevronLeft className="h-3 w-3" />
+          )}
         </Button>
       </div>
     </aside>

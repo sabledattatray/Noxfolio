@@ -14,24 +14,27 @@ import {
   type NewOrganizationMember,
   type NewActivityLog,
   ActivityType,
-  invitations
+  invitations,
 } from '@/lib/db/schema';
 import { comparePasswords, hashPassword, setSession } from '@/lib/auth/session';
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { createCheckoutSession } from '@/lib/stripe/stripe';
 import { getUser, getUserWithOrganization } from '@/lib/db/queries';
-import { sendVerificationEmail } from '@/lib/email';
+import { sendVerificationEmail, sendInvitationEmail } from '@/lib/email';
 import {
   validatedAction,
-  validatedActionWithUser
+  validatedActionWithUser,
 } from '@/lib/auth/middleware';
 import { OAuth2Client } from 'google-auth-library';
 import crypto from 'crypto';
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-export async function googleSignInAction(credential: string, redirectPath?: string) {
+export async function googleSignInAction(
+  credential: string,
+  redirectPath?: string,
+) {
   console.log('DEBUG: googleSignInAction triggered');
   console.log('DEBUG: DB URL:', process.env.POSTGRES_URL?.split('@').pop()); // Log only host/db part for safety
   try {
@@ -51,33 +54,38 @@ export async function googleSignInAction(credential: string, redirectPath?: stri
       .from(users)
       .where(eq(users.email, email))
       .limit(1);
-    
+
     let user = existingUser[0];
 
     if (!user) {
-      const passwordHash = await hashPassword(crypto.randomBytes(32).toString('hex'));
+      const passwordHash = await hashPassword(
+        crypto.randomBytes(32).toString('hex'),
+      );
       const newUser: NewUser = {
         email,
         name: name || '',
         image: picture || '',
         passwordHash,
         role: 'user',
-        emailVerifiedAt: new Date()
+        emailVerifiedAt: new Date(),
       };
-      
+
       const [createdUser] = await db.insert(users).values(newUser).returning();
       user = createdUser;
 
       const newOrganization: NewOrganization = {
-        name: `${name || email}'s Organization`
+        name: `${name || email}'s Organization`,
       };
 
-      const [createdOrganization] = await db.insert(organizations).values(newOrganization).returning();
+      const [createdOrganization] = await db
+        .insert(organizations)
+        .values(newOrganization)
+        .returning();
 
       const newOrganizationMember: NewOrganizationMember = {
         userId: user.id,
         organizationId: createdOrganization.id,
-        role: 'owner'
+        role: 'owner',
       };
 
       await Promise.all([
@@ -95,14 +103,20 @@ export async function googleSignInAction(credential: string, redirectPath?: stri
         user = updatedUser;
       }
       const userWithOrg = await getUserWithOrganization(user.id);
-      await logActivity(userWithOrg?.organizationId, user.id, ActivityType.SIGN_IN);
+      await logActivity(
+        userWithOrg?.organizationId,
+        user.id,
+        ActivityType.SIGN_IN,
+      );
     }
 
     await setSession(user);
   } catch (error: any) {
     if (error.digest?.startsWith('NEXT_REDIRECT')) throw error;
     console.error('CRITICAL GOOGLE AUTH ERROR:', error);
-    return { error: `Authentication failed: ${error.message || 'Unknown server error'}` };
+    return {
+      error: `Authentication failed: ${error.message || 'Unknown server error'}`,
+    };
   }
 
   if (redirectPath) {
@@ -116,7 +130,7 @@ async function logActivity(
   organizationId: number | null | undefined,
   userId: number,
   type: ActivityType,
-  ipAddress?: string
+  ipAddress?: string,
 ) {
   if (organizationId === null || organizationId === undefined) {
     return;
@@ -126,7 +140,7 @@ async function logActivity(
       organizationId,
       userId,
       action: type,
-      ipAddress: ipAddress || ''
+      ipAddress: ipAddress || '',
     };
     await db.insert(activityLogs).values(newActivity);
   } catch (error) {
@@ -137,7 +151,7 @@ async function logActivity(
 
 const signInSchema = z.object({
   email: z.string().email().min(3).max(255),
-  password: z.string().min(8).max(100)
+  password: z.string().min(8).max(100),
 });
 
 export const signIn = validatedAction(signInSchema, async (data, formData) => {
@@ -146,11 +160,14 @@ export const signIn = validatedAction(signInSchema, async (data, formData) => {
   const userWithOrganization = await db
     .select({
       user: users,
-      organization: organizations
+      organization: organizations,
     })
     .from(users)
     .leftJoin(organizationMembers, eq(users.id, organizationMembers.userId))
-    .leftJoin(organizations, eq(organizationMembers.organizationId, organizations.id))
+    .leftJoin(
+      organizations,
+      eq(organizationMembers.organizationId, organizations.id),
+    )
     .where(eq(users.email, email))
     .limit(1);
 
@@ -158,28 +175,29 @@ export const signIn = validatedAction(signInSchema, async (data, formData) => {
     return {
       error: 'Invalid email or password. Please try again.',
       email,
-      password
+      password,
     };
   }
 
-  const { user: foundUser, organization: foundOrganization } = userWithOrganization[0];
+  const { user: foundUser, organization: foundOrganization } =
+    userWithOrganization[0];
 
   const isPasswordValid = await comparePasswords(
     password,
-    foundUser.passwordHash
+    foundUser.passwordHash,
   );
 
   if (!isPasswordValid) {
     return {
       error: 'Invalid email or password. Please try again.',
       email,
-      password
+      password,
     };
   }
 
   await Promise.all([
     setSession(foundUser),
-    logActivity(foundOrganization?.id, foundUser.id, ActivityType.SIGN_IN)
+    logActivity(foundOrganization?.id, foundUser.id, ActivityType.SIGN_IN),
   ]);
 
   const redirectTo = formData.get('redirect') as string | null;
@@ -194,7 +212,7 @@ export const signIn = validatedAction(signInSchema, async (data, formData) => {
 const signUpSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
-  inviteId: z.string().optional()
+  inviteId: z.string().optional(),
 });
 
 export const signUp = validatedAction(signUpSchema, async (data, formData) => {
@@ -211,7 +229,7 @@ export const signUp = validatedAction(signUpSchema, async (data, formData) => {
       return {
         error: 'Failed to create user. Please try again.',
         email,
-        password
+        password,
       };
     }
 
@@ -220,7 +238,7 @@ export const signUp = validatedAction(signUpSchema, async (data, formData) => {
     const newUser: NewUser = {
       email,
       passwordHash,
-      role: 'user'
+      role: 'user',
     };
 
     const [createdUser] = await db.insert(users).values(newUser).returning();
@@ -229,7 +247,7 @@ export const signUp = validatedAction(signUpSchema, async (data, formData) => {
       return {
         error: 'Failed to create user. Please try again.',
         email,
-        password
+        password,
       };
     }
 
@@ -245,8 +263,8 @@ export const signUp = validatedAction(signUpSchema, async (data, formData) => {
           and(
             eq(invitations.id, parseInt(inviteId)),
             eq(invitations.email, email),
-            eq(invitations.status, 'pending')
-          )
+            eq(invitations.status, 'pending'),
+          ),
         )
         .limit(1);
 
@@ -259,7 +277,11 @@ export const signUp = validatedAction(signUpSchema, async (data, formData) => {
           .set({ status: 'accepted' })
           .where(eq(invitations.id, invitation.id));
 
-        await logActivity(organizationId, createdUser.id, ActivityType.ACCEPT_INVITATION);
+        await logActivity(
+          organizationId,
+          createdUser.id,
+          ActivityType.ACCEPT_INVITATION,
+        );
 
         [createdOrganization] = await db
           .select()
@@ -271,29 +293,36 @@ export const signUp = validatedAction(signUpSchema, async (data, formData) => {
       }
     } else {
       const newOrganization: NewOrganization = {
-        name: `${email}'s Organization`
+        name: `${email}'s Organization`,
       };
 
-      [createdOrganization] = await db.insert(organizations).values(newOrganization).returning();
+      [createdOrganization] = await db
+        .insert(organizations)
+        .values(newOrganization)
+        .returning();
 
       if (!createdOrganization) {
         return {
           error: 'Failed to create organization. Please try again.',
           email,
-          password
+          password,
         };
       }
 
       organizationId = createdOrganization.id;
       userRole = 'owner';
 
-      await logActivity(organizationId, createdUser.id, ActivityType.CREATE_ORGANIZATION);
+      await logActivity(
+        organizationId,
+        createdUser.id,
+        ActivityType.CREATE_ORGANIZATION,
+      );
     }
 
     const newOrganizationMember: NewOrganizationMember = {
       userId: createdUser.id,
       organizationId: organizationId,
-      role: userRole
+      role: userRole,
     };
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -302,9 +331,12 @@ export const signUp = validatedAction(signUpSchema, async (data, formData) => {
     await Promise.all([
       db.insert(organizationMembers).values(newOrganizationMember),
       logActivity(organizationId, createdUser.id, ActivityType.SIGN_UP),
-      db.update(users).set({ otp, otpExpiresAt }).where(eq(users.id, createdUser.id)),
+      db
+        .update(users)
+        .set({ otp, otpExpiresAt })
+        .where(eq(users.id, createdUser.id)),
       setSession(createdUser),
-      sendVerificationEmail(email, otp)
+      sendVerificationEmail(email, otp),
     ]);
 
     console.log(`DEBUG: OTP for ${email}: ${otp}`);
@@ -317,7 +349,7 @@ export const signUp = validatedAction(signUpSchema, async (data, formData) => {
 
 const verifyOTPSchema = z.object({
   email: z.string().email(),
-  otp: z.string().length(6)
+  otp: z.string().length(6),
 });
 
 export const verifyOTP = validatedAction(verifyOTPSchema, async (data) => {
@@ -329,16 +361,20 @@ export const verifyOTP = validatedAction(verifyOTPSchema, async (data) => {
     .where(eq(users.email, email))
     .limit(1);
 
-  if (!user || user.otp !== otp || (user.otpExpiresAt && user.otpExpiresAt < new Date())) {
+  if (
+    !user ||
+    user.otp !== otp ||
+    (user.otpExpiresAt && user.otpExpiresAt < new Date())
+  ) {
     return { error: 'Invalid or expired OTP.' };
   }
 
   await db
     .update(users)
-    .set({ 
+    .set({
       emailVerifiedAt: new Date(),
       otp: null,
-      otpExpiresAt: null
+      otpExpiresAt: null,
     })
     .where(eq(users.id, user.id));
 
@@ -363,16 +399,13 @@ export const resendVerificationAction = validatedAction(
     const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
     await Promise.all([
-      db
-        .update(users)
-        .set({ otp, otpExpiresAt })
-        .where(eq(users.id, user.id)),
-      sendVerificationEmail(email, otp)
+      db.update(users).set({ otp, otpExpiresAt }).where(eq(users.id, user.id)),
+      sendVerificationEmail(email, otp),
     ]);
 
     console.log(`DEBUG: New OTP for ${email}: ${otp}`);
     return { success: 'Verification code sent! Check your console/logs.' };
-  }
+  },
 );
 
 export async function signOut() {
@@ -380,7 +413,11 @@ export async function signOut() {
     const user = await getUser();
     if (user) {
       const userWithOrganization = await getUserWithOrganization(user.id);
-      await logActivity(userWithOrganization?.organizationId, user.id, ActivityType.SIGN_OUT);
+      await logActivity(
+        userWithOrganization?.organizationId,
+        user.id,
+        ActivityType.SIGN_OUT,
+      );
     }
   } catch (error) {
     console.error('Error during sign out logging:', error);
@@ -393,7 +430,7 @@ export async function signOut() {
 const updatePasswordSchema = z.object({
   currentPassword: z.string().min(8).max(100),
   newPassword: z.string().min(8).max(100),
-  confirmPassword: z.string().min(8).max(100)
+  confirmPassword: z.string().min(8).max(100),
 });
 
 export const updatePassword = validatedActionWithUser(
@@ -403,7 +440,7 @@ export const updatePassword = validatedActionWithUser(
 
     const isPasswordValid = await comparePasswords(
       currentPassword,
-      user.passwordHash
+      user.passwordHash,
     );
 
     if (!isPasswordValid) {
@@ -411,7 +448,7 @@ export const updatePassword = validatedActionWithUser(
         currentPassword,
         newPassword,
         confirmPassword,
-        error: 'Current password is incorrect.'
+        error: 'Current password is incorrect.',
       };
     }
 
@@ -420,7 +457,7 @@ export const updatePassword = validatedActionWithUser(
         currentPassword,
         newPassword,
         confirmPassword,
-        error: 'New password must be different from the current password.'
+        error: 'New password must be different from the current password.',
       };
     }
 
@@ -429,7 +466,7 @@ export const updatePassword = validatedActionWithUser(
         currentPassword,
         newPassword,
         confirmPassword,
-        error: 'New password and confirmation password do not match.'
+        error: 'New password and confirmation password do not match.',
       };
     }
 
@@ -441,17 +478,21 @@ export const updatePassword = validatedActionWithUser(
         .update(users)
         .set({ passwordHash: newPasswordHash })
         .where(eq(users.id, user.id)),
-      logActivity(userWithOrganization?.organizationId, user.id, ActivityType.UPDATE_PASSWORD)
+      logActivity(
+        userWithOrganization?.organizationId,
+        user.id,
+        ActivityType.UPDATE_PASSWORD,
+      ),
     ]);
 
     return {
-      success: 'Password updated successfully.'
+      success: 'Password updated successfully.',
     };
-  }
+  },
 );
 
 const deleteAccountSchema = z.object({
-  password: z.string().min(8).max(100)
+  password: z.string().min(8).max(100),
 });
 
 export const deleteAccount = validatedActionWithUser(
@@ -463,7 +504,7 @@ export const deleteAccount = validatedActionWithUser(
     if (!isPasswordValid) {
       return {
         password,
-        error: 'Incorrect password. Account deletion failed.'
+        error: 'Incorrect password. Account deletion failed.',
       };
     }
 
@@ -472,7 +513,7 @@ export const deleteAccount = validatedActionWithUser(
     await logActivity(
       userWithOrganization?.organizationId,
       user.id,
-      ActivityType.DELETE_ACCOUNT
+      ActivityType.DELETE_ACCOUNT,
     );
 
     // Soft delete
@@ -480,7 +521,7 @@ export const deleteAccount = validatedActionWithUser(
       .update(users)
       .set({
         deletedAt: sql`CURRENT_TIMESTAMP`,
-        email: sql`CONCAT(email, '-', id, '-deleted')` // Ensure email uniqueness
+        email: sql`CONCAT(email, '-', id, '-deleted')`, // Ensure email uniqueness
       })
       .where(eq(users.id, user.id));
 
@@ -490,20 +531,23 @@ export const deleteAccount = validatedActionWithUser(
         .where(
           and(
             eq(organizationMembers.userId, user.id),
-            eq(organizationMembers.organizationId, userWithOrganization.organizationId)
-          )
+            eq(
+              organizationMembers.organizationId,
+              userWithOrganization.organizationId,
+            ),
+          ),
         );
     }
 
     (await cookies()).delete('session');
     redirect('/sign-in');
-  }
+  },
 );
 
 const updateAccountSchema = z.object({
   name: z.string().min(1, 'Name is required').max(100),
   email: z.string().email('Invalid email address'),
-  image: z.string().optional()
+  image: z.string().optional(),
 });
 
 export const updateAccount = validatedActionWithUser(
@@ -514,15 +558,19 @@ export const updateAccount = validatedActionWithUser(
 
     await Promise.all([
       db.update(users).set({ name, email, image }).where(eq(users.id, user.id)),
-      logActivity(userWithOrganization?.organizationId, user.id, ActivityType.UPDATE_ACCOUNT)
+      logActivity(
+        userWithOrganization?.organizationId,
+        user.id,
+        ActivityType.UPDATE_ACCOUNT,
+      ),
     ]);
 
     return { name, success: 'Account updated successfully.' };
-  }
+  },
 );
 
 const removeOrganizationMemberSchema = z.object({
-  memberId: z.number()
+  memberId: z.number(),
 });
 
 export const removeOrganizationMember = validatedActionWithUser(
@@ -540,23 +588,26 @@ export const removeOrganizationMember = validatedActionWithUser(
       .where(
         and(
           eq(organizationMembers.id, memberId),
-          eq(organizationMembers.organizationId, userWithOrganization.organizationId)
-        )
+          eq(
+            organizationMembers.organizationId,
+            userWithOrganization.organizationId,
+          ),
+        ),
       );
 
     await logActivity(
       userWithOrganization.organizationId,
       user.id,
-      ActivityType.REMOVE_ORGANIZATION_MEMBER
+      ActivityType.REMOVE_ORGANIZATION_MEMBER,
     );
 
     return { success: 'Organization member removed successfully' };
-  }
+  },
 );
 
 const inviteOrganizationMemberSchema = z.object({
   email: z.string().email('Invalid email address'),
-  role: z.enum(['member', 'owner'])
+  role: z.enum(['member', 'owner']),
 });
 
 export const inviteOrganizationMember = validatedActionWithUser(
@@ -574,7 +625,13 @@ export const inviteOrganizationMember = validatedActionWithUser(
       .from(users)
       .leftJoin(organizationMembers, eq(users.id, organizationMembers.userId))
       .where(
-        and(eq(users.email, email), eq(organizationMembers.organizationId, userWithOrganization.organizationId))
+        and(
+          eq(users.email, email),
+          eq(
+            organizationMembers.organizationId,
+            userWithOrganization.organizationId,
+          ),
+        ),
       )
       .limit(1);
 
@@ -590,8 +647,8 @@ export const inviteOrganizationMember = validatedActionWithUser(
         and(
           eq(invitations.email, email),
           eq(invitations.organizationId, userWithOrganization.organizationId),
-          eq(invitations.status, 'pending')
-        )
+          eq(invitations.status, 'pending'),
+        ),
       )
       .limit(1);
 
@@ -600,23 +657,32 @@ export const inviteOrganizationMember = validatedActionWithUser(
     }
 
     // Create a new invitation
-    await db.insert(invitations).values({
-      organizationId: userWithOrganization.organizationId,
-      email,
-      role,
-      invitedBy: user.id,
-      status: 'pending'
-    });
+    const [invitation] = await db
+      .insert(invitations)
+      .values({
+        organizationId: userWithOrganization.organizationId,
+        email,
+        role,
+        invitedBy: user.id,
+        status: 'pending',
+      })
+      .returning();
 
     await logActivity(
       userWithOrganization.organizationId,
       user.id,
-      ActivityType.INVITE_ORGANIZATION_MEMBER
+      ActivityType.INVITE_ORGANIZATION_MEMBER,
     );
 
-    // TODO: Send invitation email and include ?inviteId={id} to sign-up URL
-    // await sendInvitationEmail(email, userWithOrganization.organization.name, role)
+    if (invitation) {
+      await sendInvitationEmail(
+        email,
+        userWithOrganization.organization.name,
+        role,
+        invitation.id,
+      );
+    }
 
     return { success: 'Invitation sent successfully' };
-  }
+  },
 );

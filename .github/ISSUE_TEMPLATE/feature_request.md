@@ -1,6 +1,6 @@
 ---
 name: 🚀 Feature Request
-about: Suggest an idea for BillForge
+about: Suggest an idea for Noxfolio
 title: '[FEAT] '
 labels: enhancement
 assignees: ''

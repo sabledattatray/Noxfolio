@@ -1,27 +1,27 @@
 /**
- * BillForge Official TypeScript SDK Foundation
+ * Noxfolio Official TypeScript SDK Foundation
  */
-export class BillForge {
+export class Noxfolio {
   private apiKey: string;
   private baseUrl: string;
 
   constructor(apiKey: string, options?: { baseUrl?: string }) {
     this.apiKey = apiKey;
-    this.baseUrl = options?.baseUrl || 'https://api.billforge.com/v1';
+    this.baseUrl = options?.baseUrl || 'https://api.noxfolio.com/v1';
   }
 
   private async request(path: string, method: string = 'GET', body?: any) {
     const response = await fetch(`${this.baseUrl}${path}`, {
       method,
       headers: {
-        'Authorization': `Bearer ${this.apiKey}`,
+        Authorization: `Bearer ${this.apiKey}`,
         'Content-Type': 'application/json',
       },
       body: body ? JSON.stringify(body) : undefined,
     });
 
     if (!response.ok) {
-      throw new Error(`BillForge API Error: ${response.statusText}`);
+      throw new Error(`Noxfolio API Error: ${response.statusText}`);
     }
 
     return response.json();
@@ -42,6 +42,6 @@ export class BillForge {
     constructEvent: (payload: string, header: string, secret: string) => {
       // Integration with WebhookService.verifySignature logic
       return JSON.parse(payload);
-    }
+    },
   };
 }

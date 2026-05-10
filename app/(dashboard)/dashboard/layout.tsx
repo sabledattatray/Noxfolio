@@ -1,21 +1,34 @@
 import { Sidebar } from '@/components/dashboard/sidebar';
 import { Topbar } from '@/components/dashboard/topbar';
 import { DynamicThemeProvider } from '@/components/dashboard/dynamic-theme-provider';
+import { ErrorBoundary } from '@/components/error-boundary';
+import { getOrganizationForUser } from '@/lib/db/queries';
 
-export default function DashboardLayout({
-  children
+import { redirect } from 'next/navigation';
+
+export default async function DashboardLayout({
+  children,
 }: {
   children: React.ReactNode;
 }) {
+  const org = await getOrganizationForUser();
+
+  // Enforce onboarding for new/unconfigured organizations
+  if (!org || org.name.includes("'s Organization") || !org.name) {
+    redirect('/onboarding');
+  }
+
+  const branding = (org?.branding as any) || {};
+
   return (
-    <DynamicThemeProvider>
-      <div className="flex min-h-screen bg-background">
+    <DynamicThemeProvider branding={branding}>
+      <div className="bg-background flex min-h-screen">
         <Sidebar />
-        <div className="flex-1 flex flex-col min-w-0">
+        <div className="flex min-w-0 flex-1 flex-col">
           <Topbar />
           <main className="flex-1 overflow-y-auto p-8">
-            <div className="max-w-6xl mx-auto space-y-8">
-              {children}
+            <div className="mx-auto max-w-6xl space-y-8">
+              <ErrorBoundary>{children}</ErrorBoundary>
             </div>
           </main>
         </div>

@@ -29,16 +29,22 @@
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
     
-    --primary: 240 10% 3.9%; /* Rich Black */
-    --primary-foreground: 0 0% 98%;
+    --primary: 1 100% 46.5%; /* Brand Red #ED0600 */
+    --primary-foreground: 0 0% 100%;
     
-    --secondary: 240 4.8% 98%; /* Even lighter for premium feel */
-    --secondary-foreground: 240 5.9% 10%;
+    --brand-red: 1 100% 46.5%;
+    --brand-orange: 33 100% 48%;
+    --brand-pink: 338 54% 44%;
+    --brand-blue: 241 55% 28%;
+    --brand-deep: 243 60% 15%;
     
-    --muted: 240 4.8% 98%;
+    --secondary: 338 54% 44%; /* Brand Pink for secondary actions */
+    --secondary-foreground: 0 0% 100%;
+    
+    --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
     
-    --accent: 240 4.8% 98%;
+    --accent: 240 4.8% 95.9%; /* Lighter accent for light mode */
     --accent-foreground: 240 5.9% 10%;
     
     --destructive: 0 84.2% 60.2%;
@@ -46,38 +52,44 @@
     
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
-    --ring: 240 10% 3.9%;
+    --ring: 1 100% 46.5%;
     --radius: 1rem;
   }
 
   .dark {
-    --background: 0 0% 3.9%; /* Pure Black Background */
+    --background: 243 60% 5%; /* Deep brand blue-black */
     --foreground: 0 0% 98%;
     
-    --card: 0 0% 6%; /* Pure Dark Gray Cards */
+    --card: 243 60% 8%;
     --card-foreground: 0 0% 98%;
     
-    --popover: 0 0% 6%;
+    --popover: 243 60% 8%;
     --popover-foreground: 0 0% 98%;
     
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 10%;
+    --primary: 1 100% 46.5%;
+    --primary-foreground: 0 0% 100%;
     
-    --secondary: 0 0% 15.9%;
-    --secondary-foreground: 0 0% 98%;
+    --brand-red: 1 100% 46.5%;
+    --brand-orange: 33 100% 48%;
+    --brand-pink: 338 54% 44%;
+    --brand-blue: 241 55% 28%;
+    --brand-deep: 243 60% 15%;
     
-    --muted: 0 0% 15.9%;
-    --muted-foreground: 0 0% 64.9%;
+    --secondary: 338 54% 55%;
+    --secondary-foreground: 0 0% 100%;
     
-    --accent: 0 0% 15.9%;
-    --accent-foreground: 0 0% 98%;
+    --muted: 243 60% 12%;
+    --muted-foreground: 240 5% 64.9%;
+    
+    --accent: 241 55% 45%;
+    --accent-foreground: 0 0% 100%;
     
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     
-    --border: 0 0% 15.9%;
-    --input: 0 0% 15.9%;
-    --ring: 0 0% 83.9%;
+    --border: 243 60% 15%;
+    --input: 243 60% 15%;
+    --ring: 1 100% 46.5%;
   }
 }
 
@@ -111,6 +123,28 @@
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.2);
   }
+  .bg-brand-gradient {
+    background: linear-gradient(135deg, hsl(var(--brand-red)), hsl(var(--brand-orange)));
+  }
+  .text-brand-gradient {
+    background: linear-gradient(135deg, hsl(var(--brand-red)), hsl(var(--brand-orange)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .bg-brand-cool-gradient {
+    background: linear-gradient(135deg, hsl(var(--brand-pink)), hsl(var(--brand-blue)));
+  }
+  .text-brand-cool-gradient {
+    background: linear-gradient(135deg, hsl(var(--brand-pink)), hsl(var(--brand-blue)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .bg-brand-deep-gradient {
+    background: linear-gradient(135deg, hsl(var(--brand-blue)), hsl(var(--brand-deep)));
+  }
+  .bg-brand-mixed-gradient {
+    background: linear-gradient(135deg, hsl(var(--brand-red)), hsl(var(--brand-pink)), hsl(var(--brand-blue)));
+  }
   .dark .glass {
     background-color: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(12px);
@@ -123,5 +157,46 @@
     transform: translateY(-4px);
     border-color: hsl(var(--primary) / 0.2);
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.05);
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+
+  @keyframes float-delayed {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-float-delayed {
+    animation: float-delayed 8s ease-in-out infinite;
+    animation-delay: 2s;
+  }
+
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  @keyframes marquee-reverse {
+    0% { transform: translateX(-50%); }
+    100% { transform: translateX(0); }
+  }
+
+  .animate-marquee {
+    animation: marquee 80s linear infinite;
+  }
+
+  .animate-marquee-reverse {
+    animation: marquee-reverse 80s linear infinite;
   }
 }

@@ -1,7 +1,7 @@
 /**
- * ⚡ BillForge Enterprise Design Tokens
- * 
- * Centralized source of truth for all design values to ensure 
+ * ⚡ Noxfolio Enterprise Design Tokens
+ *
+ * Centralized source of truth for all design values to ensure
  * 100% visual consistency across the platform.
  */
 
@@ -34,7 +34,8 @@ export const TOKENS = {
   },
   shadows: {
     soft: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
-    premium: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
+    premium:
+      '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
     glow: '0 0 20px 0px hsla(var(--primary), 0.1)',
   },
   animation: {
@@ -47,7 +48,7 @@ export const TOKENS = {
       standard: 'cubic-bezier(0.4, 0, 0.2, 1)',
       out: 'cubic-bezier(0, 0, 0.2, 1)',
       in: 'cubic-bezier(0.4, 0, 1, 1)',
-    }
+    },
   },
   typography: {
     fonts: {
@@ -60,7 +61,7 @@ export const TOKENS = {
       medium: '500',
       bold: '700',
       black: '900',
-    }
+    },
   },
   zIndex: {
     hide: -1,
@@ -71,5 +72,5 @@ export const TOKENS = {
     modal: 40,
     popover: 50,
     toast: 60,
-  }
+  },
 };

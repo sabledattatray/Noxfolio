@@ -1,5 +1,5 @@
 PHASE 1 PRD — FOUNDATION & CORE SETUP
-Project: BillForge
+Project: Noxfolio
 Phase Goal:
 
 Transform the cloned SaaS starter into a clean, production-grade enterprise foundation before building advanced billing features.
@@ -43,7 +43,7 @@ Goal
 
 Convert generic SaaS starter into:
 
-“BillForge”
+“Noxfolio”
 Tasks
 Rename Project Everywhere
 
@@ -55,7 +55,7 @@ default branding
 
 With:
 
-BillForge
+Noxfolio
 Update
 package.json
 metadata
@@ -67,7 +67,7 @@ favicon
 logos
 environment variables
 Prompt
-Rebrand the entire Next.js SaaS Starter project into a premium enterprise SaaS platform named “BillForge”.
+Rebrand the entire Next.js SaaS Starter project into a premium enterprise SaaS platform named “Noxfolio”.
 
 Requirements:
 - Replace all ACME branding
@@ -170,7 +170,7 @@ Topbar
 Empty states
 Skeleton loaders
 Prompt
-Create a premium enterprise SaaS design system for BillForge.
+Create a premium enterprise SaaS design system for Noxfolio.
 
 Requirements:
 - Dark mode first
@@ -257,7 +257,7 @@ Finance
 Developer
 Viewer
 Prompt
-Build a scalable multi-tenant organization and team management system for BillForge.
+Build a scalable multi-tenant organization and team management system for Noxfolio.
 
 Requirements:
 - Organization workspaces
@@ -301,7 +301,7 @@ widgets placeholder
 activity feed
 overview cards
 Prompt
-Create a premium enterprise SaaS dashboard foundation for BillForge.
+Create a premium enterprise SaaS dashboard foundation for Noxfolio.
 
 Requirements:
 - Collapsible sidebar
@@ -341,7 +341,7 @@ prepare relationships
 add enums
 type-safe queries
 Prompt
-Design a scalable PostgreSQL database architecture for BillForge Phase 1 foundation.
+Design a scalable PostgreSQL database architecture for Noxfolio Phase 1 foundation.
 
 Requirements:
 - Multi-tenant SaaS structure
@@ -371,7 +371,7 @@ lint-staged
 commitlint
 env validation
 Prompt
-Set up enterprise-grade developer tooling for BillForge.
+Set up enterprise-grade developer tooling for Noxfolio.
 
 Requirements:
 - ESLint
@@ -400,7 +400,7 @@ docker-compose
 PostgreSQL container
 Redis container
 Prompt
-Create production-grade Docker infrastructure for BillForge.
+Create production-grade Docker infrastructure for Noxfolio.
 
 Requirements:
 - Dockerized Next.js app
@@ -426,7 +426,7 @@ lint workflow
 build checks
 test pipeline
 Prompt
-Set up enterprise CI/CD pipelines for BillForge.
+Set up enterprise CI/CD pipelines for Noxfolio.
 
 Requirements:
 - GitHub Actions workflows
@@ -452,7 +452,7 @@ constants
 feature flags
 config abstraction
 Prompt
-Create a scalable application configuration architecture for BillForge.
+Create a scalable application configuration architecture for Noxfolio.
 
 Requirements:
 - Environment variable validation
@@ -479,7 +479,7 @@ empty states
 premium typography
 transitions
 Prompt
-Polish the entire BillForge Phase 1 foundation into a premium enterprise SaaS experience.
+Polish the entire Noxfolio Phase 1 foundation into a premium enterprise SaaS experience.
 
 Requirements:
 - Smooth animations

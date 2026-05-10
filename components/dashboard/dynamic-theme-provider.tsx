@@ -1,20 +1,64 @@
 'use client';
 
 import { useEffect, ReactNode } from 'react';
-export function DynamicThemeProvider({ children }: { children: ReactNode }) {
+import { useTheme } from 'next-themes';
+
+interface Branding {
+  primaryColor?: string;
+  accentColor?: string;
+  darkMode?: boolean;
+}
+
+export function DynamicThemeProvider({
+  children,
+  branding,
+}: {
+  children: ReactNode;
+  branding?: Branding;
+}) {
+  const { resolvedTheme } = useTheme();
+
   useEffect(() => {
-    // FORCE neutral palette regardless of organization settings to satisfy professional design requirements
-    document.documentElement.style.setProperty('--primary', '0 0% 98%'); // Force White in Dark Mode
-    document.documentElement.style.setProperty('--primary-foreground', '240 10% 3.9%');
-    document.documentElement.style.setProperty('--accent', '240 3.7% 15.9%');
-  }, []);
+    if (!branding) return;
+
+    // Apply branding colors if they exist
+    if (branding.primaryColor) {
+      document.documentElement.style.setProperty(
+        '--primary',
+        hexToHsl(branding.primaryColor),
+      );
+    }
+    if (branding.accentColor) {
+      document.documentElement.style.setProperty(
+        '--accent',
+        hexToHsl(branding.accentColor),
+      );
+    }
+
+    // Special case for dashboard: if we are in dark mode, we might want a slightly different palette
+    if (resolvedTheme === 'dark') {
+      // Professional Dark Mode adjustments
+      document.documentElement.style.setProperty(
+        '--primary-foreground',
+        '0 0% 100%',
+      );
+    } else {
+      // Light mode adjustments
+      document.documentElement.style.setProperty(
+        '--primary-foreground',
+        '0 0% 100%',
+      );
+    }
+  }, [branding, resolvedTheme]);
 
   return <>{children}</>;
 }
 
 // Helper to convert HEX to HSL format used by Shadcn/Tailwind
 function hexToHsl(hex: string): string {
-  let r = 0, g = 0, b = 0;
+  let r = 0,
+    g = 0,
+    b = 0;
   if (hex.length === 4) {
     r = parseInt(hex[1] + hex[1], 16);
     g = parseInt(hex[2] + hex[2], 16);
@@ -29,8 +73,11 @@ function hexToHsl(hex: string): string {
   g /= 255;
   b /= 255;
 
-  const max = Math.max(r, g, b), min = Math.min(r, g, b);
-  let h = 0, s, l = (max + min) / 2;
+  const max = Math.max(r, g, b),
+    min = Math.min(r, g, b);
+  let h = 0,
+    s,
+    l = (max + min) / 2;
 
   if (max === min) {
     h = s = 0;
@@ -38,9 +85,15 @@ function hexToHsl(hex: string): string {
     const d = max - min;
     s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
     switch (max) {
-      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-      case g: h = (b - r) / d + 2; break;
-      case b: h = (r - g) / d + 4; break;
+      case r:
+        h = (g - b) / d + (g < b ? 6 : 0);
+        break;
+      case g:
+        h = (b - r) / d + 2;
+        break;
+      case b:
+        h = (r - g) / d + 4;
+        break;
     }
     h /= 6;
   }

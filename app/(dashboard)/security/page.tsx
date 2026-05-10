@@ -1,63 +1,97 @@
 import { MarketingPageLayout } from '@/components/marketing-layout';
-import { ShieldCheck, Lock, Eye, Terminal, Shield, CheckCircle2 } from 'lucide-react';
+import {
+  Shield,
+  ShieldAlert,
+  Key,
+  Globe,
+  Database,
+  Server,
+} from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+
+const securityFeatures = [
+  {
+    title: 'Data Isolation',
+    description:
+      'Strict logical separation of organizational data using Row-Level Security (RLS) patterns.',
+    icon: Database,
+  },
+  {
+    title: 'SOC2 Compliance',
+    description:
+      'Our infrastructure is designed to meet SOC2 Type II standards for security and availability.',
+    icon: ShieldAlert,
+  },
+  {
+    title: 'Zero Trust Access',
+    description:
+      'All internal APIs require signed JWTs and are subject to strict RBAC controls.',
+    icon: Key,
+  },
+  {
+    title: 'Regional Residency',
+    description:
+      'Store your financial data in specific geographic regions to meet local compliance laws.',
+    icon: Globe,
+  },
+];
 
 export default function SecurityPage() {
   return (
-    <MarketingPageLayout 
-      title="Bank-grade security for your revenue"
-      subtitle="Security isn't a feature at BillForge—it's our foundation. We employ rigorous standards to ensure your data and your customers' data are always protected."
-      icon={ShieldCheck}
+    <MarketingPageLayout
+      title="Security & Compliance"
+      subtitle="Enterprise-grade protection for your financial infrastructure."
+      icon={Shield}
     >
-      <div className="space-y-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            { icon: Lock, title: 'PCI DSS Level 1', desc: 'Our infrastructure is fully compliant with the highest industry standard for payment data.' },
-            { icon: Shield, title: 'SOC 2 Type II', desc: 'Independent audits verify our internal controls for security, availability, and confidentiality.' },
-            { icon: Eye, title: '24/7 Monitoring', desc: 'Real-time threat detection and automated response systems guard our perimeter around the clock.' }
-          ].map(item => (
-            <div key={item.title} className="p-8 rounded-3xl bg-gray-50 border border-gray-100 flex flex-col items-center text-center">
-              <item.icon className="w-10 h-10 text-blue-600 mb-4" />
-              <h3 className="font-bold text-gray-900 mb-2">{item.title}</h3>
-              <p className="text-sm leading-relaxed">{item.desc}</p>
-            </div>
+      <div className="animate-in fade-in slide-in-from-bottom-4 space-y-16 duration-500">
+        <section className="prose prose-lg dark:prose-invert max-w-none">
+          <h2 className="mb-6 text-3xl font-black tracking-tight italic">
+            Our Security Philosophy
+          </h2>
+          <p className="text-muted-foreground text-xl leading-relaxed font-medium">
+            At Noxfolio, security isn't a feature—it's the foundation. We build
+            with a "Secure by Default" mentality, ensuring that every
+            transaction, API call, and log entry is protected by
+            industry-leading encryption and auditing.
+          </p>
+        </section>
+
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          {securityFeatures.map((f) => (
+            <Card
+              key={f.title}
+              className="bg-card border-border/50 group hover:border-primary/30 rounded-[32px] border p-8 shadow-sm transition-all"
+            >
+              <CardContent className="space-y-4 p-0">
+                <div className="bg-primary/10 text-primary w-fit rounded-2xl p-3 transition-transform duration-500 group-hover:scale-110">
+                  <f.icon className="h-8 w-8" />
+                </div>
+                <h3 className="text-xl font-bold tracking-tight">{f.title}</h3>
+                <p className="text-muted-foreground leading-relaxed font-medium">
+                  {f.description}
+                </p>
+              </CardContent>
+            </Card>
           ))}
         </div>
 
-        <div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">Infrastructure Security</h2>
-          <div className="space-y-6">
-            <div className="flex gap-4">
-              <CheckCircle2 className="w-6 h-6 text-emerald-500 shrink-0" />
-              <div>
-                <h4 className="font-bold text-gray-900">Data Encryption</h4>
-                <p className="text-sm">All data is encrypted at rest using AES-256 and in transit using TLS 1.3. Your database secrets are managed via hardware security modules (HSM).</p>
-              </div>
+        <section className="bg-accent/30 border-border/50 group relative overflow-hidden rounded-[40px] border p-10">
+          <div className="bg-primary/5 group-hover:bg-primary/10 absolute -top-20 -right-20 h-80 w-80 rounded-full blur-[100px] transition-all duration-1000" />
+          <div className="relative z-10 space-y-6">
+            <div className="text-primary flex items-center gap-3">
+              <Server className="h-6 w-6" />
+              <h2 className="text-foreground m-0 text-2xl font-black tracking-tight italic">
+                Infrastructure Security
+              </h2>
             </div>
-            <div className="flex gap-4">
-              <CheckCircle2 className="w-6 h-6 text-emerald-500 shrink-0" />
-              <div>
-                <h4 className="font-bold text-gray-900">Network Isolation</h4>
-                <p className="text-sm">Our production environment is logically isolated using VPCs and subnets, with strict ingress/egress rules and zero-trust networking.</p>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <CheckCircle2 className="w-6 h-6 text-emerald-500 shrink-0" />
-              <div>
-                <h4 className="font-bold text-gray-900">Vulnerability Management</h4>
-                <p className="text-sm">We run automated vulnerability scans and engage with third-party security researchers for quarterly penetration tests.</p>
-              </div>
-            </div>
+            <p className="text-muted-foreground leading-relaxed font-medium">
+              Our cloud infrastructure is managed as code and deployed across
+              multiple availability zones. We utilize automated vulnerability
+              scanning and real-time intrusion detection to stay ahead of
+              emerging threats.
+            </p>
           </div>
-        </div>
-
-        <div className="bg-gray-900 rounded-[32px] p-10 text-white overflow-hidden relative group">
-          <Terminal className="absolute -right-10 -bottom-10 w-48 h-48 opacity-10 group-hover:rotate-12 transition-transform duration-700" />
-          <h3 className="text-2xl font-bold mb-4">Responsible Disclosure</h3>
-          <p className="opacity-80 mb-6">Found a security vulnerability? We value the work of security researchers. Please report bugs via our official bug bounty program.</p>
-          <a href="mailto:security@billforge.com" className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-bold transition-all inline-block border border-white/10">
-            security@billforge.com
-          </a>
-        </div>
+        </section>
       </div>
     </MarketingPageLayout>
   );

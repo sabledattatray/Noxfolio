@@ -1,4 +1,4 @@
-# Project Showcase: BillForge Revenue Infrastructure
+# Project Showcase: Noxfolio Revenue Infrastructure
 
 ## 🚀 The Mission
 To engineer a production-grade, enterprise-scale **SaaS Infrastructure Platform** that orchestrates the entire revenue lifecycle through autonomous AI intelligence and high-performance event systems.
@@ -36,4 +36,4 @@ Crafted a dark-mode first, high-fidelity aesthetic inspired by industry-leading 
 For a full analysis of the architecture, scaling strategies, and infrastructure decisions, see the **[Technical Case Study](./CASE_STUDY.md)**.
 
 ## 🏁 Conclusion
-BillForge is a testament to senior-level **Systems Engineering**. It demonstrates the ability to architect complex, mission-critical infrastructure that balances security, performance, and autonomous intelligence.
+Noxfolio is a testament to senior-level **Systems Engineering**. It demonstrates the ability to architect complex, mission-critical infrastructure that balances security, performance, and autonomous intelligence.

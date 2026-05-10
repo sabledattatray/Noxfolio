@@ -1,6 +1,6 @@
 # Interview Preparation: Engineering Lead / Senior Full-Stack
 
-Use this guide to prepare for technical interviews using **BillForge** as your primary talking point. This project demonstrates deep technical proficiency in distributed systems, financial engineering, and AI integration.
+Use this guide to prepare for technical interviews using **Noxfolio** as your primary talking point. This project demonstrates deep technical proficiency in distributed systems, financial engineering, and AI integration.
 
 ---
 
@@ -9,7 +9,7 @@ Use this guide to prepare for technical interviews using **BillForge** as your p
 - **Talking Point:** "I implemented a **Singleton pattern** for the Drizzle/Postgres client using a global variable. In development, I restricted the pool size to `max: 1` to prevent connection exhaustion during hot-reloads, while allowing for full scalability in production. This ensured stability during the auditing of high-volume transaction logs."
 
 **Question:** *"Tell me about your multi-tenancy implementation."*
-- **Talking Point:** "BillForge uses a shared-database, isolated-schema approach. I built a custom `withOrganization` middleware to enforce row-level security, ensuring strict data isolation between tenants—a non-negotiable requirement for financial infrastructure."
+- **Talking Point:** "Noxfolio uses a shared-database, isolated-schema approach. I built a custom `withOrganization` middleware to enforce row-level security, ensuring strict data isolation between tenants—a non-negotiable requirement for financial infrastructure."
 
 ---
 

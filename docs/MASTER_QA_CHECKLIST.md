@@ -1,6 +1,6 @@
-# 🚨 Master QA & Production Validation Matrix — BillForge
+# 🚨 Master QA & Production Validation Matrix — Noxfolio
 
-This document is the single source of truth for the production readiness of BillForge. Every page and flow must pass this rigorous audit before being considered "Elite SaaS Grade."
+This document is the single source of truth for the production readiness of Noxfolio. Every page and flow must pass this rigorous audit before being considered "Elite SaaS Grade."
 
 ---
 
@@ -65,4 +65,4 @@ This document is the single source of truth for the production readiness of Bill
 ---
 
 ## 🏁 Final Certification
-BillForge has passed the **Elite SaaS QA Audit**. It meets the standards of high-growth platforms like Stripe, Vercel, and Linear.
+Noxfolio has passed the **Elite SaaS QA Audit**. It meets the standards of high-growth platforms like Stripe, Vercel, and Linear.

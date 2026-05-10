@@ -1,7 +1,7 @@
 # Case Study: How I Built an Enterprise Revenue Infrastructure Platform
 
 ## Overview
-BillForge was engineered as a high-availability, multi-tenant revenue infrastructure designed to handle complex SaaS billing, autonomous financial auditing, and global payment orchestration. This document outlines the architectural decisions and engineering patterns used to achieve enterprise-grade reliability and intelligence.
+Noxfolio was engineered as a high-availability, multi-tenant revenue infrastructure designed to handle complex SaaS billing, autonomous financial auditing, and global payment orchestration. This document outlines the architectural decisions and engineering patterns used to achieve enterprise-grade reliability and intelligence.
 
 ---
 
@@ -16,7 +16,7 @@ The system is built on a modern **Next.js (App Router)** foundation, utilizing a
 - **Security**: Stateless JWT-based session management with robust middleware authorization.
 
 ### Data Modeling & Multi-tenancy
-BillForge uses a **Shared Database, Isolated Schema** approach. 
+Noxfolio uses a **Shared Database, Isolated Schema** approach. 
 - Organizations are the root of all data ownership.
 - Row-level access control is enforced via a custom `withOrganization` middleware wrapper, preventing cross-tenant data leakage—a critical requirement for financial systems.
 
@@ -26,7 +26,7 @@ BillForge uses a **Shared Database, Isolated Schema** approach.
 Revenue infrastructure requires 100% auditability. I implemented a dual-layered event system:
 
 1.  **Activity Ledger**: A persistent audit trail tracking every user interaction (Sign-ins, Plan Upgrades, Security Changes).
-2.  **Webhook Orchestrator**: A modular event-bus that translates raw payment gateway events (Stripe, Razorpay) into internal state transitions. This abstraction allows BillForge to be "Gateway Agnostic."
+2.  **Webhook Orchestrator**: A modular event-bus that translates raw payment gateway events (Stripe, Razorpay) into internal state transitions. This abstraction allows Noxfolio to be "Gateway Agnostic."
 
 ---
 
@@ -69,4 +69,4 @@ The system supports a **Hybrid Gateway Strategy**:
 ---
 
 ## 🎯 Results
-BillForge isn't just a billing tool; it's a **Revenue OS**. By automating the "boring" parts of SaaS (billing, taxes, churn) and layering on autonomous intelligence, the platform allows founders to focus entirely on product while the infrastructure handles the money.
+Noxfolio isn't just a billing tool; it's a **Revenue OS**. By automating the "boring" parts of SaaS (billing, taxes, churn) and layering on autonomous intelligence, the platform allows founders to focus entirely on product while the infrastructure handles the money.

@@ -1,8 +1,8 @@
 PHASE 3 PRD — ANALYTICS, REPORTING & REVENUE INTELLIGENCE
-Project: BillForge
+Project: Noxfolio
 Phase Goal:
 
-Transform BillForge from:
+Transform Noxfolio from:
 
 “Billing platform”
 
@@ -82,7 +82,7 @@ Required Structure
     /reports
     /executive
 Prompt
-Design an enterprise-grade analytics architecture for BillForge.
+Design an enterprise-grade analytics architecture for Noxfolio.
 
 Requirements:
 - Revenue analytics infrastructure
@@ -134,7 +134,7 @@ payment success
 refunds
 collections
 Prompt
-Build an executive-grade revenue analytics dashboard for BillForge.
+Build an executive-grade revenue analytics dashboard for Noxfolio.
 
 Requirements:
 - MRR analytics
@@ -180,7 +180,7 @@ monthly snapshots
 historical tracking
 currency normalization
 Prompt
-Build a production-grade recurring revenue calculation engine for BillForge.
+Build a production-grade recurring revenue calculation engine for Noxfolio.
 
 Requirements:
 - MRR calculations
@@ -214,7 +214,7 @@ retention curves
 cancellation analytics
 downgrade analysis
 Prompt
-Build advanced churn and retention analytics for BillForge.
+Build advanced churn and retention analytics for Noxfolio.
 
 Requirements:
 - Customer churn analysis
@@ -246,7 +246,7 @@ revenue per cohort
 churn by cohort
 LTV by cohort
 Prompt
-Build a scalable cohort analysis system for BillForge.
+Build a scalable cohort analysis system for Noxfolio.
 
 Requirements:
 - Signup cohorts
@@ -282,7 +282,7 @@ risky customers
 high-value accounts
 expansion opportunities
 Prompt
-Build enterprise customer intelligence analytics for BillForge.
+Build enterprise customer intelligence analytics for Noxfolio.
 
 Requirements:
 - Customer lifetime value calculations
@@ -312,7 +312,7 @@ WebSockets
 event streams
 Redis pub/sub
 Prompt
-Build a real-time analytics infrastructure for BillForge.
+Build a real-time analytics infrastructure for Noxfolio.
 
 Requirements:
 - Live revenue updates
@@ -345,7 +345,7 @@ CSV
 Excel
 PDF
 Prompt
-Build an enterprise financial reporting engine for BillForge.
+Build an enterprise financial reporting engine for Noxfolio.
 
 Requirements:
 - Revenue reports
@@ -383,7 +383,7 @@ drilldowns
 filters
 zooming
 Prompt
-Build advanced enterprise data visualization systems for BillForge.
+Build advanced enterprise data visualization systems for Noxfolio.
 
 Requirements:
 - Revenue charts
@@ -422,7 +422,7 @@ centralized calculations
 caching
 scheduled aggregation
 Prompt
-Build a centralized KPI calculation engine for BillForge.
+Build a centralized KPI calculation engine for Noxfolio.
 
 Requirements:
 - MRR
@@ -456,7 +456,7 @@ retention_reports
 kpi_metrics
 financial_reports
 Prompt
-Optimize the BillForge database for enterprise analytics workloads.
+Optimize the Noxfolio database for enterprise analytics workloads.
 
 Requirements:
 - Aggregation tables
@@ -486,7 +486,7 @@ saved filters
 query presets
 custom ranges
 Prompt
-Build an enterprise analytics filtering and query system for BillForge.
+Build an enterprise analytics filtering and query system for Noxfolio.
 
 Requirements:
 - Date range filters
@@ -516,7 +516,7 @@ threshold alerts
 anomaly alerts
 dashboard notifications
 Prompt
-Build an enterprise business alert and analytics notification system for BillForge.
+Build an enterprise business alert and analytics notification system for Noxfolio.
 
 Requirements:
 - Revenue drop alerts
@@ -545,7 +545,7 @@ Example
 “Revenue increased 12% due to annual plan upgrades.”
 
 Prompt
-Build the foundational AI-ready analytics intelligence layer for BillForge.
+Build the foundational AI-ready analytics intelligence layer for Noxfolio.
 
 Requirements:
 - Revenue trend summaries
@@ -570,7 +570,7 @@ chart transitions
 interactive widgets
 executive visual polish
 Prompt
-Polish the entire BillForge analytics experience into a world-class enterprise financial intelligence platform.
+Polish the entire Noxfolio analytics experience into a world-class enterprise financial intelligence platform.
 
 Requirements:
 - Premium analytics cards
@@ -609,7 +609,7 @@ UX
  Responsive analytics
 🚀 PHASE 3 FINAL OUTPUT
 
-After Phase 3, BillForge should feel like:
+After Phase 3, Noxfolio should feel like:
 
 ✅ enterprise revenue operating system
 ✅ financial intelligence platform

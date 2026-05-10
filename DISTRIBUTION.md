@@ -1,6 +1,6 @@
-# Distribution Strategy: Launching BillForge
+# Distribution Strategy: Launching Noxfolio
 
-This document contains high-impact templates for distributing **BillForge** on social media and developer platforms. Use these to maximize visibility, attract recruiters, and build an open-source community.
+This document contains high-impact templates for distributing **Noxfolio** on social media and developer platforms. Use these to maximize visibility, attract recruiters, and build an open-source community.
 
 ---
 
@@ -10,7 +10,7 @@ This document contains high-impact templates for distributing **BillForge** on s
 **Tweet 1 (The Hook):**
 I spent the last [X] weeks building an Autonomous Revenue OS for Enterprise SaaS.
 
-Meet **BillForge** ⚡
+Meet **Noxfolio** ⚡
 
 A high-performance, open-core infrastructure platform that transforms billing from a static database into an AI-driven engine.
 
@@ -19,7 +19,7 @@ A high-performance, open-core infrastructure platform that transforms billing fr
 **Tweet 2 (The Architecture):**
 Most billing starters are just "Todo apps + Stripe."
 
-BillForge is different. It’s engineered for scale:
+Noxfolio is different. It’s engineered for scale:
 - Next.js 15 (Turbopack)
 - PostgreSQL (Drizzle ORM)
 - Redis / BullMQ (Queueing)
@@ -56,7 +56,7 @@ Check out the Technical Case Study & source code here: [Link]
 
 I’ve always believed that SaaS billing should be more than just a checkout button. It should be a reactive, intelligent system that grows with the business.
 
-That’s why I built **BillForge**.
+That’s why I built **Noxfolio**.
 
 It’s a production-grade enterprise foundation featuring:
 ✅ Multi-tenant workspace orchestration.
@@ -78,7 +78,7 @@ Read the full technical breakdown: [Link to Case Study]
 *Title: How I Built an Autonomous Revenue Engine with Next.js and AI*
 
 1.  **The Problem**: Why traditional billing systems fail at scale (static data, siloed insights).
-2.  **The Solution**: Introducing BillForge – an event-driven revenue OS.
+2.  **The Solution**: Introducing Noxfolio – an event-driven revenue OS.
 3.  **Architecture Deep Dive**:
     - Why Drizzle + Postgres was the right choice for financial integrity.
     - Implementing a singleton DB pattern to prevent connection leaks.

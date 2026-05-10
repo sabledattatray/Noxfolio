@@ -1,7 +1,21 @@
 'use client';
 
 import Link from 'next/link';
-import { Shield, Twitter, Github, Linkedin, Mail, Globe, Cpu, Lock, FileText, Users, HelpCircle, Activity } from 'lucide-react';
+import {
+  Shield,
+  Twitter,
+  Github,
+  Linkedin,
+  Mail,
+  Globe,
+  Cpu,
+  Lock,
+  FileText,
+  Users,
+  HelpCircle,
+  Activity,
+  Heart,
+} from 'lucide-react';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -10,11 +24,19 @@ export function Footer() {
     {
       title: 'Product',
       links: [
-        { name: 'Features', href: '/#features' },
+        { name: 'Features', href: '/features' },
+        { name: 'Industries', href: '/industries' },
         { name: 'Pricing', href: '/pricing' },
-        { name: 'Changelog', href: '/changelog', icon: Activity },
-        { name: 'Documentation', href: '/docs', icon: FileText },
-        { name: 'API Reference', href: '/docs/api', icon: Cpu },
+        { name: 'Calculator', href: '/pricing-calculator' },
+      ],
+    },
+    {
+      title: 'Resources',
+      links: [
+        { name: 'Documentation', href: '/docs' },
+        { name: 'API Reference', href: '/docs/api' },
+        { name: 'Changelog', href: '/changelog' },
+        { name: 'Status', href: '/status' },
       ],
     },
     {
@@ -23,7 +45,7 @@ export function Footer() {
         { name: 'About Us', href: '/about' },
         { name: 'Careers', href: '/careers', badge: 'Hiring' },
         { name: 'Contact', href: '/contact' },
-        { name: 'Status', href: '/status', icon: Globe },
+        { name: 'Security', href: '/security' },
       ],
     },
     {
@@ -31,7 +53,7 @@ export function Footer() {
       links: [
         { name: 'Privacy Policy', href: '/privacy' },
         { name: 'Terms of Service', href: '/terms' },
-        { name: 'Security', href: '/security', icon: Lock },
+        { name: 'Cookie Policy', href: '/privacy' },
       ],
     },
     {
@@ -45,49 +67,57 @@ export function Footer() {
   ];
 
   return (
-    <footer className="bg-white dark:bg-black border-t border-gray-200 dark:border-zinc-800 pt-16 pb-8 mt-auto transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-12 mb-16">
-          <div className="col-span-2">
-            <Link href="/" className="flex items-center mb-6">
-              <img src="/logo.svg" alt="Noxfolio Logo" className="h-12 w-12" />
-              <span className="ml-1 text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Noxfolio</span>
+    <footer className="bg-background border-border mt-auto border-t pt-20 pb-10">
+      <div className="mx-auto max-w-7xl px-6">
+        {/* Main Footer Grid - 6 Columns total on Desktop */}
+        <div className="mb-20 grid grid-cols-2 gap-12 md:grid-cols-3 lg:grid-cols-6">
+          <div className="col-span-2 lg:col-span-1">
+            <Link href="/" className="group mb-6 flex items-center gap-1">
+              <img
+                src="/logo.svg"
+                alt="Noxfolio Logo"
+                className="h-10 w-10 transition-transform group-hover:scale-110"
+              />
+              <span className="text-brand-gradient text-xl font-bold tracking-tighter">
+                Noxfolio
+              </span>
             </Link>
-            <p className="text-gray-500 dark:text-zinc-400 text-sm max-w-xs mb-6 leading-relaxed">
-              The ultimate enterprise billing foundation for modern SaaS. Built for scale, security, and developer happiness.
+            <p className="text-muted-foreground mb-6 text-xs leading-relaxed font-medium">
+              AI-powered automation platform that transforms how businesses
+              operate. <br className="hidden md:block" /> Stop managing tasks,
+              start automating everything.
             </p>
-            <div className="flex space-x-5">
-              <Link href="#" className="text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                <Twitter className="h-5 w-5" />
+            <div className="flex gap-4">
+              <Link
+                href="#"
+                className="bg-muted/50 hover:bg-primary/10 hover:text-primary rounded-lg p-2 transition-all"
+              >
+                <Twitter className="h-4 w-4" />
               </Link>
-              <Link href="#" className="text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
-                <Github className="h-5 w-5" />
-              </Link>
-              <Link href="#" className="text-gray-400 hover:text-blue-700 dark:hover:text-blue-500 transition-colors">
-                <Linkedin className="h-5 w-5" />
-              </Link>
-              <Link href="mailto:hello@noxfolio.com" className="text-gray-400 hover:text-red-500 transition-colors">
-                <Mail className="h-5 w-5" />
+              <Link
+                href="#"
+                className="bg-muted/50 hover:bg-primary/10 hover:text-primary rounded-lg p-2 transition-all"
+              >
+                <Github className="h-4 w-4" />
               </Link>
             </div>
           </div>
 
           {sections.map((section) => (
             <div key={section.title}>
-              <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-widest mb-6">
+              <h3 className="text-foreground mb-8 text-[10px] font-black tracking-[0.2em] uppercase">
                 {section.title}
               </h3>
               <ul className="space-y-4">
                 {section.links.map((link) => (
                   <li key={link.name}>
-                    <Link 
-                      href={link.href} 
-                      className="text-gray-500 dark:text-zinc-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center text-sm group"
+                    <Link
+                      href={link.href}
+                      className="text-muted-foreground hover:text-primary inline-block text-xs font-bold transition-colors"
                     >
-                      {link.icon && <link.icon className="w-4 h-4 mr-2 text-gray-400 dark:text-zinc-500 group-hover:text-blue-500 transition-colors" />}
                       {link.name}
                       {link.badge && (
-                        <span className="ml-2 px-1.5 py-0.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[10px] font-bold rounded uppercase tracking-tighter">
+                        <span className="bg-brand-pink/10 text-brand-pink ml-2 rounded px-1.5 py-0.5 text-[9px] font-black tracking-tighter uppercase">
                           {link.badge}
                         </span>
                       )}
@@ -99,21 +129,45 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="pt-8 border-t border-gray-100 dark:border-zinc-900 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-gray-400 dark:text-zinc-500 text-xs">
-            © {currentYear} Noxfolio Foundation, Inc. All rights reserved.
-          </p>
-          <div className="flex items-center space-x-6">
-            <span className="flex items-center text-[10px] text-gray-400 dark:text-zinc-500 font-medium">
-              <span className="w-2 h-2 bg-emerald-500 rounded-full mr-2 animate-pulse" />
-              All systems operational
+        {/* Bottom Bar */}
+        <div className="border-border flex flex-col items-center justify-between gap-6 border-t pt-10 lg:flex-row">
+          <div className="text-muted-foreground/60 flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase">
+            <span>© {currentYear} Noxfolio Foundation</span>
+            <span className="mx-2 opacity-20">|</span>
+            <span className="flex items-center">
+              Made with{' '}
+              <Heart className="text-brand-red mx-1 h-3 w-3 fill-current" /> by
+              Datta Sable
             </span>
-            <div className="flex space-x-4 text-xs font-medium text-gray-400 dark:text-zinc-500">
-              <Link href="/privacy" className="hover:text-gray-600 dark:hover:text-white">Privacy</Link>
-              <Link href="/terms" className="hover:text-gray-600 dark:hover:text-white">Terms</Link>
-              <Link href="/security" className="hover:text-gray-600 dark:hover:text-white">Security</Link>
-            </div>
           </div>
+
+          <nav className="text-muted-foreground/60 flex flex-wrap items-center justify-center gap-8 text-[10px] font-black tracking-widest uppercase">
+            <Link
+              href="/privacy"
+              className="hover:text-primary transition-colors"
+            >
+              Privacy
+            </Link>
+            <Link
+              href="/terms"
+              className="hover:text-primary transition-colors"
+            >
+              Terms
+            </Link>
+            <Link
+              href="/security"
+              className="hover:text-primary transition-colors"
+            >
+              Security
+            </Link>
+            <Link
+              href="/status"
+              className="flex items-center transition-colors hover:text-emerald-500"
+            >
+              <span className="mr-2 h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
+              Systems Operational
+            </Link>
+          </nav>
         </div>
       </div>
     </footer>

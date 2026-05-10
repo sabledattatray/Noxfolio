@@ -1,6 +1,6 @@
-# BillForge Phase 6: Ecosystem, Autonomy & White-Labeling [COMPLETED]
+# Noxfolio Phase 6: Ecosystem, Autonomy & White-Labeling [COMPLETED]
 
-This phase transformed BillForge from a standalone platform into a modular ecosystem with intelligent autonomous agents and enterprise-grade customization.
+This phase transformed Noxfolio from a standalone platform into a modular ecosystem with intelligent autonomous agents and enterprise-grade customization.
 
 ## 🧱 Phase 6 Modules & Task Tracker
 
@@ -36,4 +36,4 @@ This phase transformed BillForge from a standalone platform into a modular ecosy
 ---
 
 ## 🚀 Status: PRODUCTION READY
-BillForge is now a fully extensible, white-labeled financial ecosystem ready for enterprise deployment.
+Noxfolio is now a fully extensible, white-labeled financial ecosystem ready for enterprise deployment.

@@ -1,6 +1,6 @@
-# 🗺️ BillForge Public Roadmap
+# 🗺️ Noxfolio Public Roadmap
 
-This roadmap outlines the future of the BillForge Autonomous Revenue Engine. We are building the most advanced open-core billing infrastructure for the next generation of SaaS.
+This roadmap outlines the future of the Noxfolio Autonomous Revenue Engine. We are building the most advanced open-core billing infrastructure for the next generation of SaaS.
 
 ---
 
@@ -36,4 +36,4 @@ This roadmap outlines the future of the BillForge Autonomous Revenue Engine. We 
 ---
 
 ## 🤝 Community Feedback
-We prioritize our roadmap based on community feedback. If you have a feature request, please open a [GitHub Issue](https://github.com/youruser/billforge/issues).
+We prioritize our roadmap based on community feedback. If you have a feature request, please open a [GitHub Issue](https://github.com/youruser/noxfolio/issues).

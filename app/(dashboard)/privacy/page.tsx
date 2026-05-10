@@ -1,30 +1,70 @@
 import { MarketingPageLayout } from '@/components/marketing-layout';
-import { FileText } from 'lucide-react';
+import { ShieldCheck, Lock, Eye, FileLock, UserCheck } from 'lucide-react';
 
 export default function PrivacyPage() {
-  const sections = [
-    { title: 'Information We Collect', content: 'We collect information you provide directly to us when you create an account, such as your name, email, and company details. We also collect transaction data required for billing.' },
-    { title: 'How We Use Information', content: 'Your information is used to provide, maintain, and improve our billing services, process payments, and communicate with you about your account.' },
-    { title: 'Data Retention', content: 'We retain your personal data only for as long as necessary to fulfill the purposes for which it was collected, including legal and accounting requirements.' },
-    { title: 'Your Rights', content: 'Under GDPR and CCPA, you have the right to access, delete, or port your data. Contact us at privacy@billforge.com to exercise these rights.' }
-  ];
-
   return (
-    <MarketingPageLayout 
+    <MarketingPageLayout
       title="Privacy Policy"
-      subtitle="Last Updated: May 7, 2026. We are committed to protecting your personal data and being transparent about how we use it."
-      icon={FileText}
+      subtitle="How we protect and manage your data."
+      icon={Lock}
     >
-      <div className="space-y-12">
-        {sections.map(section => (
-          <div key={section.title}>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">{section.title}</h2>
-            <p className="leading-relaxed">{section.content}</p>
+      <div className="prose prose-lg dark:prose-invert animate-in fade-in slide-in-from-bottom-4 max-w-none space-y-12 duration-500">
+        <section className="space-y-4">
+          <div className="text-primary flex items-center gap-3">
+            <Eye className="h-6 w-6" />
+            <h2 className="m-0 text-2xl font-black tracking-tight italic">
+              1. Data Collection
+            </h2>
           </div>
-        ))}
-        <div className="pt-8 border-t border-gray-100">
-          <p className="text-sm">If you have any questions about this policy, please reach out to our Data Protection Officer at <a href="mailto:privacy@billforge.com" className="text-blue-600">privacy@billforge.com</a>.</p>
-        </div>
+          <p className="text-muted-foreground font-medium">
+            We collect information that you provide directly to us when you
+            create an account, such as your name, email address, and payment
+            information. We also collect usage data to improve our autonomous
+            billing agents.
+          </p>
+        </section>
+
+        <section className="space-y-4">
+          <div className="text-primary flex items-center gap-3">
+            <ShieldCheck className="h-6 w-6" />
+            <h2 className="m-0 text-2xl font-black tracking-tight italic">
+              2. Data Security
+            </h2>
+          </div>
+          <p className="text-muted-foreground font-medium">
+            Your data is encrypted at rest using AES-256 and in transit using
+            TLS 1.3. We employ strict data isolation protocols to ensure that no
+            organizational data is leaked between tenants.
+          </p>
+        </section>
+
+        <section className="space-y-4">
+          <div className="text-primary flex items-center gap-3">
+            <FileLock className="h-6 w-6" />
+            <h2 className="m-0 text-2xl font-black tracking-tight italic">
+              3. Data Retention
+            </h2>
+          </div>
+          <p className="text-muted-foreground font-medium">
+            We retain your information for as long as your account is active or
+            as needed to provide you with services. You can request data
+            deletion at any time via the security dashboard.
+          </p>
+        </section>
+
+        <section className="space-y-4">
+          <div className="text-primary flex items-center gap-3">
+            <UserCheck className="h-6 w-6" />
+            <h2 className="m-0 text-2xl font-black tracking-tight italic">
+              4. Your Rights
+            </h2>
+          </div>
+          <p className="text-muted-foreground font-medium">
+            Under GDPR and CCPA, you have the right to access, rectify, or erase
+            your personal data. Our platform provides self-service tools to
+            exercise these rights autonomously.
+          </p>
+        </section>
       </div>
     </MarketingPageLayout>
   );

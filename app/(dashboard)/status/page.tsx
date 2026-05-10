@@ -1,57 +1,135 @@
 import { MarketingPageLayout } from '@/components/marketing-layout';
-import { Activity, Clock, Terminal } from 'lucide-react';
+import { Activity, CheckCircle2, AlertCircle, Clock } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+
+const systems = [
+  { name: 'API Gateway', status: 'operational', uptime: '99.99%' },
+  { name: 'Dashboard UI', status: 'operational', uptime: '100%' },
+  { name: 'Billing Engine', status: 'operational', uptime: '99.95%' },
+  { name: 'Analytics Pipeline', status: 'operational', uptime: '99.90%' },
+  {
+    name: 'Webhook Delivery',
+    status: 'degraded',
+    uptime: '98.50%',
+    note: 'Slight latency in European regions.',
+  },
+];
+
+const incidents = [
+  {
+    date: 'May 08, 2026',
+    title: 'Minor Webhook Latency',
+    status: 'Resolved',
+    description:
+      'We experienced minor delays in webhook delivery for approximately 15 minutes due to an upstream provider issue.',
+  },
+  {
+    date: 'April 22, 2026',
+    title: 'Scheduled Maintenance',
+    status: 'Completed',
+    description: 'Database optimization and indexing completed successfully.',
+  },
+];
 
 export default function StatusPage() {
-  const services = [
-    { name: 'API Gateway', status: 'operational' },
-    { name: 'Billing Engine', status: 'operational' },
-    { name: 'Dashboard UI', status: 'operational' },
-    { name: 'Webhook Deliveries', status: 'operational' },
-    { name: 'Database Clusters', status: 'operational' },
-  ];
-
   return (
-    <MarketingPageLayout 
+    <MarketingPageLayout
       title="System Status"
-      subtitle="Real-time monitoring and incident reports for all BillForge services."
+      subtitle="Real-time performance metrics and incident reports."
       icon={Activity}
     >
-      <div className="space-y-12">
-        <div className="p-8 rounded-[32px] bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-between">
-          <div className="flex items-center gap-4 text-emerald-600">
-            <div className="w-4 h-4 bg-emerald-500 rounded-full animate-pulse" />
-            <h2 className="text-2xl font-bold">All Systems Operational</h2>
-          </div>
-          <p className="text-sm font-medium text-emerald-600/80">Refreshed: Just now</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {services.map(service => (
-            <div key={service.name} className="p-6 rounded-2xl border border-gray-100 bg-white flex justify-between items-center">
-              <span className="font-bold text-gray-900">{service.name}</span>
-              <span className="px-3 py-1 bg-emerald-50 text-emerald-600 text-xs font-bold rounded-full uppercase tracking-widest">
-                {service.status}
-              </span>
+      <div className="animate-in fade-in slide-in-from-bottom-4 space-y-12 duration-500">
+        {/* Global Status Banner */}
+        <div className="flex flex-col items-center justify-between gap-6 rounded-[32px] border border-emerald-500/20 bg-emerald-500/10 p-8 md:flex-row">
+          <div className="flex items-center gap-4">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-500">
+              <CheckCircle2 className="h-10 w-10" />
             </div>
-          ))}
+            <div>
+              <h2 className="text-2xl font-black tracking-tight italic">
+                All Systems Operational
+              </h2>
+              <p className="text-muted-foreground font-medium">
+                As of May 10, 2026 — 20:50 UTC
+              </p>
+            </div>
+          </div>
+          <Badge className="rounded-full bg-emerald-500 px-4 py-1.5 font-bold text-white">
+            100% HEALTHY
+          </Badge>
         </div>
 
-        <div className="space-y-6">
-          <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-            <Clock className="w-5 h-5 text-gray-400" />
-            Past Incidents
+        {/* System Breakdown */}
+        <div className="space-y-4">
+          <h3 className="px-4 text-xl font-bold tracking-tight">
+            System Components
           </h3>
-          <div className="space-y-8">
-            {[
-              { date: 'May 1, 2026', title: 'Increased latency in US-East-1', description: 'Monitoring showed a spike in response times for the API Gateway. Resolved within 12 minutes.', status: 'Resolved' },
-              { date: 'April 14, 2026', title: 'Webhook delivery delays', description: 'A backlog in our message queue caused a 5-minute delay in webhook deliveries.', status: 'Resolved' }
-            ].map(incident => (
-              <div key={incident.date} className="relative pl-8 border-l-2 border-gray-100 pb-8 last:pb-0">
-                <div className="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-white border-2 border-gray-200" />
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">{incident.date}</p>
-                <h4 className="font-bold text-gray-900 mb-2">{incident.title}</h4>
-                <p className="text-sm text-gray-500 mb-2 leading-relaxed">{incident.description}</p>
-                <span className="text-[10px] font-black text-emerald-500 uppercase">{incident.status}</span>
+          <div className="grid grid-cols-1 gap-4">
+            {systems.map((s) => (
+              <div
+                key={s.name}
+                className="bg-card border-border/50 group hover:border-primary/30 flex items-center justify-between rounded-2xl border p-6 transition-all"
+              >
+                <div className="flex items-center gap-4">
+                  <div
+                    className={`h-2 w-2 rounded-full ${s.status === 'operational' ? 'bg-emerald-500' : 'bg-amber-500'} shadow-[0_0_10px_rgba(16,185,129,0.5)]`}
+                  />
+                  <div>
+                    <p className="font-bold">{s.name}</p>
+                    {s.note && (
+                      <p className="text-muted-foreground text-[10px] font-medium italic">
+                        {s.note}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center gap-8">
+                  <div className="hidden text-right sm:block">
+                    <p className="text-muted-foreground text-[10px] font-black tracking-widest uppercase">
+                      Uptime
+                    </p>
+                    <p className="text-sm font-bold">{s.uptime}</p>
+                  </div>
+                  <Badge
+                    variant="outline"
+                    className={`border-transparent font-bold capitalize ${
+                      s.status === 'operational'
+                        ? 'bg-emerald-500/10 text-emerald-500'
+                        : 'bg-amber-500/10 text-amber-500'
+                    }`}
+                  >
+                    {s.status}
+                  </Badge>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Recent Incidents */}
+        <div className="space-y-6">
+          <h3 className="px-4 text-xl font-bold tracking-tight">
+            Incident History
+          </h3>
+          <div className="space-y-4">
+            {incidents.map((i) => (
+              <div
+                key={i.title}
+                className="bg-accent/30 border-border/50 space-y-4 rounded-[32px] border p-8"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="text-muted-foreground flex items-center gap-2 text-[10px] font-black tracking-widest uppercase">
+                    <Clock className="h-3 w-3" />
+                    {i.date}
+                  </div>
+                  <Badge className="bg-primary/10 text-primary rounded-lg border-transparent font-bold">
+                    {i.status}
+                  </Badge>
+                </div>
+                <h4 className="text-lg font-bold">{i.title}</h4>
+                <p className="text-muted-foreground text-sm leading-relaxed font-medium">
+                  {i.description}
+                </p>
               </div>
             ))}
           </div>

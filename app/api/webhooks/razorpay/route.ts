@@ -44,13 +44,35 @@ export async function POST(req: Request) {
 
 async function handlePaymentCaptured(payment: any) {
   console.log('✅ Razorpay Payment Captured:', payment.id);
-  // Implementation logic for payment capture
+
+  // Find invoice by order ID
+  const [existingInvoice] = await db
+    .select()
+    .from(invoices)
+    .where(eq(invoices.razorpayOrderId, payment.order_id))
+    .limit(1);
+
+  if (existingInvoice) {
+    await db
+      .update(invoices)
+      .set({
+        status: 'paid',
+        razorpayPaymentId: payment.id,
+      })
+      .where(eq(invoices.id, existingInvoice.id));
+
+    // Log financial activity
+    await db.insert(activityLogs).values({
+      organizationId: existingInvoice.organizationId,
+      action: `Payment captured for invoice ${existingInvoice.number}: ${payment.amount / 100} ${payment.currency}`,
+    });
+  }
 }
 
 async function handleOrderPaid(order: any) {
   console.log('✅ Razorpay Order Paid:', order.id);
   const organizationId = parseInt(order.notes.organizationId);
-  
+
   if (isNaN(organizationId)) return;
 
   await db.insert(invoices).values({
@@ -63,10 +85,11 @@ async function handleOrderPaid(order: any) {
   });
 
   // Update organization subscription status
-  await db.update(organizations)
-    .set({ 
+  await db
+    .update(organizations)
+    .set({
       subscriptionStatus: 'active',
-      planName: order.notes.planId || 'pro'
+      planName: order.notes.planId || 'pro',
     })
     .where(eq(organizations.id, organizationId));
 }

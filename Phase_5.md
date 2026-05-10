@@ -1,7 +1,7 @@
 PHASE 5 PRD — ENTERPRISE SCALING, SECURITY & PRODUCTION HARDENING
-Project: BillForge
+Project: Noxfolio
 Phase Goal:
-Transform BillForge from:
+Transform Noxfolio from:
 
 “Advanced SaaS platform”
 
@@ -129,7 +129,7 @@ high availability
 
 
 Prompt
-Design a production-grade enterprise infrastructure architecture for BillForge.Requirements:- Scalable app architecture- Worker infrastructure- Queue processing systems- Load balancing- High availability design- Fault-tolerant architecture- CDN integration- Infrastructure separationGoals:- Enterprise deployment readiness- Horizontal scalability- Financial infrastructure reliability
+Design a production-grade enterprise infrastructure architecture for Noxfolio.Requirements:- Scalable app architecture- Worker infrastructure- Queue processing systems- Load balancing- High availability design- Fault-tolerant architecture- CDN integration- Infrastructure separationGoals:- Enterprise deployment readiness- Horizontal scalability- Financial infrastructure reliability
 
 MODULE 2 — DATABASE SCALING & OPTIMIZATION
 Goal
@@ -168,7 +168,7 @@ caching layers
 
 
 Prompt
-Optimize the BillForge database architecture for enterprise-scale workloads.Requirements:- Query optimization- Index optimization- Read replicas- Connection pooling- Partitioning strategies- Analytics database separation- Transaction optimization- Database cachingGoals:- Financial transaction reliability- Scalable analytics performance- Enterprise database efficiency
+Optimize the Noxfolio database architecture for enterprise-scale workloads.Requirements:- Query optimization- Index optimization- Read replicas- Connection pooling- Partitioning strategies- Analytics database separation- Transaction optimization- Database cachingGoals:- Financial transaction reliability- Scalable analytics performance- Enterprise database efficiency
 
 MODULE 3 — REDIS & CACHING STRATEGY
 Goal
@@ -207,7 +207,7 @@ invalidation strategies
 
 
 Prompt
-Build an enterprise caching and Redis infrastructure for BillForge.Requirements:- Distributed caching- Session caching- API response caching- Dashboard widget caching- Analytics aggregation caching- Redis pub/sub infrastructure- Cache invalidation strategiesGoals:- Enterprise-scale performance- Low-latency financial dashboards- Scalable realtime infrastructure
+Build an enterprise caching and Redis infrastructure for Noxfolio.Requirements:- Distributed caching- Session caching- API response caching- Dashboard widget caching- Analytics aggregation caching- Redis pub/sub infrastructure- Cache invalidation strategiesGoals:- Enterprise-scale performance- Low-latency financial dashboards- Scalable realtime infrastructure
 
 MODULE 4 — ADVANCED SECURITY HARDENING
 Goal
@@ -252,7 +252,7 @@ MFA enforcement
 
 
 Prompt
-Implement enterprise-grade security hardening across BillForge.Requirements:- CSP headers- XSS prevention- CSRF protection- SQL injection prevention- API security hardening- Suspicious activity detection- MFA enforcement- Device tracking- Enterprise audit loggingGoals:- Financial infrastructure security standards- Production-grade protection- Enterprise SaaS compliance readiness
+Implement enterprise-grade security hardening across Noxfolio.Requirements:- CSP headers- XSS prevention- CSRF protection- SQL injection prevention- API security hardening- Suspicious activity detection- MFA enforcement- Device tracking- Enterprise audit loggingGoals:- Financial infrastructure security standards- Production-grade protection- Enterprise SaaS compliance readiness
 
 MODULE 5 — RBAC & ENTERPRISE PERMISSIONS
 Goal
@@ -297,7 +297,7 @@ auditor
 
 
 Prompt
-Build an enterprise-grade RBAC and permission management system for BillForge.Requirements:- Fine-grained permissions- Hierarchical roles- Scoped organization access- Permission inheritance- Admin delegation- Audit-friendly permission architectureRoles:- Super admin- Organization owner- Finance admin- Support admin- Developer- AuditorGoals:- Enterprise SaaS authorization architecture- Financial platform access security
+Build an enterprise-grade RBAC and permission management system for Noxfolio.Requirements:- Fine-grained permissions- Hierarchical roles- Scoped organization access- Permission inheritance- Admin delegation- Audit-friendly permission architectureRoles:- Super admin- Organization owner- Finance admin- Support admin- Developer- AuditorGoals:- Enterprise SaaS authorization architecture- Financial platform access security
 
 MODULE 6 — OBSERVABILITY & MONITORING
 Goal
@@ -349,7 +349,7 @@ alerts
 
 
 Prompt
-Build enterprise observability and monitoring systems for BillForge.Requirements:- API monitoring- Queue monitoring- Database metrics- Worker health monitoring- Payment failure alerts- Error tracking- Distributed tracing- Infrastructure dashboardsTools:- Grafana- Prometheus- SentryGoals:- Enterprise production monitoring- Financial infrastructure reliability
+Build enterprise observability and monitoring systems for Noxfolio.Requirements:- API monitoring- Queue monitoring- Database metrics- Worker health monitoring- Payment failure alerts- Error tracking- Distributed tracing- Infrastructure dashboardsTools:- Grafana- Prometheus- SentryGoals:- Enterprise production monitoring- Financial infrastructure reliability
 
 MODULE 7 — AUDIT LOGGING SYSTEM
 Goal
@@ -388,7 +388,7 @@ exportable logs
 
 
 Prompt
-Build an enterprise audit logging infrastructure for BillForge.Requirements:- Immutable audit logs- Financial action logging- Permission change logs- API access logs- Webhook event logs- Searchable audit trails- Exportable audit historyGoals:- Enterprise compliance readiness- Financial operation traceability- Security accountability
+Build an enterprise audit logging infrastructure for Noxfolio.Requirements:- Immutable audit logs- Financial action logging- Permission change logs- API access logs- Webhook event logs- Searchable audit trails- Exportable audit historyGoals:- Enterprise compliance readiness- Financial operation traceability- Security accountability
 
 MODULE 8 — DISASTER RECOVERY & BACKUPS
 Goal
@@ -414,7 +414,7 @@ failover systems
 
 
 Prompt
-Build disaster recovery and backup systems for BillForge.Requirements:- Automated backups- Point-in-time recovery- Database snapshots- Queue recovery- Failover infrastructure- Backup validation- Recovery proceduresGoals:- Financial data safety- Enterprise disaster recovery readiness- High reliability infrastructure
+Build disaster recovery and backup systems for Noxfolio.Requirements:- Automated backups- Point-in-time recovery- Database snapshots- Queue recovery- Failover infrastructure- Backup validation- Recovery proceduresGoals:- Financial data safety- Enterprise disaster recovery readiness- High reliability infrastructure
 
 MODULE 9 — LOAD TESTING & PERFORMANCE ENGINEERING
 Goal
@@ -447,7 +447,7 @@ optimization
 
 
 Prompt
-Perform enterprise-scale load testing and performance engineering for BillForge.Requirements:- API stress testing- Billing workload testing- Queue scalability testing- Database performance testing- WebSocket scaling tests- Bottleneck analysisGoals:- Enterprise-scale reliability- Production performance optimization- Financial platform scalability
+Perform enterprise-scale load testing and performance engineering for Noxfolio.Requirements:- API stress testing- Billing workload testing- Queue scalability testing- Database performance testing- WebSocket scaling tests- Bottleneck analysisGoals:- Enterprise-scale reliability- Production performance optimization- Financial platform scalability
 
 MODULE 10 — CI/CD & DEPLOYMENT AUTOMATION
 Goal
@@ -486,7 +486,7 @@ builds
 
 
 Prompt
-Build enterprise CI/CD and deployment automation pipelines for BillForge.Requirements:- Automated deployments- Preview environments- Blue-green deployments- Rollback support- Security scans- Build pipelines- Test automation- Deployment validationGoals:- Enterprise deployment reliability- Zero-downtime releases- Production-safe automation
+Build enterprise CI/CD and deployment automation pipelines for Noxfolio.Requirements:- Automated deployments- Preview environments- Blue-green deployments- Rollback support- Security scans- Build pipelines- Test automation- Deployment validationGoals:- Enterprise deployment reliability- Zero-downtime releases- Production-safe automation
 
 MODULE 11 — QUEUE & WORKER SCALING
 Goal
@@ -522,7 +522,7 @@ worker scaling
 
 
 Prompt
-Build scalable enterprise queue and worker infrastructure for BillForge.Requirements:- Billing workers- Email workers- Webhook workers- Analytics workers- Retry handling- Dead-letter queues- Worker autoscaling- Queue observabilityInfrastructure:- BullMQ- Redis queues- Enterprise async processing
+Build scalable enterprise queue and worker infrastructure for Noxfolio.Requirements:- Billing workers- Email workers- Webhook workers- Analytics workers- Retry handling- Dead-letter queues- Worker autoscaling- Queue observabilityInfrastructure:- BullMQ- Redis queues- Enterprise async processing
 
 MODULE 12 — MULTI-REGION & CDN STRATEGY
 Goal
@@ -545,7 +545,7 @@ asset optimization
 
 
 Prompt
-Implement multi-region delivery and CDN optimization for BillForge.Requirements:- Global CDN integration- Edge caching- Region-aware APIs- Asset optimization- Static delivery optimization- Multi-region deployment preparationGoals:- Global SaaS performance- Enterprise-grade delivery speed
+Implement multi-region delivery and CDN optimization for Noxfolio.Requirements:- Global CDN integration- Edge caching- Region-aware APIs- Asset optimization- Static delivery optimization- Multi-region deployment preparationGoals:- Global SaaS performance- Enterprise-grade delivery speed
 
 MODULE 13 — COMPLIANCE & PRIVACY SYSTEMS
 Goal
@@ -581,7 +581,7 @@ retention policies
 
 
 Prompt
-Build enterprise compliance and privacy systems for BillForge.Requirements:- GDPR-ready architecture- Consent tracking- Data export workflows- Account deletion handling- Data retention policies- Privacy-safe logging- Compliance audit preparationGoals:- Enterprise compliance readiness- Privacy-focused financial infrastructure
+Build enterprise compliance and privacy systems for Noxfolio.Requirements:- GDPR-ready architecture- Consent tracking- Data export workflows- Account deletion handling- Data retention policies- Privacy-safe logging- Compliance audit preparationGoals:- Enterprise compliance readiness- Privacy-focused financial infrastructure
 
 MODULE 14 — ERROR HANDLING & RESILIENCE
 Goal
@@ -614,7 +614,7 @@ timeout handling
 
 
 Prompt
-Implement enterprise resilience and error handling systems for BillForge.Requirements:- Graceful failure handling- Retry systems- Circuit breakers- Timeout handling- Fallback systems- Worker resilience- API fault toleranceGoals:- Enterprise financial reliability- Production-grade resilience
+Implement enterprise resilience and error handling systems for Noxfolio.Requirements:- Graceful failure handling- Retry systems- Circuit breakers- Timeout handling- Fallback systems- Worker resilience- API fault toleranceGoals:- Enterprise financial reliability- Production-grade resilience
 
 MODULE 15 — INFRASTRUCTURE AS CODE
 Goal
@@ -634,7 +634,7 @@ env templates
 
 
 Prompt
-Build Infrastructure-as-Code systems for BillForge.Requirements:- Terraform infrastructure- Deployment configurations- Environment templates- Cloud resource management- Reproducible infrastructureGoals:- Enterprise infrastructure automation- Scalable DevOps workflows
+Build Infrastructure-as-Code systems for Noxfolio.Requirements:- Terraform infrastructure- Deployment configurations- Environment templates- Cloud resource management- Reproducible infrastructureGoals:- Enterprise infrastructure automation- Scalable DevOps workflows
 
 MODULE 16 — FINAL ENTERPRISE UI POLISH
 Goal
@@ -657,7 +657,7 @@ premium transitions
 
 
 Prompt
-Polish the entire BillForge platform into a world-class enterprise financial infrastructure product.Requirements:- Premium realtime dashboard polish- Enterprise transitions- Performance optimization- Financial software UI refinement- Loading optimization- Professional dashboard consistencyGoal:- Product should feel like Stripe/Vercel-level infrastructure software- Enterprise-grade UX quality- Investor-ready product polish
+Polish the entire Noxfolio platform into a world-class enterprise financial infrastructure product.Requirements:- Premium realtime dashboard polish- Enterprise transitions- Performance optimization- Financial software UI refinement- Loading optimization- Professional dashboard consistencyGoal:- Product should feel like Stripe/Vercel-level infrastructure software- Enterprise-grade UX quality- Investor-ready product polish
 
 MODULE 17 — PRODUCTION DEPLOYMENT CHECKLIST
 Goal
@@ -686,7 +686,7 @@ security validation
 
 
 Prompt
-Prepare BillForge for final enterprise production deployment.Requirements:- SSL setup- Domain configuration- Environment validation- Monitoring verification- Backup verification- Security validation- Performance verification- Deployment readiness checksGoals:- Production-safe enterprise deployment- Financial infrastructure launch readiness
+Prepare Noxfolio for final enterprise production deployment.Requirements:- SSL setup- Domain configuration- Environment validation- Monitoring verification- Backup verification- Security validation- Performance verification- Deployment readiness checksGoals:- Production-safe enterprise deployment- Financial infrastructure launch readiness
 
 ✅ PHASE 5 COMPLETION CHECKLIST
 Infrastructure
@@ -763,7 +763,7 @@ Compliance
 
 
 🚀 PHASE 5 FINAL OUTPUT
-After Phase 5, BillForge should feel like:
+After Phase 5, Noxfolio should feel like:
 ✅ enterprise financial infrastructure
 ✅ production-grade SaaS platform
 ✅ scalable developer ecosystem

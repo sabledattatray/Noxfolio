@@ -1,8 +1,8 @@
 PHASE 2 PRD — BILLING ENGINE & PAYMENT INFRASTRUCTURE
-Project: BillForge
+Project: Noxfolio
 Phase Goal:
 
-Build the complete enterprise-grade billing core for BillForge.
+Build the complete enterprise-grade billing core for Noxfolio.
 
 This phase transforms the project from:
 
@@ -62,7 +62,7 @@ Required Structure
     /refunds
     /webhooks
 Prompt
-Design an enterprise-grade billing architecture for BillForge.
+Design an enterprise-grade billing architecture for Noxfolio.
 
 Requirements:
 - Modular billing system
@@ -112,7 +112,7 @@ Secure webhook handling
 Retry-safe logic
 Idempotency
 Prompt
-Integrate Stripe into BillForge as a production-grade billing infrastructure provider.
+Integrate Stripe into Noxfolio as a production-grade billing infrastructure provider.
 
 Requirements:
 - Stripe Checkout integration
@@ -163,7 +163,7 @@ Growth
 Enterprise
 Custom
 Prompt
-Build a scalable SaaS pricing and subscription plan engine for BillForge.
+Build a scalable SaaS pricing and subscription plan engine for Noxfolio.
 
 Requirements:
 - Monthly/yearly plans
@@ -214,7 +214,7 @@ grace periods
 dunning management
 subscription schedules
 Prompt
-Build a production-grade subscription lifecycle management system for BillForge.
+Build a production-grade subscription lifecycle management system for Noxfolio.
 
 Requirements:
 - Subscription creation
@@ -260,7 +260,7 @@ modern cards
 invoice timeline
 payment history
 Prompt
-Build a premium customer billing portal for BillForge.
+Build a premium customer billing portal for Noxfolio.
 
 Requirements:
 - Subscription management
@@ -305,7 +305,7 @@ line items
 totals
 invoice number
 Prompt
-Build a complete enterprise invoice generation system for BillForge.
+Build a complete enterprise invoice generation system for Noxfolio.
 
 Requirements:
 - Automatic invoice generation
@@ -346,7 +346,7 @@ tax-inclusive pricing
 tax-exclusive pricing
 GST validation
 Prompt
-Build a scalable SaaS tax engine foundation for BillForge.
+Build a scalable SaaS tax engine foundation for Noxfolio.
 
 Requirements:
 - GST support
@@ -379,7 +379,7 @@ Day 3 retry
 Day 5 retry
 Suspend after threshold
 Prompt
-Build a production-grade failed payment recovery and dunning system for BillForge.
+Build a production-grade failed payment recovery and dunning system for Noxfolio.
 
 Requirements:
 - Automatic retry logic
@@ -408,7 +408,7 @@ expiration dates
 usage limits
 referral rewards
 Prompt
-Build a scalable coupon and discount engine for BillForge.
+Build a scalable coupon and discount engine for Noxfolio.
 
 Requirements:
 - Percentage discounts
@@ -441,7 +441,7 @@ storage GB
 seats/users
 transactions
 Prompt
-Build a scalable usage-based billing system for BillForge.
+Build a scalable usage-based billing system for Noxfolio.
 
 Requirements:
 - Usage event tracking
@@ -483,7 +483,7 @@ enums
 constraints
 scalability
 Prompt
-Design a production-grade billing database schema for BillForge.
+Design a production-grade billing database schema for Noxfolio.
 
 Requirements:
 - Subscription relationships
@@ -518,7 +518,7 @@ retry logic
 event logs
 replay events
 Prompt
-Build a scalable billing webhook and event processing system for BillForge.
+Build a scalable billing webhook and event processing system for Noxfolio.
 
 Requirements:
 - Stripe webhook handling
@@ -546,7 +546,7 @@ payment failed
 trial ending
 subscription cancelled
 Prompt
-Build a transactional billing email system for BillForge.
+Build a transactional billing email system for Noxfolio.
 
 Requirements:
 - Invoice emails
@@ -573,7 +573,7 @@ active subscriptions
 failed payments
 churn
 Prompt
-Build the foundational billing analytics infrastructure for BillForge.
+Build the foundational billing analytics infrastructure for Noxfolio.
 
 Requirements:
 - Revenue aggregation
@@ -600,7 +600,7 @@ billing charts
 payment cards
 empty states
 Prompt
-Polish the entire BillForge billing experience into a premium enterprise SaaS platform.
+Polish the entire Noxfolio billing experience into a premium enterprise SaaS platform.
 
 Requirements:
 - Elegant billing tables
@@ -645,7 +645,7 @@ UI
  Payment flows polished
 🚀 PHASE 2 FINAL OUTPUT
 
-After Phase 2, BillForge should feel like:
+After Phase 2, Noxfolio should feel like:
 
 ✅ real SaaS billing infrastructure
 ✅ Stripe alternative prototype

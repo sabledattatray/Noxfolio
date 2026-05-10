@@ -1,6 +1,6 @@
-# 🌐 BillForge Public Ecosystem Command Center
+# 🌐 Noxfolio Public Ecosystem Command Center
 
-This document outlines the strategy for maintaining and growing the public presence of **BillForge**. Use this to coordinate content launches and community engagement.
+This document outlines the strategy for maintaining and growing the public presence of **Noxfolio**. Use this to coordinate content launches and community engagement.
 
 ---
 
@@ -40,7 +40,7 @@ Ensure the following are set up in your repository:
 2.  **Discussions**: Enable GitHub Discussions for Q&A and feature brainstorming.
 3.  **Roadmap**: Keep `ROADMAP.md` updated as you complete phases.
 4.  **Releases**: Use professional release notes. Example:
-    > **BillForge v1.1.0: The Observability Update**
+    > **Noxfolio v1.1.0: The Observability Update**
     > - Added high-fidelity Audit Ledger.
     > - Integrated Agent Status logs.
     > - Optimized DB connection pooling.

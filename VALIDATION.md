@@ -1,4 +1,4 @@
-# External Validation Strategy: BillForge
+# External Validation Strategy: Noxfolio
 
 Internal audits (98%) verify technical correctness. **External validation** verifies market value and engineering authority. Use this guide to gain social proof and technical vetting from the global developer community.
 
@@ -10,7 +10,7 @@ Before a public launch, get vetted by senior engineers to build "Engineering Aut
 ### Communities to Target:
 - **r/SaaS**: Post for product-market fit feedback.
 - **r/NextJS**: Post for code-review and architectural feedback (Singleton patterns, Drizzle usage).
-- **Hacker News (Show HN)**: The ultimate technical gauntlet. Post with a title like: *Show HN: BillForge – Open Core Revenue OS with Autonomous AI Agents.*
+- **Hacker News (Show HN)**: The ultimate technical gauntlet. Post with a title like: *Show HN: Noxfolio – Open Core Revenue OS with Autonomous AI Agents.*
 - **Developer Discords**: (e.g., T3 Stack, Vercel, Supabase) Share in "Showcase" channels.
 
 ---
@@ -30,7 +30,7 @@ Product Hunt is the primary engine for "Stars" and "Beta Users."
 Don't wait for them to find you. Send this to Platform Engineering leads at companies you admire.
 
 ### Outreach Template:
-> "Hi [Name], I've been following [Company]'s work on [Specific Tech/Infrastructure]. I recently engineered **BillForge**, an autonomous revenue infrastructure platform. I’d love to get your thoughts on how I handled the **event-driven background orchestration** and **tenant isolation** in a Next.js environment. No pressure, just looking for a peer review from a senior architect."
+> "Hi [Name], I've been following [Company]'s work on [Specific Tech/Infrastructure]. I recently engineered **Noxfolio**, an autonomous revenue infrastructure platform. I’d love to get your thoughts on how I handled the **event-driven background orchestration** and **tenant isolation** in a Next.js environment. No pressure, just looking for a peer review from a senior architect."
 
 ---
 
