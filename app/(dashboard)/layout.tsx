@@ -11,6 +11,7 @@ import useSWR from 'swr';
 import { Footer } from '@/components/footer';
 import { IndustriesMegaMenu } from '@/components/industries-mega-menu';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { useTheme } from 'next-themes';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -50,6 +51,7 @@ function UserActions() {
 function Header() {
   const [mounted, setMounted] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { resolvedTheme } = useTheme();
 
   useEffect(() => {
     setMounted(true);
@@ -176,9 +178,15 @@ function Header() {
         </div>
       </header>
 
-      {/* Mobile Drawer - Optimized for Pro Dark/Light Themes */}
+      {/* Mobile Drawer - Forced Opacity & Theme Sync via Inline Styles */}
       <div
-        className={`!dark:bg-[#050510] border-border fixed inset-0 top-16 z-[99999] border-t !bg-white !opacity-100 backdrop-blur-none transition-transform duration-500 lg:hidden ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`border-border fixed inset-0 top-16 z-[99999] border-t transition-transform duration-500 lg:hidden ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        style={{
+          backgroundColor:
+            mounted && resolvedTheme === 'dark' ? '#050510' : '#ffffff',
+          opacity: 1,
+          visibility: isMobileMenuOpen ? 'visible' : 'hidden',
+        }}
       >
         <div className="flex h-[calc(100vh-64px)] flex-col p-8">
           <div className="text-muted-foreground/50 mb-4 text-[10px] font-black tracking-[0.2em] uppercase">
