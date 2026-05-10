@@ -65,13 +65,13 @@
   }
 
   .dark, [data-theme="dark"] {
-    --background: 243 60% 5%; /* Deep brand blue-black */
+    --background: 0 0% 0%; /* Pure Black */
     --foreground: 0 0% 98%;
     
-    --card: 243 60% 8%;
+    --card: 0 0% 3%; /* Extremely deep grey for cards */
     --card-foreground: 0 0% 98%;
     
-    --popover: 243 60% 8%;
+    --popover: 0 0% 3%;
     --popover-foreground: 0 0% 98%;
     
     --primary: 1 100% 46.5%;
@@ -80,14 +80,14 @@
     --secondary: 338 54% 55%;
     --secondary-foreground: 0 0% 100%;
     
-    --muted: 243 60% 12%;
+    --muted: 0 0% 7%;
     --muted-foreground: 240 5% 64.9%;
     
-    --accent: 241 55% 45%;
+    --accent: 0 0% 10%;
     --accent-foreground: 0 0% 100%;
     
-    --border: 243 60% 15%;
-    --input: 243 60% 15%;
+    --border: 0 0% 10%;
+    --input: 0 0% 10%;
     --ring: 1 100% 46.5%;
 
     /* Dark Mode Standardization Aliases */
