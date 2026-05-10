@@ -56,35 +56,95 @@ function Header() {
   }, []);
 
   return (
-    <header className="border-border bg-background/80 sticky top-0 z-50 flex h-16 items-center border-b backdrop-blur-xl transition-all duration-300">
-      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6">
-        <div className="flex items-center gap-10">
-          <Link href="/" className="group flex items-center gap-1">
-            <img
-              src="/logo.svg"
-              alt="Noxfolio Logo"
-              className="h-9 w-9 transition-transform group-hover:scale-110"
-            />
-            <span className="text-brand-gradient text-xl font-bold tracking-tighter">
-              Noxfolio
-            </span>
-          </Link>
-
-          <nav className="text-muted-foreground hidden items-center gap-8 text-sm font-medium lg:flex">
-            <Link
-              href="/features"
-              className="hover:text-foreground transition-colors"
-            >
-              Features
+    <>
+      <header className="border-border bg-background/80 sticky top-0 z-50 flex h-16 items-center border-b backdrop-blur-xl transition-all duration-300">
+        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6">
+          <div className="flex items-center gap-10">
+            <Link href="/" className="group flex items-center gap-1">
+              <img
+                src="/logo.svg"
+                alt="Noxfolio Logo"
+                className="h-9 w-9 transition-transform group-hover:scale-110"
+              />
+              <span className="text-brand-gradient text-xl font-bold tracking-tighter">
+                Noxfolio
+              </span>
             </Link>
-            <div className="group relative py-4">
+
+            <nav className="text-muted-foreground hidden items-center gap-8 text-sm font-medium lg:flex">
               <Link
-                href="/industries"
-                className="hover:text-foreground flex items-center gap-1 transition-colors"
+                href="/features"
+                className="hover:text-foreground transition-colors"
               >
-                Industries
+                Features
+              </Link>
+              <div className="group relative py-4">
+                <Link
+                  href="/industries"
+                  className="hover:text-foreground flex items-center gap-1 transition-colors"
+                >
+                  Industries
+                  <svg
+                    className="h-4 w-4 transition-transform group-hover:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </Link>
+                <IndustriesMegaMenu />
+              </div>
+              <Link
+                href="/pricing"
+                className="hover:text-foreground transition-colors"
+              >
+                Pricing
+              </Link>
+              <Link
+                href="/pricing-calculator"
+                className="hover:text-foreground transition-colors"
+              >
+                Pricing Calculator
+              </Link>
+              <Link
+                href="/contact"
+                className="hover:text-foreground transition-colors"
+              >
+                Contact Us
+              </Link>
+            </nav>
+          </div>
+
+          <div className="flex items-center gap-4 lg:gap-6">
+            <div className="hidden sm:block">
+              <ThemeToggle />
+            </div>
+
+            <div className="hidden lg:block">
+              <Suspense
+                fallback={
+                  <div className="bg-muted h-9 w-40 animate-pulse rounded-full" />
+                }
+              >
+                <UserActions />
+              </Suspense>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="bg-muted/50 text-foreground hover:bg-muted rounded-xl p-2 transition-all lg:hidden"
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? (
                 <svg
-                  className="h-4 w-4 transition-transform group-hover:rotate-180"
+                  className="h-6 w-6"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -93,90 +153,32 @@ function Header() {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
+                    d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
-              </Link>
-              <IndustriesMegaMenu />
-            </div>
-            <Link
-              href="/pricing"
-              className="hover:text-foreground transition-colors"
-            >
-              Pricing
-            </Link>
-            <Link
-              href="/pricing-calculator"
-              className="hover:text-foreground transition-colors"
-            >
-              Pricing Calculator
-            </Link>
-            <Link
-              href="/contact"
-              className="hover:text-foreground transition-colors"
-            >
-              Contact Us
-            </Link>
-          </nav>
-        </div>
-
-        <div className="flex items-center gap-4 lg:gap-6">
-          <div className="hidden sm:block">
-            <ThemeToggle />
+              ) : (
+                <svg
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+              )}
+            </button>
           </div>
-
-          <div className="hidden lg:block">
-            <Suspense
-              fallback={
-                <div className="bg-muted h-9 w-40 animate-pulse rounded-full" />
-              }
-            >
-              <UserActions />
-            </Suspense>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="bg-muted/50 text-foreground hover:bg-muted rounded-xl p-2 transition-all lg:hidden"
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? (
-              <svg
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            ) : (
-              <svg
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            )}
-          </button>
         </div>
-      </div>
+      </header>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer - Moved outside <header> to prevent transparency inheritance */}
       <div
-        className={`bg-background fixed inset-0 top-16 z-40 transition-all duration-500 lg:hidden ${isMobileMenuOpen ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}`}
+        className={`fixed inset-0 top-16 z-[100] bg-white transition-transform duration-500 lg:hidden dark:bg-black ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
         <div className="flex h-[calc(100vh-64px)] flex-col p-6">
           <nav className="flex flex-col space-y-4 pt-4">
@@ -242,7 +244,7 @@ function Header() {
           </div>
         </div>
       </div>
-    </header>
+    </>
   );
 }
 
