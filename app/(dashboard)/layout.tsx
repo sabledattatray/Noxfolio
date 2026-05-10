@@ -176,7 +176,7 @@ function Header() {
 
       {/* Mobile Drawer */}
       <div
-        className={`bg-background/98 fixed inset-0 top-16 z-40 backdrop-blur-2xl transition-all duration-500 lg:hidden ${isMobileMenuOpen ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}`}
+        className={`bg-background fixed inset-0 top-16 z-40 transition-all duration-500 lg:hidden ${isMobileMenuOpen ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}`}
       >
         <div className="flex h-[calc(100vh-64px)] flex-col p-6">
           <nav className="flex flex-col space-y-4 pt-4">
