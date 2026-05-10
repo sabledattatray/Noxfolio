@@ -79,11 +79,11 @@ export default function OnboardingPage() {
           ? await sendPhoneOTPAction({ phoneNumber })
           : await sendEmailOTPAction({});
 
-      if (result.error) {
+      if ('error' in result) {
         setError(result.error);
         setOtpSent(false);
       } else {
-        setSuccess(result.success || 'Verification code sent!');
+        setSuccess((result as any).success || 'Verification code sent!');
       }
     } catch (err: any) {
       setError('Failed to send code. Please try again.');
@@ -98,11 +98,13 @@ export default function OnboardingPage() {
     setSuccess('');
     try {
       const result = await verifyOTPAction({ otp });
-      if (result.error) {
+      if ('error' in result) {
         setError(result.error);
       } else {
         setOtpVerified(true);
-        setSuccess('Identity verified successfully!');
+        setSuccess(
+          (result as any).success || 'Identity verified successfully!',
+        );
       }
     } catch (err: any) {
       setError('Verification failed. Please try again.');
@@ -121,7 +123,7 @@ export default function OnboardingPage() {
         industry,
       });
 
-      if (result.error) {
+      if ('error' in result) {
         setError(result.error);
         setIsSubmitting(false);
       } else {
