@@ -80,7 +80,7 @@ export default function OnboardingPage() {
           : await sendEmailOTPAction({});
 
       if ('error' in result) {
-        setError(result.error);
+        setError(result.error || 'Failed to send verification code');
         setOtpSent(false);
       } else {
         setSuccess((result as any).success || 'Verification code sent!');
@@ -99,7 +99,7 @@ export default function OnboardingPage() {
     try {
       const result = await verifyOTPAction({ otp });
       if ('error' in result) {
-        setError(result.error);
+        setError(result.error || 'Invalid verification code');
       } else {
         setOtpVerified(true);
         setSuccess(
@@ -124,7 +124,7 @@ export default function OnboardingPage() {
       });
 
       if ('error' in result) {
-        setError(result.error);
+        setError(result.error || 'Failed to complete onboarding');
         setIsSubmitting(false);
       } else {
         setSuccess('Everything is ready! Launching your dashboard...');
