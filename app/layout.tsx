@@ -26,7 +26,15 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const org = await getOrganizationForUser();
+  let user = null;
+  let org = null;
+
+  try {
+    [user, org] = await Promise.all([getUser(), getOrganizationForUser()]);
+  } catch (error) {
+    console.error('Critical Layout Error:', error);
+  }
+
   const branding = (org?.branding as any) || {};
 
   // Helper to convert hex to HSL string for Tailwind
@@ -79,7 +87,7 @@ export default async function RootLayout({
           <SWRConfig
             value={{
               fallback: {
-                '/api/user': await getUser(),
+                '/api/user': user,
                 '/api/organization': org,
               },
             }}

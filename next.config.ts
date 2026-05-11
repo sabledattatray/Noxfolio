@@ -2,12 +2,12 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   experimental: {
-    ppr: true,
+    ppr: false,
     clientSegmentCache: true,
     serverActions: {
-      bodySizeLimit: '10mb'
-    }
-  }
+      bodySizeLimit: '10mb',
+    },
+  },
 };
 
 export default nextConfig;

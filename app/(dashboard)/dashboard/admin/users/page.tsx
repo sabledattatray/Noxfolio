@@ -77,7 +77,7 @@ export default function AdminUsersPage() {
     },
   ];
 
-  const displayUsers = users || demoUsers;
+  const displayUsers = Array.isArray(users) ? users : demoUsers;
 
   return (
     <div className="animate-in fade-in space-y-8 duration-700">
@@ -164,12 +164,24 @@ export default function AdminUsersPage() {
                   >
                     <td className="p-4">
                       <div className="flex items-center gap-3">
-                        <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-none font-black shadow-inner">
-                          {user.name.substring(0, 2).toUpperCase()}
+                        <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center overflow-hidden rounded-none font-black uppercase shadow-inner">
+                          {user.image ? (
+                            <img
+                              src={user.image}
+                              alt={user.name}
+                              className="h-full w-full object-cover"
+                            />
+                          ) : user.name ? (
+                            user.name.substring(0, 2)
+                          ) : user.email ? (
+                            user.email.substring(0, 2)
+                          ) : (
+                            '??'
+                          )}
                         </div>
                         <div>
                           <p className="text-sm font-bold tracking-tight">
-                            {user.name}
+                            {user.name || 'Anonymous User'}
                           </p>
                           <p className="text-muted-foreground text-xs font-medium">
                             {user.email}
@@ -198,7 +210,7 @@ export default function AdminUsersPage() {
                     </td>
                     <td className="p-4">
                       <div className="flex items-center gap-2">
-                        {user.status === 'active' && (
+                        {(user.status === 'active' || !user.status) && (
                           <div className="h-1.5 w-1.5 rounded-none bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                         )}
                         {user.status === 'pending' && (
@@ -210,14 +222,14 @@ export default function AdminUsersPage() {
                         <span
                           className={cn(
                             'text-[10px] font-black tracking-widest uppercase',
-                            user.status === 'active'
+                            user.status === 'active' || !user.status
                               ? 'text-emerald-500'
                               : user.status === 'suspended'
                                 ? 'text-destructive'
                                 : 'text-amber-500',
                           )}
                         >
-                          {user.status}
+                          {user.status || 'active'}
                         </span>
                       </div>
                     </td>
@@ -225,7 +237,7 @@ export default function AdminUsersPage() {
                       <div className="text-muted-foreground flex items-center gap-2">
                         <Globe className="h-3 w-3" />
                         <span className="text-xs font-bold tracking-tight">
-                          {user.region}
+                          {user.region || 'GLOBAL-EDGE'}
                         </span>
                       </div>
                     </td>
@@ -233,7 +245,16 @@ export default function AdminUsersPage() {
                       <div className="text-muted-foreground flex items-center gap-2">
                         <Calendar className="h-3 w-3" />
                         <span className="text-xs font-medium">
-                          {user.joined}
+                          {user.createdAt
+                            ? new Date(user.createdAt).toLocaleDateString(
+                                'en-US',
+                                {
+                                  month: 'short',
+                                  day: 'numeric',
+                                  year: 'numeric',
+                                },
+                              )
+                            : 'Jan 1, 2024'}
                         </span>
                       </div>
                     </td>

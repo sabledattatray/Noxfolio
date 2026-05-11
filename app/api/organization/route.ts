@@ -1,6 +1,18 @@
-import { getOrganizationForUser } from '@/lib/db/queries';
+import {
+  getOrganizationForUser,
+  getOrganizationMembers,
+} from '@/lib/db/queries';
 
 export async function GET() {
   const organization = await getOrganizationForUser();
-  return Response.json(organization);
+  if (!organization) {
+    return Response.json({ error: 'Not found' }, { status: 404 });
+  }
+
+  const members = await getOrganizationMembers(organization.id);
+
+  return Response.json({
+    ...organization,
+    organizationMembers: members,
+  });
 }

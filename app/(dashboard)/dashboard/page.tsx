@@ -38,6 +38,7 @@ export default function DashboardPage() {
     text: string;
   } | null>(null);
   const [isOnboardingComplete, setIsOnboardingComplete] = useState(false);
+  const [effectiveRole, setEffectiveRole] = useState<string | null>(null);
 
   // Security check: Onboarding status
   useEffect(() => {
@@ -46,15 +47,19 @@ export default function DashboardPage() {
     }
   }, [isLoading, user, router]);
 
-  if (isLoading) {
-    return (
-      <div className="flex min-h-[400px] items-center justify-center">
-        <div className="border-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent" />
-      </div>
-    );
-  }
+  useEffect(() => {
+    const role = user?.role || 'member';
+    const override =
+      typeof window !== 'undefined'
+        ? localStorage.getItem('noxfolio_role_override')
+        : null;
+    setEffectiveRole(override || role);
+  }, [user]);
 
-  if (error || !user) {
+  // Security check: Email verification
+  const isVerified = user?.emailVerifiedAt !== null;
+
+  if (error) {
     return (
       <div className="flex min-h-[400px] flex-col items-center justify-center space-y-4">
         <AlertCircle className="text-destructive h-12 w-12" />
@@ -66,9 +71,6 @@ export default function DashboardPage() {
       </div>
     );
   }
-
-  // Security check: Email verification
-  const isVerified = user.emailVerifiedAt !== null;
 
   async function handleVerify() {
     if (otp.length !== 6) return;
@@ -177,13 +179,10 @@ export default function DashboardPage() {
     );
   }
 
-  // Branching based on role (respecting local override for simulation)
-  const effectiveRole =
-    typeof window !== 'undefined'
-      ? localStorage.getItem('noxfolio_role_override') || user.role
-      : user.role;
+  // Branching based on role
+  const roleToUse = effectiveRole || user?.role || 'member';
 
-  if (effectiveRole === 'admin') {
+  if (roleToUse === 'admin') {
     return <DashboardAdmin />;
   }
 

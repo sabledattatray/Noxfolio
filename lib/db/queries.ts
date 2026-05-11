@@ -12,7 +12,7 @@ import {
 import { cookies } from 'next/headers';
 import { verifyToken } from '@/lib/auth/session';
 
-export const getUser = cache(async () => {
+export const getFullAuthContext = cache(async () => {
   const sessionCookie = (await cookies()).get('session');
   if (!sessionCookie || !sessionCookie.value) {
     return null;
@@ -31,17 +31,33 @@ export const getUser = cache(async () => {
     return null;
   }
 
-  const user = await db
-    .select()
+  const result = await db
+    .select({
+      user: users,
+      organization: organizations,
+    })
     .from(users)
+    .leftJoin(organizationMembers, eq(users.id, organizationMembers.userId))
+    .leftJoin(
+      organizations,
+      eq(organizationMembers.organizationId, organizations.id),
+    )
     .where(and(eq(users.id, sessionData.user.id), isNull(users.deletedAt)))
     .limit(1);
 
-  if (user.length === 0) {
+  if (result.length === 0) {
     return null;
   }
 
-  return user[0];
+  return {
+    user: result[0].user,
+    organization: result[0].organization,
+  };
+});
+
+export const getUser = cache(async () => {
+  const context = await getFullAuthContext();
+  return context?.user || null;
 });
 
 export async function getOrganizationByStripeCustomerId(customerId: string) {
@@ -113,31 +129,12 @@ export async function getActivityLogs() {
 }
 
 export const getOrganizationForUser = cache(async () => {
-  const user = await getUser();
-  if (!user) {
-    return null;
-  }
+  const context = await getFullAuthContext();
+  return context?.organization || null;
+});
 
-  const result = await db
-    .select({
-      organization: organizations,
-    })
-    .from(organizationMembers)
-    .innerJoin(
-      organizations,
-      eq(organizationMembers.organizationId, organizations.id),
-    )
-    .where(eq(organizationMembers.userId, user.id))
-    .limit(1);
-
-  if (result.length === 0) {
-    return null;
-  }
-
-  const organization = result[0].organization;
-
-  // Fetch members separately to match the expected return type
-  const members = await db
+export async function getOrganizationMembers(organizationId: number) {
+  return await db
     .select({
       id: organizationMembers.id,
       role: organizationMembers.role,
@@ -152,13 +149,8 @@ export const getOrganizationForUser = cache(async () => {
     })
     .from(organizationMembers)
     .innerJoin(users, eq(organizationMembers.userId, users.id))
-    .where(eq(organizationMembers.organizationId, organization.id));
-
-  return {
-    ...organization,
-    organizationMembers: members,
-  };
-});
+    .where(eq(organizationMembers.organizationId, organizationId));
+}
 export async function getInvoicesForOrganization() {
   const organization = await getOrganizationForUser();
   if (!organization) return [];
@@ -209,7 +201,8 @@ export async function getDashboardStats() {
   const org = await getOrganizationForUser();
   if (!org) return null;
 
-  // 1. & 2. Fetch Member Count and Recent Activities in parallel
+  // Fetch Member Count and Recent Activities in parallel
+  // We already have the org, so we just need the count and activities
   const [membersResult, recentActivities] = await Promise.all([
     db
       .select({ count: count() })
@@ -229,11 +222,29 @@ export async function getDashboardStats() {
       .limit(5),
   ]);
 
-  const memberCount = Number(membersResult[0]?.count || 0);
-
   return {
-    memberCount,
+    memberCount: Number(membersResult[0]?.count || 0),
     recentActivities,
     organization: org,
   };
+}
+
+export async function getAllUsers() {
+  const user = await getUser();
+  if (!user || (user.role !== 'admin' && user.role !== 'owner')) {
+    throw new Error('Unauthorized');
+  }
+
+  return await db
+    .select({
+      id: users.id,
+      name: users.name,
+      email: users.email,
+      role: users.role,
+      createdAt: users.createdAt,
+      image: users.image,
+    })
+    .from(users)
+    .where(isNull(users.deletedAt))
+    .orderBy(desc(users.createdAt));
 }
