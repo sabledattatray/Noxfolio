@@ -33,7 +33,7 @@ export function OnboardingView({ onComplete }: { onComplete: () => void }) {
         {/* Progress Header */}
         <div className="flex items-center justify-between px-2">
           <div className="flex items-center gap-2">
-            <div className="bg-primary shadow-primary/20 flex h-8 w-8 items-center justify-center rounded-full text-xs font-black text-white shadow-lg">
+            <div className="bg-primary flex h-8 w-8 items-center justify-center rounded-full text-xs font-black text-white shadow-none">
               {step}
             </div>
             <span className="text-muted-foreground text-sm font-black tracking-widest uppercase">
@@ -50,7 +50,7 @@ export function OnboardingView({ onComplete }: { onComplete: () => void }) {
           </div>
         </div>
 
-        <Card className="bg-card border-border relative overflow-hidden rounded-[3rem] shadow-2xl">
+        <Card className="bg-card border-border relative overflow-hidden rounded-[3rem] shadow-none">
           <div className="from-primary to-primary absolute top-0 left-0 h-1.5 w-full bg-gradient-to-r via-blue-500" />
 
           <CardContent className="space-y-10 p-10 md:p-14">
@@ -224,7 +224,7 @@ export function OnboardingView({ onComplete }: { onComplete: () => void }) {
               </Button>
               <Button
                 variant="default"
-                className="shadow-primary/20 group h-14 flex-1 rounded-2xl text-lg font-black shadow-xl transition-all active:scale-95"
+                className="group h-14 flex-1 rounded-2xl text-lg font-black shadow-none transition-all active:scale-95"
                 onClick={onComplete}
               >
                 Next

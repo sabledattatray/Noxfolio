@@ -12,9 +12,9 @@ export default function DashboardLayout({
     <DynamicThemeProvider>
       <div className="bg-background flex min-h-screen">
         <Sidebar />
-        <div className="flex flex-1 flex-col overflow-hidden">
+        <div className="flex flex-1 flex-col">
           <Topbar />
-          <main className="flex-1 overflow-y-auto p-4 md:p-8">
+          <main className="flex-1 p-4 md:p-8">
             <div className="mx-auto max-w-7xl">
               <ErrorBoundary>{children}</ErrorBoundary>
             </div>

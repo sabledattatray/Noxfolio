@@ -59,6 +59,29 @@ export default function DashboardPage() {
   // Security check: Email verification
   const isVerified = user?.emailVerifiedAt !== null;
 
+  if (isLoading) {
+    return (
+      <div className="animate-in fade-in space-y-8 duration-500">
+        <div className="space-y-2">
+          <div className="bg-accent/50 h-10 w-48 animate-pulse rounded-xl" />
+          <div className="bg-accent/30 h-4 w-64 animate-pulse rounded-lg" />
+        </div>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div
+              key={i}
+              className="bg-accent/20 h-32 animate-pulse rounded-xl"
+            />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+          <div className="bg-accent/20 h-[500px] animate-pulse rounded-xl lg:col-span-2" />
+          <div className="bg-accent/20 h-[500px] animate-pulse rounded-xl" />
+        </div>
+      </div>
+    );
+  }
+
   if (error) {
     return (
       <div className="flex min-h-[400px] flex-col items-center justify-center space-y-4">

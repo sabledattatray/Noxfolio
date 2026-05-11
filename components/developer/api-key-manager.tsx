@@ -26,11 +26,15 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export function APIKeyManager() {
   const {
-    data: keys,
+    data: keysData,
     error,
     mutate,
     isLoading,
   } = useSWR('/api/developer/keys', fetcher);
+
+  const keys = Array.isArray(keysData) ? keysData : [];
+  const apiError =
+    error || (!isLoading && !Array.isArray(keysData) ? keysData?.error : null);
   const [showKey, setShowKey] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [newKeyName, setNewKeyName] = useState('Default API Key');
@@ -106,9 +110,11 @@ export function APIKeyManager() {
           <div className="flex justify-center py-8">
             <Loader2 className="text-muted-foreground h-8 w-8 animate-spin" />
           </div>
-        ) : error ? (
-          <div className="text-sm text-rose-500">Failed to load API keys.</div>
-        ) : keys?.length === 0 ? (
+        ) : apiError ? (
+          <div className="text-sm text-rose-500">
+            {apiError || 'Failed to load API keys.'}
+          </div>
+        ) : keys.length === 0 ? (
           <div className="text-muted-foreground py-8 text-center text-sm">
             No API keys generated yet.
           </div>

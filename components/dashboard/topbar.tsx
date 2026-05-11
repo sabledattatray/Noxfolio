@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useTheme } from 'next-themes';
 
 import {
   Search,
@@ -34,6 +35,7 @@ import { cn } from '@/lib/utils';
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function Topbar() {
+  const { resolvedTheme } = useTheme();
   const { data: user } = useSWR<DBUser>('/api/user', fetcher);
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
@@ -56,13 +58,22 @@ export default function Topbar() {
   }
 
   return (
-    <header className="border-border bg-card/50 sticky top-0 z-30 flex h-16 items-center justify-between border-b px-8 backdrop-blur-xl">
+    <header
+      className={cn(
+        'border-border sticky top-0 isolate z-50 flex h-16 items-center justify-between border-b px-8 transition-colors duration-200',
+        mounted
+          ? resolvedTheme === 'dark'
+            ? 'bg-zinc-950'
+            : 'bg-white'
+          : 'bg-background',
+      )}
+    >
       <div className="flex max-w-xl flex-1 items-center gap-4">
         <div className="group relative w-full">
           <Search className="text-muted-foreground group-focus-within:text-primary absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transition-colors" />
           <Input
             placeholder="Search anything... (⌘K)"
-            className="bg-accent/50 focus-visible:bg-background h-10 rounded-xl border-transparent pr-12 pl-10 transition-all duration-200"
+            className="bg-accent/30 focus-visible:bg-background border-border/50 h-10 rounded-none pr-12 pl-10 transition-all duration-200"
           />
           <div className="absolute top-1/2 right-3 flex -translate-y-1/2 items-center gap-1">
             <kbd className="bg-muted pointer-events-none hidden h-5 items-center gap-1 rounded border px-1.5 font-mono text-[10px] font-medium opacity-100 select-none sm:flex">
@@ -72,14 +83,14 @@ export default function Topbar() {
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-0">
         {mounted ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-muted-foreground hover:text-foreground relative rounded-xl"
+                className="text-muted-foreground hover:text-foreground relative rounded-none"
               >
                 <Bell className="h-5 w-5" />
                 <span className="bg-primary border-card absolute top-2.5 right-2.5 h-2 w-2 rounded-full border-2" />
@@ -105,7 +116,7 @@ export default function Topbar() {
           <Button
             variant="ghost"
             size="icon"
-            className="text-muted-foreground relative rounded-xl"
+            className="text-muted-foreground relative rounded-none"
           >
             <Bell className="h-5 w-5" />
           </Button>
@@ -115,9 +126,9 @@ export default function Topbar() {
           variant="ghost"
           size="icon"
           className={cn(
-            'rounded-xl transition-all duration-300',
+            'rounded-none transition-all duration-300',
             effectiveRole === 'admin'
-              ? 'text-primary bg-primary/5 shadow-inner'
+              ? 'text-primary bg-primary/5 shadow-none'
               : 'text-muted-foreground hover:text-foreground',
           )}
           onClick={() => {
@@ -142,7 +153,7 @@ export default function Topbar() {
         <Button
           variant="ghost"
           size="icon"
-          className="text-muted-foreground hover:text-foreground rounded-xl"
+          className="text-muted-foreground hover:text-foreground rounded-none"
           asChild
         >
           <Link href="/dashboard/settings">
@@ -161,7 +172,7 @@ export default function Topbar() {
                 variant="ghost"
                 className="hover:bg-accent/50 flex h-10 items-center gap-2 rounded-xl py-1 pr-3 pl-1"
               >
-                <Avatar className="h-8 w-8 rounded-lg shadow-inner">
+                <Avatar className="h-8 w-8 rounded-lg shadow-none">
                   <AvatarImage src={user?.image || ''} />
                   <AvatarFallback className="from-primary to-primary/60 text-primary-foreground bg-gradient-to-tr text-xs font-bold uppercase">
                     {user?.name?.substring(0, 2) ||

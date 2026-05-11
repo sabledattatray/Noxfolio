@@ -22,7 +22,7 @@ import {
   NoxfolioFeatures,
   IntegrationMarquee,
   PremiumPricing,
-} from '@/components/expedify-sections';
+} from '@/components/noxfolio-sections';
 
 export default function HomePage() {
   const [mounted, setMounted] = React.useState(false);

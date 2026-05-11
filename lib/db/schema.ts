@@ -6,6 +6,7 @@ import {
   timestamp,
   integer,
   jsonb,
+  index,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
@@ -51,84 +52,118 @@ export const organizations = pgTable('organizations', {
   size: varchar('size', { length: 50 }),
   industry: varchar('industry', { length: 50 }),
   balance: integer('balance').default(0),
+  billing: jsonb('billing').default({}),
 });
 
-export const organizationMembers = pgTable('organization_members', {
-  id: serial('id').primaryKey(),
-  userId: integer('user_id')
-    .notNull()
-    .references(() => users.id),
-  organizationId: integer('organization_id')
-    .notNull()
-    .references(() => organizations.id),
-  role: varchar('role', { length: 50 }).notNull(),
-  joinedAt: timestamp('joined_at').notNull().defaultNow(),
-});
+export const organizationMembers = pgTable(
+  'organization_members',
+  {
+    id: serial('id').primaryKey(),
+    userId: integer('user_id')
+      .notNull()
+      .references(() => users.id),
+    organizationId: integer('organization_id')
+      .notNull()
+      .references(() => organizations.id),
+    role: varchar('role', { length: 50 }).notNull(),
+    joinedAt: timestamp('joined_at').notNull().defaultNow(),
+  },
+  (table) => [
+    index('membership_user_idx').on(table.userId),
+    index('membership_org_idx').on(table.organizationId),
+  ],
+);
 
-export const activityLogs = pgTable('activity_logs', {
-  id: serial('id').primaryKey(),
-  organizationId: integer('organization_id')
-    .notNull()
-    .references(() => organizations.id),
-  userId: integer('user_id').references(() => users.id),
-  action: text('action').notNull(),
-  timestamp: timestamp('timestamp').notNull().defaultNow(),
-  ipAddress: varchar('ip_address', { length: 45 }),
-});
+export const activityLogs = pgTable(
+  'activity_logs',
+  {
+    id: serial('id').primaryKey(),
+    organizationId: integer('organization_id')
+      .notNull()
+      .references(() => organizations.id),
+    userId: integer('user_id').references(() => users.id),
+    action: text('action').notNull(),
+    timestamp: timestamp('timestamp').notNull().defaultNow(),
+    ipAddress: varchar('ip_address', { length: 45 }),
+  },
+  (table) => [
+    index('activity_org_idx').on(table.organizationId),
+    index('activity_user_idx').on(table.userId),
+  ],
+);
 
-export const invitations = pgTable('invitations', {
-  id: serial('id').primaryKey(),
-  organizationId: integer('organization_id')
-    .notNull()
-    .references(() => organizations.id),
-  email: varchar('email', { length: 255 }).notNull(),
-  role: varchar('role', { length: 50 }).notNull(),
-  invitedBy: integer('invited_by')
-    .notNull()
-    .references(() => users.id),
-  invitedAt: timestamp('invited_at').notNull().defaultNow(),
-  status: varchar('status', { length: 20 }).notNull().default('pending'),
-});
+export const invitations = pgTable(
+  'invitations',
+  {
+    id: serial('id').primaryKey(),
+    organizationId: integer('organization_id')
+      .notNull()
+      .references(() => organizations.id),
+    email: varchar('email', { length: 255 }).notNull(),
+    role: varchar('role', { length: 50 }).notNull(),
+    invitedBy: integer('invited_by')
+      .notNull()
+      .references(() => users.id),
+    invitedAt: timestamp('invited_at').notNull().defaultNow(),
+    status: varchar('status', { length: 20 }).notNull().default('pending'),
+  },
+  (table) => [
+    index('invitation_email_idx').on(table.email),
+    index('invitation_org_idx').on(table.organizationId),
+  ],
+);
 
-export const notifications = pgTable('notifications', {
-  id: serial('id').primaryKey(),
-  userId: integer('user_id')
-    .notNull()
-    .references(() => users.id),
-  title: varchar('title', { length: 255 }).notNull(),
-  message: text('message').notNull(),
-  type: varchar('type', { length: 50 }).notNull(),
-  isRead: integer('is_read').notNull().default(0),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-});
+export const notifications = pgTable(
+  'notifications',
+  {
+    id: serial('id').primaryKey(),
+    userId: integer('user_id')
+      .notNull()
+      .references(() => users.id),
+    title: varchar('title', { length: 255 }).notNull(),
+    message: text('message').notNull(),
+    type: varchar('type', { length: 50 }).notNull(),
+    isRead: integer('is_read').notNull().default(0),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+  },
+  (table) => [index('notification_user_idx').on(table.userId)],
+);
 
-export const invoices = pgTable('invoices', {
-  id: serial('id').primaryKey(),
-  organizationId: integer('organization_id')
-    .notNull()
-    .references(() => organizations.id),
-  stripeInvoiceId: varchar('stripe_invoice_id', { length: 255 }).unique(),
-  razorpayOrderId: varchar('razorpay_order_id', { length: 255 }).unique(),
-  razorpayPaymentId: varchar('razorpay_payment_id', { length: 255 }).unique(),
-  number: varchar('number', { length: 50 }),
-  amount: integer('amount').notNull(),
-  currency: varchar('currency', { length: 10 }).notNull().default('usd'),
-  status: varchar('status', { length: 50 }).notNull(),
-  pdfUrl: text('pdf_url'),
-  hostedInvoiceUrl: text('hosted_invoice_url'),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-});
+export const invoices = pgTable(
+  'invoices',
+  {
+    id: serial('id').primaryKey(),
+    organizationId: integer('organization_id')
+      .notNull()
+      .references(() => organizations.id),
+    stripeInvoiceId: varchar('stripe_invoice_id', { length: 255 }).unique(),
+    razorpayOrderId: varchar('razorpay_order_id', { length: 255 }).unique(),
+    razorpayPaymentId: varchar('razorpay_payment_id', { length: 255 }).unique(),
+    number: varchar('number', { length: 50 }),
+    amount: integer('amount').notNull(),
+    currency: varchar('currency', { length: 10 }).notNull().default('usd'),
+    status: varchar('status', { length: 50 }).notNull(),
+    pdfUrl: text('pdf_url'),
+    hostedInvoiceUrl: text('hosted_invoice_url'),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+  },
+  (table) => [index('invoice_org_idx').on(table.organizationId)],
+);
 
-export const invoiceItems = pgTable('invoice_items', {
-  id: serial('id').primaryKey(),
-  invoiceId: integer('invoice_id')
-    .notNull()
-    .references(() => invoices.id),
-  description: text('description').notNull(),
-  amount: integer('amount').notNull(),
-  currency: varchar('currency', { length: 10 }).notNull().default('usd'),
-  quantity: integer('quantity').notNull().default(1),
-});
+export const invoiceItems = pgTable(
+  'invoice_items',
+  {
+    id: serial('id').primaryKey(),
+    invoiceId: integer('invoice_id')
+      .notNull()
+      .references(() => invoices.id),
+    description: text('description').notNull(),
+    amount: integer('amount').notNull(),
+    currency: varchar('currency', { length: 10 }).notNull().default('usd'),
+    quantity: integer('quantity').notNull().default(1),
+  },
+  (table) => [index('invoice_item_idx').on(table.invoiceId)],
+);
 
 export const coupons = pgTable('coupons', {
   id: serial('id').primaryKey(),
@@ -144,79 +179,105 @@ export const coupons = pgTable('coupons', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
 
-export const usageEvents = pgTable('usage_events', {
-  id: serial('id').primaryKey(),
-  organizationId: integer('organization_id')
-    .notNull()
-    .references(() => organizations.id),
-  type: varchar('type', { length: 50 }).notNull(),
-  value: integer('value').notNull().default(1),
-  metadata: jsonb('metadata'),
-  timestamp: timestamp('timestamp').notNull().defaultNow(),
-});
+export const usageEvents = pgTable(
+  'usage_events',
+  {
+    id: serial('id').primaryKey(),
+    organizationId: integer('organization_id')
+      .notNull()
+      .references(() => organizations.id),
+    type: varchar('type', { length: 50 }).notNull(),
+    value: integer('value').notNull().default(1),
+    metadata: jsonb('metadata'),
+    timestamp: timestamp('timestamp').notNull().defaultNow(),
+  },
+  (table) => [index('usage_org_idx').on(table.organizationId)],
+);
 
-export const analyticsSnapshots = pgTable('analytics_snapshots', {
-  id: serial('id').primaryKey(),
-  organizationId: integer('organization_id')
-    .notNull()
-    .references(() => organizations.id),
-  type: varchar('type', { length: 50 }).notNull(), // e.g., 'mrr_snapshot', 'customer_cohort'
-  data: jsonb('data').notNull(),
-  snapshotDate: timestamp('snapshot_date').notNull().defaultNow(),
-});
+export const analyticsSnapshots = pgTable(
+  'analytics_snapshots',
+  {
+    id: serial('id').primaryKey(),
+    organizationId: integer('organization_id')
+      .notNull()
+      .references(() => organizations.id),
+    type: varchar('type', { length: 50 }).notNull(), // e.g., 'mrr_snapshot', 'customer_cohort'
+    data: jsonb('data').notNull(),
+    snapshotDate: timestamp('snapshot_date').notNull().defaultNow(),
+  },
+  (table) => [index('analytics_org_idx').on(table.organizationId)],
+);
 
-export const kpiMetrics = pgTable('kpi_metrics', {
-  id: serial('id').primaryKey(),
-  organizationId: integer('organization_id')
-    .notNull()
-    .references(() => organizations.id),
-  name: varchar('name', { length: 50 }).notNull(), // e.g., 'MRR', 'ARR', 'LTV'
-  value: integer('value').notNull(), // Multiplied by 100 for decimals if needed
-  period: varchar('period', { length: 20 }).notNull(), // e.g., '2024-05'
-  calculatedAt: timestamp('calculated_at').notNull().defaultNow(),
-});
+export const kpiMetrics = pgTable(
+  'kpi_metrics',
+  {
+    id: serial('id').primaryKey(),
+    organizationId: integer('organization_id')
+      .notNull()
+      .references(() => organizations.id),
+    name: varchar('name', { length: 50 }).notNull(), // e.g., 'MRR', 'ARR', 'LTV'
+    value: integer('value').notNull(), // Multiplied by 100 for decimals if needed
+    period: varchar('period', { length: 20 }).notNull(), // e.g., '2024-05'
+    calculatedAt: timestamp('calculated_at').notNull().defaultNow(),
+  },
+  (table) => [index('kpi_org_idx').on(table.organizationId)],
+);
 
-export const apiKeys = pgTable('api_keys', {
-  id: serial('id').primaryKey(),
-  organizationId: integer('organization_id')
-    .notNull()
-    .references(() => organizations.id),
-  key: varchar('key', { length: 255 }).notNull().unique(), // Hashed key
-  name: varchar('name', { length: 100 }).notNull(),
-  prefix: varchar('prefix', { length: 20 }).notNull(), // e.g., 'bf_live_'
-  scopes: jsonb('scopes').notNull(), // e.g., ['read:billing', 'write:customers']
-  environment: varchar('environment', { length: 20 }).notNull().default('live'),
-  expiresAt: timestamp('expires_at'),
-  lastUsedAt: timestamp('last_used_at'),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-});
+export const apiKeys = pgTable(
+  'api_keys',
+  {
+    id: serial('id').primaryKey(),
+    organizationId: integer('organization_id')
+      .notNull()
+      .references(() => organizations.id),
+    key: varchar('key', { length: 255 }).notNull().unique(), // Hashed key
+    name: varchar('name', { length: 100 }).notNull(),
+    prefix: varchar('prefix', { length: 20 }).notNull(), // e.g., 'bf_live_'
+    scopes: jsonb('scopes').notNull(), // e.g., ['read:billing', 'write:customers']
+    environment: varchar('environment', { length: 20 })
+      .notNull()
+      .default('live'),
+    expiresAt: timestamp('expires_at'),
+    lastUsedAt: timestamp('last_used_at'),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+  },
+  (table) => [index('api_key_org_idx').on(table.organizationId)],
+);
 
-export const webhookEndpoints = pgTable('webhook_endpoints', {
-  id: serial('id').primaryKey(),
-  organizationId: integer('organization_id')
-    .notNull()
-    .references(() => organizations.id),
-  url: text('url').notNull(),
-  secret: varchar('secret', { length: 255 }).notNull(),
-  events: jsonb('events').notNull(), // e.g., ['invoice.paid', 'subscription.deleted']
-  status: varchar('status', { length: 20 }).notNull().default('active'),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-});
+export const webhookEndpoints = pgTable(
+  'webhook_endpoints',
+  {
+    id: serial('id').primaryKey(),
+    organizationId: integer('organization_id')
+      .notNull()
+      .references(() => organizations.id),
+    url: text('url').notNull(),
+    secret: varchar('secret', { length: 255 }).notNull(),
+    events: jsonb('events').notNull(), // e.g., ['invoice.paid', 'subscription.deleted']
+    status: varchar('status', { length: 20 }).notNull().default('active'),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+  },
+  (table) => [index('webhook_org_idx').on(table.organizationId)],
+);
 
-export const auditLogs = pgTable('audit_logs', {
-  id: serial('id').primaryKey(),
-  organizationId: integer('organization_id')
-    .notNull()
-    .references(() => organizations.id),
-  userId: integer('user_id').references(() => users.id),
-  action: varchar('action', { length: 255 }).notNull(),
-  entityType: varchar('entity_type', { length: 50 }).notNull(), // e.g., 'invoice', 'api_key'
-  entityId: varchar('entity_id', { length: 255 }).notNull(),
-  metadata: jsonb('metadata'),
-  ipAddress: varchar('ip_address', { length: 45 }),
-  userAgent: text('user_agent'),
-  timestamp: timestamp('timestamp').notNull().defaultNow(),
-});
+export const auditLogs = pgTable(
+  'audit_logs',
+  {
+    id: serial('id').primaryKey(),
+    organizationId: integer('organization_id')
+      .notNull()
+      .references(() => organizations.id),
+    userId: integer('user_id').references(() => users.id),
+    action: varchar('action', { length: 255 }).notNull(),
+    entityType: varchar('entity_type', { length: 50 }).notNull(), // e.g., 'invoice', 'api_key'
+    entityId: varchar('entity_id', { length: 255 }).notNull(),
+    metadata: jsonb('metadata'),
+    ipAddress: varchar('ip_address', { length: 45 }),
+    userAgent: text('user_agent'),
+    timestamp: timestamp('timestamp').notNull().defaultNow(),
+  },
+  (table) => [index('audit_org_idx').on(table.organizationId)],
+);
 
 export const organizationsRelations = relations(organizations, ({ many }) => ({
   organizationMembers: many(organizationMembers),

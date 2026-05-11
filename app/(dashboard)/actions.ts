@@ -22,7 +22,11 @@ import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 import { createCheckoutSession } from '@/lib/stripe/stripe';
-import { getUser, getUserWithOrganization } from '@/lib/db/queries';
+import {
+  getUser,
+  getUserWithOrganization,
+  getOrganizationForUser,
+} from '@/lib/db/queries';
 import { sendVerificationEmail, sendInvitationEmail } from '@/lib/email';
 import {
   validatedAction,
@@ -107,12 +111,8 @@ export async function googleSignInAction(
           .returning();
         user = updatedUser;
       }
-      const userWithOrg = await getUserWithOrganization(user.id);
-      await logActivity(
-        userWithOrg?.organizationId,
-        user.id,
-        ActivityType.SIGN_IN,
-      );
+      const organization = await getOrganizationForUser();
+      await logActivity(organization?.id, user.id, ActivityType.SIGN_IN);
     }
 
     await setSession(user);
@@ -413,12 +413,8 @@ export async function signOut() {
   try {
     const user = await getUser();
     if (user) {
-      const userWithOrganization = await getUserWithOrganization(user.id);
-      await logActivity(
-        userWithOrganization?.organizationId,
-        user.id,
-        ActivityType.SIGN_OUT,
-      );
+      const organization = await getOrganizationForUser();
+      await logActivity(organization?.id, user.id, ActivityType.SIGN_OUT);
     }
   } catch (error) {
     console.error('Error during sign out logging:', error);
@@ -472,18 +468,14 @@ export const updatePassword = validatedActionWithUser(
     }
 
     const newPasswordHash = await hashPassword(newPassword);
-    const userWithOrganization = await getUserWithOrganization(user.id);
+    const organization = await getOrganizationForUser();
 
     await Promise.all([
       db
         .update(users)
         .set({ passwordHash: newPasswordHash })
         .where(eq(users.id, user.id)),
-      logActivity(
-        userWithOrganization?.organizationId,
-        user.id,
-        ActivityType.UPDATE_PASSWORD,
-      ),
+      logActivity(organization?.id, user.id, ActivityType.UPDATE_PASSWORD),
     ]);
 
     return {
@@ -509,13 +501,9 @@ export const deleteAccount = validatedActionWithUser(
       };
     }
 
-    const userWithOrganization = await getUserWithOrganization(user.id);
+    const organization = await getOrganizationForUser();
 
-    await logActivity(
-      userWithOrganization?.organizationId,
-      user.id,
-      ActivityType.DELETE_ACCOUNT,
-    );
+    await logActivity(organization?.id, user.id, ActivityType.DELETE_ACCOUNT);
 
     // Soft delete
     await db
@@ -526,16 +514,13 @@ export const deleteAccount = validatedActionWithUser(
       })
       .where(eq(users.id, user.id));
 
-    if (userWithOrganization?.organizationId) {
+    if (organization?.id) {
       await db
         .delete(organizationMembers)
         .where(
           and(
             eq(organizationMembers.userId, user.id),
-            eq(
-              organizationMembers.organizationId,
-              userWithOrganization.organizationId,
-            ),
+            eq(organizationMembers.organizationId, organization.id),
           ),
         );
     }
@@ -555,15 +540,11 @@ export const updateAccount = validatedActionWithUser(
   updateAccountSchema,
   async (data, _, user) => {
     const { name, email, image } = data;
-    const userWithOrganization = await getUserWithOrganization(user.id);
+    const organization = await getOrganizationForUser();
 
     await Promise.all([
       db.update(users).set({ name, email, image }).where(eq(users.id, user.id)),
-      logActivity(
-        userWithOrganization?.organizationId,
-        user.id,
-        ActivityType.UPDATE_ACCOUNT,
-      ),
+      logActivity(organization?.id, user.id, ActivityType.UPDATE_ACCOUNT),
     ]);
 
     return { name, success: 'Account updated successfully.' };
@@ -578,9 +559,9 @@ export const removeOrganizationMember = validatedActionWithUser(
   removeOrganizationMemberSchema,
   async (data, _, user) => {
     const { memberId } = data;
-    const userWithOrganization = await getUserWithOrganization(user.id);
+    const organization = await getOrganizationForUser();
 
-    if (!userWithOrganization?.organizationId) {
+    if (!organization?.id) {
       return { error: 'User is not part of an organization' };
     }
 
@@ -589,15 +570,12 @@ export const removeOrganizationMember = validatedActionWithUser(
       .where(
         and(
           eq(organizationMembers.id, memberId),
-          eq(
-            organizationMembers.organizationId,
-            userWithOrganization.organizationId,
-          ),
+          eq(organizationMembers.organizationId, organization.id),
         ),
       );
 
     await logActivity(
-      userWithOrganization.organizationId,
+      organization.id,
       user.id,
       ActivityType.REMOVE_ORGANIZATION_MEMBER,
     );
@@ -615,9 +593,9 @@ export const inviteOrganizationMember = validatedActionWithUser(
   inviteOrganizationMemberSchema,
   async (data, _, user) => {
     const { email, role } = data;
-    const userWithOrganization = await getUserWithOrganization(user.id);
+    const organization = await getOrganizationForUser();
 
-    if (!userWithOrganization?.organizationId) {
+    if (!organization?.id) {
       return { error: 'User is not part of an organization' };
     }
 
@@ -628,10 +606,7 @@ export const inviteOrganizationMember = validatedActionWithUser(
       .where(
         and(
           eq(users.email, email),
-          eq(
-            organizationMembers.organizationId,
-            userWithOrganization.organizationId,
-          ),
+          eq(organizationMembers.organizationId, organization.id),
         ),
       )
       .limit(1);
@@ -647,7 +622,7 @@ export const inviteOrganizationMember = validatedActionWithUser(
       .where(
         and(
           eq(invitations.email, email),
-          eq(invitations.organizationId, userWithOrganization.organizationId),
+          eq(invitations.organizationId, organization.id),
           eq(invitations.status, 'pending'),
         ),
       )
@@ -661,7 +636,7 @@ export const inviteOrganizationMember = validatedActionWithUser(
     const [invitation] = await db
       .insert(invitations)
       .values({
-        organizationId: userWithOrganization.organizationId,
+        organizationId: organization.id,
         email,
         role,
         invitedBy: user.id,
@@ -670,18 +645,13 @@ export const inviteOrganizationMember = validatedActionWithUser(
       .returning();
 
     await logActivity(
-      userWithOrganization.organizationId,
+      organization.id,
       user.id,
       ActivityType.INVITE_ORGANIZATION_MEMBER,
     );
 
-    if (invitation && userWithOrganization.organization) {
-      await sendInvitationEmail(
-        email,
-        userWithOrganization.organization.name,
-        role,
-        invitation.id,
-      );
+    if (invitation && organization) {
+      await sendInvitationEmail(email, organization.name, role, invitation.id);
     }
 
     return { success: 'Invitation sent successfully' };
@@ -882,6 +852,47 @@ export const completeOnboardingAction = validatedActionWithUser(
     } catch (error: any) {
       console.error('CRITICAL ERROR in completeOnboardingAction:', error);
       return { error: `Server Error: ${error.message || 'Unknown error'}` };
+    }
+  },
+);
+const updateBillingSchema = z.object({
+  phone: z.string().optional(),
+  billingEmail: z.string().email().optional().or(z.literal('')),
+  legalName: z.string().optional(),
+  tradeName: z.string().optional(),
+  businessType: z.string().optional(),
+  gstin: z.string().optional(),
+  address1: z.string().optional(),
+  address2: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  pinCode: z.string().optional(),
+});
+
+export const updateBillingAction = validatedActionWithUser(
+  updateBillingSchema,
+  async (data, _, user) => {
+    try {
+      const organization = await getOrganizationForUser();
+      if (!organization) {
+        return { error: 'Organization not found' };
+      }
+
+      await db
+        .update(organizations)
+        .set({
+          billing: data,
+          updatedAt: new Date(),
+        })
+        .where(eq(organizations.id, organization.id));
+
+      await logActivity(organization.id, user.id, ActivityType.UPDATE_ACCOUNT);
+
+      revalidatePath('/dashboard/settings');
+      return { success: 'Billing profile updated successfully' };
+    } catch (error: any) {
+      console.error('Failed to update billing:', error);
+      return { error: `Failed to update billing: ${error.message}` };
     }
   },
 );

@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { useActionState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -46,9 +46,13 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
 
 function LoginContent({ mode }: { mode: 'signin' | 'signup' }) {
   // Clear simulation overrides on new login to prevent role leakage between accounts
+  const router = useRouter();
+
+  // Prefetch dashboard for instant transition
   useEffect(() => {
+    router.prefetch('/dashboard');
     localStorage.removeItem('noxfolio_role_override');
-  }, []);
+  }, [router]);
 
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect');
@@ -58,6 +62,8 @@ function LoginContent({ mode }: { mode: 'signin' | 'signup' }) {
     mode === 'signin' ? signIn : signUp,
     { error: '' },
   );
+
+  const [isGoogleLoading, setIsGoogleLoading] = React.useState(false);
 
   const [otpState, otpAction, otpPending] = useActionState<
     ActionState,
@@ -190,12 +196,15 @@ function LoginContent({ mode }: { mode: 'signin' | 'signup' }) {
                     use_fedcm_for_prompt={false}
                     onSuccess={async (credentialResponse) => {
                       if (credentialResponse.credential) {
+                        setIsGoogleLoading(true);
                         const result = await googleSignInAction(
                           credentialResponse.credential,
                           redirect || '/dashboard',
                         );
                         if (result && result.success) {
                           window.location.href = redirect || '/dashboard';
+                        } else {
+                          setIsGoogleLoading(false);
                         }
                       }
                     }}
@@ -206,12 +215,16 @@ function LoginContent({ mode }: { mode: 'signin' | 'signup' }) {
                   />
                 </div>
                 <div className="pointer-events-none flex items-center gap-2 text-xs font-bold">
-                  <img
-                    src="https://www.google.com/favicon.ico"
-                    className="h-3 w-3 grayscale transition-all group-hover:grayscale-0"
-                    alt="Google"
-                  />
-                  Google
+                  {isGoogleLoading ? (
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                  ) : (
+                    <img
+                      src="https://www.google.com/favicon.ico"
+                      className="h-3 w-3 grayscale transition-all group-hover:grayscale-0"
+                      alt="Google"
+                    />
+                  )}
+                  {isGoogleLoading ? 'Signing in...' : 'Google'}
                 </div>
               </div>
               <div className="border-border bg-card hover:bg-accent/50 group relative flex h-12 cursor-pointer items-center justify-center overflow-hidden rounded-2xl border transition-all">

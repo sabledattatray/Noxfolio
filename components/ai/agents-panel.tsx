@@ -103,7 +103,7 @@ export function AIAgentsPanel({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="bg-primary/10 flex h-12 w-12 items-center justify-center rounded-none shadow-inner">
+          <div className="bg-primary/10 flex h-12 w-12 items-center justify-center rounded-none shadow-none">
             <Bot className="text-primary h-7 w-7" />
           </div>
           <div>
@@ -125,7 +125,7 @@ export function AIAgentsPanel({
 
       <div className="grid grid-cols-1 gap-6">
         {/* Revenue Guard Active Protection Card */}
-        <Card className="bg-card border-primary/20 group relative overflow-hidden rounded-none border-l-4 p-6">
+        <Card className="bg-card border-border/50 group relative overflow-hidden rounded-none p-6 shadow-none dark:shadow-md">
           <div className="absolute top-0 right-0 p-4 opacity-[0.03] transition-opacity group-hover:opacity-10 dark:opacity-5">
             <ShieldCheck className="text-primary h-20 w-20" />
           </div>
@@ -154,7 +154,7 @@ export function AIAgentsPanel({
               <Button
                 onClick={() => handleExecute(revenueGuardInsight.id)}
                 disabled={executingId === revenueGuardInsight.id}
-                className="bg-primary hover:bg-primary/90 shadow-primary/20 h-10 rounded-none px-6 text-[10px] font-black tracking-widest text-white uppercase shadow-lg"
+                className="bg-primary hover:bg-primary/90 dark:shadow-primary/20 h-10 rounded-none px-6 text-[10px] font-black tracking-widest text-white uppercase shadow-none dark:shadow-lg"
               >
                 {executingId === revenueGuardInsight.id ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -172,7 +172,7 @@ export function AIAgentsPanel({
           .map((insight) => (
             <Card
               key={insight.id}
-              className="group hover:border-primary/30 bg-card/50 rounded-none p-6 shadow-sm transition-all duration-300"
+              className="group hover:border-primary/30 bg-card/50 rounded-none p-6 shadow-none transition-all duration-300 dark:shadow-md"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex gap-4">
@@ -214,7 +214,7 @@ export function AIAgentsPanel({
                   size="lg"
                   onClick={() => handleExecute(insight.id)}
                   disabled={executingId === insight.id}
-                  className="shadow-primary/20 rounded-none px-8 font-bold shadow-xl transition-all hover:scale-105 active:scale-95"
+                  className="dark:shadow-primary/20 rounded-none px-8 font-bold shadow-none transition-all hover:scale-105 active:scale-95 dark:shadow-xl"
                 >
                   {executingId === insight.id ? (
                     <Loader2 className="h-5 w-5 animate-spin" />
@@ -234,7 +234,7 @@ export function AIAgentsPanel({
 
   const renderStatus = () => (
     <div className="space-y-6">
-      <Card className="from-primary/10 via-card to-card border-primary/20 shadow-primary/5 rounded-none bg-gradient-to-br p-8 shadow-xl">
+      <Card className="bg-card border-border/50 rounded-none p-8 shadow-none dark:shadow-md">
         <div className="mb-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="bg-primary/20 rounded-none p-2">
@@ -337,8 +337,7 @@ export function AIAgentsPanel({
         </Button>
       </Card>
 
-      <Card className="border-border/50 bg-card/30 group relative overflow-hidden rounded-none p-8 backdrop-blur-sm">
-        <div className="absolute top-0 left-0 h-full w-full bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+      <Card className="border-border/50 bg-card relative overflow-hidden rounded-none p-8 shadow-none dark:shadow-md">
         <div className="mb-4 flex items-center gap-2">
           <Sparkles className="h-4 w-4 text-amber-500" />
           <h3 className="text-muted-foreground text-xs font-bold tracking-widest uppercase">
