@@ -152,7 +152,14 @@ export default function ModulePage() {
   );
 }
 
-function StatCard({ title, value, trend, isHighlight = false }) {
+interface StatCardProps {
+  title: string;
+  value: string;
+  trend: string;
+  isHighlight?: boolean;
+}
+
+function StatCard({ title, value, trend, isHighlight = false }: StatCardProps) {
   return (
     <Card
       className={
