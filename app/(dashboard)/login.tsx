@@ -110,7 +110,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
             </p>
             <div className="flex flex-wrap items-center gap-8 opacity-40 grayscale transition-all duration-700 group-hover:grayscale-0">
               <span className="text-xl font-black tracking-tighter">FORGE</span>
-              <span className="decoration-primary text-xl font-black tracking-tighter italic underline">
+              <span className="decoration-primary text-xl font-black tracking-tighter underline">
                 BILL
               </span>
               <span className="text-xl font-black tracking-tighter">STACK</span>

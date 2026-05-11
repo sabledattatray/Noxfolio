@@ -45,7 +45,7 @@ export default function SecurityPage() {
     >
       <div className="animate-in fade-in slide-in-from-bottom-4 space-y-16 duration-500">
         <section className="prose prose-lg dark:prose-invert max-w-none">
-          <h2 className="mb-6 text-3xl font-black tracking-tight italic">
+          <h2 className="mb-6 text-3xl font-black tracking-tight">
             Our Security Philosophy
           </h2>
           <p className="text-muted-foreground text-xl leading-relaxed font-medium">
@@ -80,7 +80,7 @@ export default function SecurityPage() {
           <div className="relative z-10 space-y-6">
             <div className="text-primary flex items-center gap-3">
               <Server className="h-6 w-6" />
-              <h2 className="text-foreground m-0 text-2xl font-black tracking-tight italic">
+              <h2 className="text-foreground m-0 text-2xl font-black tracking-tight">
                 Infrastructure Security
               </h2>
             </div>

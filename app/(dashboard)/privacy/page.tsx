@@ -12,7 +12,7 @@ export default function PrivacyPage() {
         <section className="space-y-4">
           <div className="text-primary flex items-center gap-3">
             <Eye className="h-6 w-6" />
-            <h2 className="m-0 text-2xl font-black tracking-tight italic">
+            <h2 className="m-0 text-2xl font-black tracking-tight">
               1. Data Collection
             </h2>
           </div>
@@ -27,7 +27,7 @@ export default function PrivacyPage() {
         <section className="space-y-4">
           <div className="text-primary flex items-center gap-3">
             <ShieldCheck className="h-6 w-6" />
-            <h2 className="m-0 text-2xl font-black tracking-tight italic">
+            <h2 className="m-0 text-2xl font-black tracking-tight">
               2. Data Security
             </h2>
           </div>
@@ -41,7 +41,7 @@ export default function PrivacyPage() {
         <section className="space-y-4">
           <div className="text-primary flex items-center gap-3">
             <FileLock className="h-6 w-6" />
-            <h2 className="m-0 text-2xl font-black tracking-tight italic">
+            <h2 className="m-0 text-2xl font-black tracking-tight">
               3. Data Retention
             </h2>
           </div>
@@ -55,7 +55,7 @@ export default function PrivacyPage() {
         <section className="space-y-4">
           <div className="text-primary flex items-center gap-3">
             <UserCheck className="h-6 w-6" />
-            <h2 className="m-0 text-2xl font-black tracking-tight italic">
+            <h2 className="m-0 text-2xl font-black tracking-tight">
               4. Your Rights
             </h2>
           </div>

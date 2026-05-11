@@ -38,7 +38,7 @@ export default function CareersPage() {
     >
       <div className="space-y-12">
         <div className="rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-700 p-10 text-white shadow-2xl shadow-blue-500/20">
-          <h2 className="mb-4 text-3xl font-bold italic">
+          <h2 className="mb-4 text-3xl font-bold">
             "The best work is done when the foundation is invisible."
           </h2>
           <p className="opacity-90">

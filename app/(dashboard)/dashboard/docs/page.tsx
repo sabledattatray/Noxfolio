@@ -60,7 +60,7 @@ export default function DocsPage() {
       <div className="space-y-4">
         <div className="text-primary flex items-center gap-3">
           <BookOpen className="h-8 w-8" />
-          <h1 className="text-4xl font-black tracking-tighter uppercase italic">
+          <h1 className="text-4xl font-black tracking-tighter uppercase">
             Developer Interface
           </h1>
         </div>

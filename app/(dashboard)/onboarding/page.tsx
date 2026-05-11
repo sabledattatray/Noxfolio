@@ -152,7 +152,7 @@ export default function OnboardingPage() {
             <div className="border-primary/20 border-t-primary h-24 w-24 animate-spin rounded-full border-4 shadow-[0_0_40px_rgba(var(--primary),0.3)]" />
             <Rocket className="text-primary absolute top-1/2 left-1/2 h-10 w-10 -translate-x-1/2 -translate-y-1/2 animate-pulse" />
           </div>
-          <h2 className="animate-pulse text-2xl font-black tracking-tight italic">
+          <h2 className="animate-pulse text-2xl font-black tracking-tight">
             Powering up your workspace...
           </h2>
           <p className="text-muted-foreground mt-2 font-medium">
@@ -330,7 +330,7 @@ export default function OnboardingPage() {
                               {isVerifying ? '...' : 'Verify'}
                             </Button>
                           </div>
-                          <p className="text-muted-foreground pl-2 text-[10px] font-medium italic">
+                          <p className="text-muted-foreground pl-2 text-[10px] font-medium">
                             {verificationMethod === 'phone'
                               ? 'Check your terminal/console for the SMS code.'
                               : `Check your inbox at ${user?.email || 'your email'} for the code.`}

@@ -10,7 +10,7 @@ export default function MarketplacePage() {
     <div className="mx-auto max-w-7xl space-y-12 py-10">
       <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
         <div className="space-y-2">
-          <h1 className="from-primary to-primary/60 bg-gradient-to-r bg-clip-text text-4xl font-extrabold tracking-tight text-transparent italic">
+          <h1 className="from-primary to-primary/60 bg-gradient-to-r bg-clip-text text-4xl font-extrabold tracking-tight text-transparent">
             Noxfolio Ecosystem
           </h1>
           <p className="text-muted-foreground max-w-2xl text-lg">

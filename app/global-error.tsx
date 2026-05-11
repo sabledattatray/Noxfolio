@@ -16,9 +16,7 @@ export default function GlobalError({
     <html lang="en" className={manrope.className}>
       <body className="flex min-h-screen items-center justify-center bg-white p-6 text-black">
         <div className="w-full max-w-md space-y-6 text-center">
-          <h1 className="text-4xl font-black tracking-tight italic">
-            Critical Error
-          </h1>
+          <h1 className="text-4xl font-black tracking-tight">Critical Error</h1>
           <p className="leading-relaxed font-medium text-zinc-500">
             A global error has occurred. Please try refreshing the page or
             contacting support if the problem persists.

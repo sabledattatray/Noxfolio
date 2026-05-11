@@ -27,12 +27,6 @@ function UserActions() {
 
   return (
     <div className="flex items-center gap-6">
-      <Link
-        href={user ? '/dashboard' : '/sign-in'}
-        className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors"
-      >
-        {user ? 'Dashboard' : 'Sign In'}
-      </Link>
       <Link href="/#overview">
         <Button
           variant="outline"
@@ -66,7 +60,13 @@ function Header() {
 
   return (
     <>
-      <header className="border-border bg-background/80 sticky top-0 z-50 flex h-16 items-center border-b backdrop-blur-xl transition-all duration-300">
+      <header
+        className="border-border sticky top-0 z-50 flex h-16 items-center border-b transition-all duration-300"
+        style={{
+          backgroundColor:
+            mounted && resolvedTheme === 'dark' ? '#000000' : '#ffffff',
+        }}
+      >
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6">
           <div className="flex items-center gap-10">
             <Link href="/" className="group flex items-center gap-1">

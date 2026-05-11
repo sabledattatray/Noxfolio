@@ -53,7 +53,7 @@ export function FAQSection() {
           </div>
           <h2 className="text-3xl font-extrabold tracking-tighter md:text-5xl">
             Everything you{' '}
-            <span className="text-brand-gradient font-medium italic">
+            <span className="text-brand-gradient font-medium">
               need to know.
             </span>
           </h2>

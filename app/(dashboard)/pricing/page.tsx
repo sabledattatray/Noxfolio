@@ -44,7 +44,7 @@ export default function PricingPage() {
           </div>
           <h1 className="text-foreground text-5xl leading-[1.1] font-extrabold tracking-tighter md:text-7xl">
             Simple Pricing. <br />
-            <span className="text-muted-foreground font-medium italic">
+            <span className="text-muted-foreground font-medium">
               Zero Surprises.
             </span>
           </h1>

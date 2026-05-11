@@ -31,9 +31,7 @@ export default function IndustriesPage() {
           </div>
           <h1 className="text-5xl leading-[1.1] font-extrabold tracking-tighter md:text-7xl">
             Tailored for Every <br />
-            <span className="text-brand-gradient font-medium italic">
-              Vertical.
-            </span>
+            <span className="text-brand-gradient font-medium">Vertical.</span>
           </h1>
           <p className="text-muted-foreground text-xl leading-relaxed font-medium">
             Noxfolio provides specialized billing infrastructure designed for{' '}

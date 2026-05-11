@@ -34,7 +34,7 @@ export default function FeaturesPage() {
           </div>
           <h1 className="text-5xl leading-[1.1] font-extrabold tracking-tighter md:text-7xl">
             Powerful Features for <br />
-            <span className="text-brand-gradient font-medium italic">
+            <span className="text-brand-gradient font-medium">
               Next-Gen Revenue.
             </span>
           </h1>

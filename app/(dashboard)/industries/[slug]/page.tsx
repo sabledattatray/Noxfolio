@@ -129,7 +129,7 @@ export default function IndustryDetailPage() {
 
           <h1 className="text-5xl leading-[1.05] font-extrabold tracking-tighter md:text-8xl">
             Revolutionizing <br />
-            <span className="text-brand-gradient font-medium italic">
+            <span className="text-brand-gradient font-medium">
               {data.title}.
             </span>
           </h1>
@@ -212,16 +212,16 @@ export default function IndustryDetailPage() {
           </h2>
           <div className="flex flex-wrap justify-center gap-16 opacity-40 grayscale">
             {/* Placeholder for industry logos */}
-            <div className="flex items-center gap-2 text-2xl font-black tracking-tighter italic">
+            <div className="flex items-center gap-2 text-2xl font-black tracking-tighter">
               GLOBAL_PAY
             </div>
-            <div className="flex items-center gap-2 text-2xl font-black tracking-tighter italic">
+            <div className="flex items-center gap-2 text-2xl font-black tracking-tighter">
               FIN_TECH
             </div>
-            <div className="flex items-center gap-2 text-2xl font-black tracking-tighter italic">
+            <div className="flex items-center gap-2 text-2xl font-black tracking-tighter">
               SECURE_HEALTH
             </div>
-            <div className="flex items-center gap-2 text-2xl font-black tracking-tighter italic">
+            <div className="flex items-center gap-2 text-2xl font-black tracking-tighter">
               ED_POWER
             </div>
           </div>

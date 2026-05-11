@@ -45,7 +45,7 @@ export class ErrorBoundary extends Component<Props, State> {
               <div className="bg-destructive/10 text-destructive mb-4 flex h-20 w-20 items-center justify-center rounded-full">
                 <AlertCircle className="h-10 w-10" />
               </div>
-              <CardTitle className="text-2xl font-black tracking-tight italic">
+              <CardTitle className="text-2xl font-black tracking-tight">
                 Something went wrong
               </CardTitle>
               <CardDescription className="px-4 font-medium">

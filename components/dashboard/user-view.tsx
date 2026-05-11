@@ -123,7 +123,7 @@ export function DashboardUser({
     <div className="animate-in fade-in slide-in-from-bottom-4 space-y-8 duration-500">
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
-          <h1 className="from-foreground to-foreground/70 bg-gradient-to-r bg-clip-text text-3xl font-black tracking-tight text-transparent italic">
+          <h1 className="from-foreground to-foreground/70 bg-gradient-to-r bg-clip-text text-3xl font-black tracking-tight text-transparent">
             Welcome back, {user?.name?.split(' ')[0] || 'User'}!
           </h1>
           <p className="text-muted-foreground mt-1 font-medium">
@@ -215,7 +215,7 @@ export function DashboardUser({
                         <p className="text-sm font-black tracking-tight">
                           {activity.action.replace(/_/g, ' ')}
                         </p>
-                        <span className="text-muted-foreground text-[10px] font-bold uppercase italic">
+                        <span className="text-muted-foreground text-[10px] font-bold uppercase">
                           {new Date(activity.timestamp).toLocaleTimeString([], {
                             hour: '2-digit',
                             minute: '2-digit',

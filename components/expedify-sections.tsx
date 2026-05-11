@@ -24,7 +24,7 @@ export function NoxfolioFeatures() {
         <div className="mb-24 space-y-6 text-center">
           <h2 className="text-4xl leading-tight font-extrabold tracking-tighter md:text-7xl">
             The Only CRM That <br />
-            <span className="text-brand-gradient font-medium italic">
+            <span className="text-brand-gradient font-medium">
               Thinks, Talks, and Acts.
             </span>
           </h2>
@@ -237,7 +237,7 @@ export function PremiumPricing() {
         <div className="mb-24 space-y-6 text-center">
           <h2 className="text-4xl font-bold tracking-tight md:text-6xl">
             Simple Pricing.{' '}
-            <span className="text-brand-gradient italic">Zero Surprises.</span>
+            <span className="text-brand-gradient">Zero Surprises.</span>
           </h2>
           <p className="text-muted-foreground text-lg font-medium">
             Start free. Scale as you grow. Pay only for what you use.

@@ -46,7 +46,7 @@ export default function StatusPage() {
               <CheckCircle2 className="h-10 w-10" />
             </div>
             <div>
-              <h2 className="text-2xl font-black tracking-tight italic">
+              <h2 className="text-2xl font-black tracking-tight">
                 All Systems Operational
               </h2>
               <p className="text-muted-foreground font-medium">
@@ -77,7 +77,7 @@ export default function StatusPage() {
                   <div>
                     <p className="font-bold">{s.name}</p>
                     {s.note && (
-                      <p className="text-muted-foreground text-[10px] font-medium italic">
+                      <p className="text-muted-foreground text-[10px] font-medium">
                         {s.note}
                       </p>
                     )}

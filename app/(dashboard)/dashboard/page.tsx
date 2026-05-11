@@ -104,7 +104,7 @@ export default function DashboardPage() {
               <Mail className="h-10 w-10" />
             </div>
             <div className="space-y-2">
-              <h2 className="text-2xl font-black tracking-tight italic">
+              <h2 className="text-2xl font-black tracking-tight">
                 Verify your email
               </h2>
               <p className="text-muted-foreground font-medium">

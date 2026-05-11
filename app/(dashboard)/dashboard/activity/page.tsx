@@ -103,7 +103,7 @@ export default async function ActivityPage() {
     <div className="animate-in fade-in slide-in-from-bottom-4 space-y-8 duration-500">
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
-          <h1 className="from-foreground to-foreground/70 bg-gradient-to-r bg-clip-text text-3xl font-black tracking-tight text-transparent italic">
+          <h1 className="from-foreground to-foreground/70 bg-gradient-to-r bg-clip-text text-3xl font-black tracking-tight text-transparent">
             Observability Hub
           </h1>
           <p className="text-muted-foreground mt-1 font-medium">
