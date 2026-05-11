@@ -75,7 +75,7 @@ function Header() {
                 alt="Noxfolio Logo"
                 className="h-9 w-9 transition-transform group-hover:scale-110"
               />
-              <span className="text-xl font-bold tracking-tighter text-black dark:text-white">
+              <span className="text-foreground text-xl font-bold tracking-tighter">
                 Noxfolio
               </span>
             </Link>
