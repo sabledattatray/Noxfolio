@@ -64,7 +64,7 @@ export function Sidebar({ className }: { className?: string }) {
               alt="Noxfolio Logo"
               className="h-10 w-10 rounded-lg"
             />
-            <span>Noxfolio</span>
+            <span className="text-black dark:text-white">Noxfolio</span>
           </Link>
         )}
         {isCollapsed && (
