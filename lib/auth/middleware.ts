@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { OrganizationDataWithMembers, User } from '@/lib/db/schema';
+import { Organization, User } from '@/lib/db/schema';
 import { getOrganizationForUser, getUser } from '@/lib/db/queries';
 import { redirect } from 'next/navigation';
 
@@ -75,7 +75,7 @@ export function validatedActionWithUser<S extends z.ZodType<any, any>, T>(
 
 type ActionWithOrganizationFunction<T> = (
   formData: FormData,
-  organization: OrganizationDataWithMembers,
+  organization: Organization,
 ) => Promise<T>;
 
 export function withOrganization<T>(action: ActionWithOrganizationFunction<T>) {
