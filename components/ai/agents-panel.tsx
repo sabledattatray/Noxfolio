@@ -4,12 +4,12 @@ import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Bot, 
-  Sparkles, 
-  TrendingUp, 
-  ShieldAlert, 
-  ArrowRight, 
+import {
+  Bot,
+  Sparkles,
+  TrendingUp,
+  ShieldAlert,
+  ArrowRight,
   Loader2,
   CheckCircle2,
   BrainCircuit,
@@ -17,238 +17,353 @@ import {
   X,
   Target,
   Zap,
-  Info
+  Info,
+  ShieldCheck,
+  Activity,
 } from 'lucide-react';
 import { AutonomousAgentService, AgentInsight } from '@/modules/ai/agents';
+import useSWR from 'swr';
 
-export function AIAgentsPanel() {
-  const [insights, setInsights] = useState<AgentInsight[]>([]);
-  const [loading, setLoading] = useState(true);
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
+export function AIAgentsPanel({
+  mode = 'full',
+}: {
+  mode?: 'full' | 'insights' | 'status';
+}) {
+  const {
+    data: insights,
+    error,
+    isLoading,
+  } = useSWR<AgentInsight[]>('/api/ai/insights', fetcher, {
+    revalidateOnFocus: false,
+    refreshInterval: 30000,
+  });
+
   const [executingId, setExecutingId] = useState<string | null>(null);
   const [configOpen, setConfigOpen] = useState(false);
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
-
-  useEffect(() => {
-    async function load() {
-      try {
-        const res = await fetch('/api/ai/insights');
-        const data = await res.json();
-        setInsights(Array.isArray(data) ? data : []);
-      } catch (err) {
-        console.error('Failed to load AI insights:', err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    load();
-  }, []);
 
   const handleExecute = async (id: string) => {
     setExecutingId(id);
     const result = await AutonomousAgentService.executeAction(id);
     if (result.success) {
-      setInsights(prev => prev.filter(i => i.id !== id));
+      // Logic for post-execution
     }
     setExecutingId(null);
   };
 
-  if (loading) {
-    return <div className="h-48 w-full animate-pulse bg-accent/20 rounded-[32px]" />;
+  const renderSkeleton = () => (
+    <div className="animate-pulse space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="bg-accent/20 h-12 w-12 rounded-none" />
+          <div className="space-y-2">
+            <div className="bg-accent/20 h-6 w-32 rounded-none" />
+            <div className="bg-accent/10 h-3 w-48 rounded-none" />
+          </div>
+        </div>
+      </div>
+      <div className="space-y-4">
+        {[1, 2].map((i) => (
+          <Card
+            key={i}
+            className="bg-accent/5 border-border/20 rounded-none p-6"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex flex-1 gap-4">
+                <div className="bg-accent/20 h-12 w-12 shrink-0 rounded-none" />
+                <div className="flex-1 space-y-3">
+                  <div className="bg-accent/20 h-5 w-1/3 rounded-none" />
+                  <div className="bg-accent/10 h-4 w-full rounded-none" />
+                </div>
+              </div>
+              <div className="bg-accent/20 h-12 w-32 rounded-none" />
+            </div>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+
+  if (isLoading) {
+    return mode === 'status' ? (
+      <div className="bg-accent/5 h-64 w-full animate-pulse rounded-none" />
+    ) : (
+      renderSkeleton()
+    );
   }
 
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 relative">
-      {/* Config Overlay */}
-      {configOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in duration-300">
-          <Card className="w-full max-w-lg p-8 space-y-6 shadow-2xl border-primary/20 relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-primary to-purple-500" />
-            <button onClick={() => setConfigOpen(false)} className="absolute top-4 right-4 p-2 hover:bg-accent rounded-full transition-colors">
-              <X className="w-5 h-5" />
-            </button>
-            
-            <div className="space-y-2">
-              <div className="flex items-center gap-3 text-primary">
-                <Settings2 className="w-6 h-6" />
-                <h3 className="text-2xl font-bold">AI Behavior Engine</h3>
+  const activeInsights = Array.isArray(insights) ? insights : [];
+  const revenueGuardInsight = activeInsights.find(
+    (i) => i.type === 'revenue_guard',
+  );
+
+  const renderInsights = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="bg-primary/10 flex h-12 w-12 items-center justify-center rounded-none shadow-inner">
+            <Bot className="text-primary h-7 w-7" />
+          </div>
+          <div>
+            <h2 className="text-2xl font-black tracking-tight">
+              Autonomous Insights
+            </h2>
+            <p className="text-muted-foreground text-sm font-medium">
+              Real-time optimization engine active.
+            </p>
+          </div>
+        </div>
+        <div className="hidden items-center gap-2 rounded-none border border-emerald-500/10 bg-emerald-500/5 px-4 py-2 md:flex">
+          <div className="h-2 w-2 animate-pulse rounded-none bg-emerald-500" />
+          <span className="text-[10px] font-black tracking-widest text-emerald-600 uppercase">
+            System Optimal
+          </span>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6">
+        {/* Revenue Guard Active Protection Card */}
+        <Card className="bg-card border-primary/20 group relative overflow-hidden rounded-none border-l-4 p-6">
+          <div className="absolute top-0 right-0 p-4 opacity-[0.03] transition-opacity group-hover:opacity-10 dark:opacity-5">
+            <ShieldCheck className="text-primary h-20 w-20" />
+          </div>
+          <div className="flex items-start justify-between">
+            <div className="flex gap-4">
+              <div className="bg-primary/10 text-primary rounded-none p-3">
+                <ShieldCheck className="h-6 w-6" />
               </div>
-              <p className="text-sm text-muted-foreground">Adjust the autonomy and risk-tolerance of your billing agents.</p>
-            </div>
-
-            <div className="space-y-6">
-              {[
-                { label: 'Autonomy Level', desc: 'Allow agents to execute low-risk actions without approval.', default: 'Semi-Autonomous' },
-                { label: 'Risk Threshold', desc: 'Maximum financial impact before requiring human review.', default: '$500.00' },
-                { label: 'Strategy Focus', desc: 'Primary optimization goal for the next cycle.', default: 'Churn Reduction' }
-              ].map(opt => (
-                <div key={opt.label} className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <label className="text-sm font-bold text-foreground">{opt.label}</label>
-                    <Badge variant="outline" className="text-primary border-primary/20">{opt.default}</Badge>
-                  </div>
-                  <p className="text-[10px] text-muted-foreground leading-relaxed">{opt.desc}</p>
-                  <div className="h-1.5 w-full bg-accent rounded-full overflow-hidden">
-                    <div className="h-full w-2/3 bg-primary rounded-full" />
-                  </div>
+              <div>
+                <div className="mb-1 flex items-center gap-2">
+                  <h3 className="text-lg font-black tracking-tight uppercase">
+                    Revenue Guard AI
+                  </h3>
+                  <Badge className="rounded-none border-transparent bg-emerald-500/10 text-[8px] font-black tracking-widest text-emerald-500 uppercase">
+                    Active Protection
+                  </Badge>
                 </div>
-              ))}
+                <p className="text-muted-foreground max-w-lg text-sm">
+                  {revenueGuardInsight
+                    ? revenueGuardInsight.description
+                    : 'No revenue leaks detected in the current settlement cycle. Proactive scanning for failed payments and overdue invoices is active.'}
+                </p>
+              </div>
             </div>
-
-            <Button className="w-full h-12 rounded-xl shadow-lg shadow-primary/20" onClick={() => setConfigOpen(false)}>
-              Save Configuration
-            </Button>
-          </Card>
-        </div>
-      )}
-
-      <div className="lg:col-span-2 space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center shadow-inner">
-              <Bot className="w-7 h-7 text-primary" />
-            </div>
-            <div>
-              <h2 className="text-2xl font-black tracking-tight">Autonomous Insights</h2>
-              <p className="text-sm text-muted-foreground font-medium">Real-time optimization engine active.</p>
-            </div>
+            {revenueGuardInsight && (
+              <Button
+                onClick={() => handleExecute(revenueGuardInsight.id)}
+                disabled={executingId === revenueGuardInsight.id}
+                className="bg-primary hover:bg-primary/90 shadow-primary/20 h-10 rounded-none px-6 text-[10px] font-black tracking-widest text-white uppercase shadow-lg"
+              >
+                {executingId === revenueGuardInsight.id ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  'Execute Recovery'
+                )}
+              </Button>
+            )}
           </div>
-          <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/5 border border-emerald-500/10">
-            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">System Optimal</span>
-          </div>
-        </div>
+        </Card>
 
-        <div className="space-y-4">
-          {insights.map((insight) => (
-            <Card key={insight.id} className="p-6 group hover:border-primary/30 transition-all duration-300 bg-card/50 shadow-sm">
+        {/* Other Insights */}
+        {activeInsights
+          .filter((i) => i.type !== 'revenue_guard')
+          .map((insight) => (
+            <Card
+              key={insight.id}
+              className="group hover:border-primary/30 bg-card/50 rounded-none p-6 shadow-sm transition-all duration-300"
+            >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex gap-4">
-                  <div className={`mt-1 p-3 rounded-2xl transition-transform group-hover:scale-110 ${
-                    insight.impact === 'high' ? 'bg-destructive/10 text-destructive' : 'bg-amber-500/10 text-amber-500'
-                  }`}>
-                    {insight.type === 'revenue_guard' ? <ShieldAlert className="w-6 h-6" /> : <TrendingUp className="w-6 h-6" />}
+                  <div
+                    className={`mt-1 rounded-none p-3 transition-transform group-hover:scale-110 ${
+                      insight.impact === 'high'
+                        ? 'bg-destructive/10 text-destructive'
+                        : 'bg-amber-500/10 text-amber-500'
+                    }`}
+                  >
+                    {insight.type === 'revenue_guard' ? (
+                      <ShieldAlert className="h-6 w-6" />
+                    ) : (
+                      <TrendingUp className="h-6 w-6" />
+                    )}
                   </div>
                   <div className="space-y-1">
-                    <h3 className="font-bold text-lg group-hover:text-primary transition-colors">{insight.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed max-w-md">{insight.description}</p>
+                    <h3 className="group-hover:text-primary text-lg font-bold transition-colors">
+                      {insight.title}
+                    </h3>
+                    <p className="text-muted-foreground max-w-md text-sm leading-relaxed">
+                      {insight.description}
+                    </p>
                     <div className="flex items-center gap-4 pt-3">
-                      <Badge variant="outline" className="text-[10px] uppercase font-black tracking-widest bg-accent/30 border-transparent">
+                      <Badge
+                        variant="outline"
+                        className="bg-accent/30 rounded-none border-transparent text-[10px] font-black tracking-widest uppercase"
+                      >
                         {insight.impact} Impact
                       </Badge>
-                      <div className="flex items-center gap-1.5 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                        <Zap className="w-3 h-3 text-amber-500" />
+                      <div className="text-muted-foreground flex items-center gap-1.5 text-[10px] font-bold tracking-widest uppercase">
+                        <Zap className="h-3 w-3 text-amber-500" />
                         Live Detection
                       </div>
                     </div>
                   </div>
                 </div>
-                <Button 
-                  size="lg" 
+                <Button
+                  size="lg"
                   onClick={() => handleExecute(insight.id)}
                   disabled={executingId === insight.id}
-                  className="rounded-2xl shadow-xl shadow-primary/20 px-8 font-bold transition-all hover:scale-105 active:scale-95"
+                  className="shadow-primary/20 rounded-none px-8 font-bold shadow-xl transition-all hover:scale-105 active:scale-95"
                 >
                   {executingId === insight.id ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <Loader2 className="h-5 w-5 animate-spin" />
                   ) : (
                     <>
                       {insight.actionLabel}
-                      <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                      <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                     </>
                   )}
                 </Button>
               </div>
             </Card>
           ))}
+      </div>
+    </div>
+  );
 
-          {insights.length === 0 && (
-            <div className="py-20 text-center space-y-6 rounded-[32px] border-2 border-dashed border-border/50 bg-accent/5 backdrop-blur-sm">
-              <div className="w-20 h-20 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto shadow-inner">
-                <CheckCircle2 className="w-10 h-10 text-emerald-500/40" />
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-2xl font-black tracking-tight">System Fully Optimized</h3>
-                <p className="text-muted-foreground max-w-sm mx-auto">Your autonomous agents have completed all pending tasks. Stand by for the next analysis cycle.</p>
-              </div>
+  const renderStatus = () => (
+    <div className="space-y-6">
+      <Card className="from-primary/10 via-card to-card border-primary/20 shadow-primary/5 rounded-none bg-gradient-to-br p-8 shadow-xl">
+        <div className="mb-8 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="bg-primary/20 rounded-none p-2">
+              <BrainCircuit className="text-primary h-6 w-6" />
             </div>
-          )}
+            <h3 className="text-lg font-bold">Active Agents</h3>
+          </div>
+          <span className="flex h-2 w-2 rounded-none bg-emerald-500" />
         </div>
-      </div>
 
-      <div className="space-y-6">
-        <Card className="p-8 bg-gradient-to-br from-primary/10 via-card to-card border-primary/20 shadow-xl shadow-primary/5">
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-primary/20 rounded-xl">
-                <BrainCircuit className="w-6 h-6 text-primary" />
-              </div>
-              <h3 className="font-bold text-lg">Active Agents</h3>
-            </div>
-            <span className="flex h-2 w-2 rounded-full bg-emerald-500" />
-          </div>
-
-          <div className="space-y-4">
-            {[
-              { name: 'Revenue Guard', status: 'Monitoring', color: 'text-emerald-500', icon: ShieldAlert, detail: 'Scanning transaction patterns...', tier: 'Enterprise' },
-              { name: 'Growth Optimus', status: 'Analyzing', color: 'text-blue-500', icon: TrendingUp, detail: 'Modeling cohort expansions...', tier: 'Pro' },
-              { name: 'Retention Hero', status: 'Idle', color: 'text-muted-foreground', icon: Target, detail: 'Waiting for churn triggers...', tier: 'Enterprise' }
-            ].map((agent) => (
-              <button 
-                key={agent.name} 
-                onClick={() => setSelectedAgent(selectedAgent === agent.name ? null : agent.name)}
-                className="w-full text-left p-4 rounded-2xl bg-accent/30 border border-border/50 hover:border-primary/30 transition-all group relative overflow-hidden"
-              >
-                <div className="flex items-center justify-between mb-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold group-hover:text-primary transition-colors">{agent.name}</span>
-                    <Badge variant="outline" className="text-[8px] h-4 px-1.5 uppercase font-black tracking-tighter bg-primary/5 text-primary border-primary/20">
-                      {agent.tier}
-                    </Badge>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className={`w-1.5 h-1.5 rounded-full bg-current ${agent.color}`} />
-                    <span className={`text-[10px] font-black uppercase tracking-widest ${agent.color}`}>{agent.status}</span>
-                  </div>
+        <div className="space-y-4">
+          {[
+            {
+              name: 'Revenue Guard',
+              status: 'Monitoring',
+              color: 'text-emerald-500',
+              icon: ShieldAlert,
+              detail: 'Scanning transaction patterns...',
+              tier: 'Enterprise',
+            },
+            {
+              name: 'Growth Optimus',
+              status: 'Analyzing',
+              color: 'text-blue-500',
+              icon: TrendingUp,
+              detail: 'Modeling cohort expansions...',
+              tier: 'Pro',
+            },
+            {
+              name: 'Retention Hero',
+              status: 'Idle',
+              color: 'text-muted-foreground',
+              icon: Target,
+              detail: 'Waiting for churn triggers...',
+              tier: 'Enterprise',
+            },
+          ].map((agent) => (
+            <button
+              key={agent.name}
+              onClick={() =>
+                setSelectedAgent(
+                  selectedAgent === agent.name ? null : agent.name,
+                )
+              }
+              className="bg-accent/30 border-border/50 hover:border-primary/30 group relative w-full overflow-hidden rounded-none border p-4 text-left transition-all"
+            >
+              <div className="mb-1 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="group-hover:text-primary text-sm font-bold transition-colors">
+                    {agent.name}
+                  </span>
+                  <Badge
+                    variant="outline"
+                    className="bg-primary/5 text-primary border-primary/20 h-4 rounded-none px-1.5 text-[8px] font-black tracking-tighter uppercase"
+                  >
+                    {agent.tier}
+                  </Badge>
                 </div>
-                {selectedAgent === agent.name ? (
-                  <div className="animate-in slide-in-from-top-1 duration-300">
-                    <p className="text-[10px] text-muted-foreground flex items-center gap-2 pt-2 border-t border-border/50 mt-2">
-                      <Info className="w-3 h-3" />
-                      {agent.detail}
-                    </p>
-                    <Button variant="ghost" size="sm" className="w-full mt-2 h-7 text-[10px] font-bold text-primary hover:bg-primary/5 rounded-lg">
-                      View Agent Logs
-                    </Button>
-                  </div>
-                ) : (
-                  <p className="text-[10px] text-muted-foreground/60 truncate">Click for detailed agent status</p>
-                )}
-              </button>
-            ))}
-          </div>
+                <div className="flex items-center gap-2">
+                  <div
+                    className={`h-1.5 w-1.5 rounded-none bg-current ${agent.color}`}
+                  />
+                  <span
+                    className={`text-[10px] font-black tracking-widest uppercase ${agent.color}`}
+                  >
+                    {agent.status}
+                  </span>
+                </div>
+              </div>
+              {selectedAgent === agent.name ? (
+                <div className="animate-in slide-in-from-top-1 duration-300">
+                  <p className="text-muted-foreground border-border/50 mt-2 flex items-center gap-2 border-t pt-2 text-[10px]">
+                    <Info className="h-3 w-3" />
+                    {agent.detail}
+                  </p>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-primary hover:bg-primary/5 mt-2 h-7 w-full rounded-none text-[10px] font-bold"
+                  >
+                    View Agent Logs
+                  </Button>
+                </div>
+              ) : (
+                <p className="text-muted-foreground/60 truncate text-[10px]">
+                  Click for detailed agent status
+                </p>
+              )}
+            </button>
+          ))}
+        </div>
 
-          <Button 
-            variant="outline" 
-            onClick={() => setConfigOpen(true)}
-            className="w-full mt-8 h-12 rounded-2xl border-primary/20 hover:bg-primary/5 hover:border-primary/50 transition-all font-bold group"
-          >
-            <Settings2 className="w-4 h-4 mr-2 group-hover:rotate-90 transition-transform" />
-            Configure AI Behavior
-          </Button>
-        </Card>
+        <Button
+          variant="outline"
+          onClick={() => setConfigOpen(true)}
+          className="border-primary/20 hover:bg-primary/5 hover:border-primary/50 group mt-8 h-12 w-full rounded-none font-bold transition-all"
+        >
+          <Settings2 className="mr-2 h-4 w-4 transition-transform group-hover:rotate-90" />
+          Configure AI Behavior
+        </Button>
+      </Card>
 
-        <Card className="p-8 border-border/50 bg-card/30 backdrop-blur-sm relative overflow-hidden group">
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          <div className="flex items-center gap-2 mb-4">
-            <Sparkles className="w-4 h-4 text-amber-500" />
-            <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">AI Contribution</h3>
-          </div>
-          <div className="space-y-1">
-            <p className="text-4xl font-black text-primary tracking-tighter">$4,820</p>
-            <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">Revenue saved this month</p>
-          </div>
-        </Card>
-      </div>
+      <Card className="border-border/50 bg-card/30 group relative overflow-hidden rounded-none p-8 backdrop-blur-sm">
+        <div className="absolute top-0 left-0 h-full w-full bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+        <div className="mb-4 flex items-center gap-2">
+          <Sparkles className="h-4 w-4 text-amber-500" />
+          <h3 className="text-muted-foreground text-xs font-bold tracking-widest uppercase">
+            AI Contribution
+          </h3>
+        </div>
+        <div className="space-y-1">
+          <p className="text-primary text-4xl font-black tracking-tighter">
+            $4,820
+          </p>
+          <p className="text-muted-foreground text-[10px] font-black tracking-widest uppercase">
+            Revenue saved this month
+          </p>
+        </div>
+      </Card>
+    </div>
+  );
+
+  if (mode === 'insights') return renderInsights();
+  if (mode === 'status') return renderStatus();
+
+  return (
+    <div className="relative grid grid-cols-1 gap-8 lg:grid-cols-3">
+      <div className="lg:col-span-2">{renderInsights()}</div>
+      <div>{renderStatus()}</div>
     </div>
   );
 }

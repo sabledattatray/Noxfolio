@@ -38,7 +38,10 @@ export async function googleSignInAction(
   redirectPath?: string,
 ) {
   console.log('DEBUG: googleSignInAction triggered');
-  console.log('DEBUG: DB URL:', process.env.POSTGRES_URL?.split('@').pop()); // Log only host/db part for safety
+  // Avoid crashing if POSTGRES_URL is missing
+  if (process.env.POSTGRES_URL) {
+    console.log('DEBUG: DB host present');
+  }
   try {
     const ticket = await googleClient.verifyIdToken({
       idToken: credential,
@@ -121,11 +124,7 @@ export async function googleSignInAction(
     };
   }
 
-  if (redirectPath) {
-    redirect(redirectPath);
-  } else {
-    redirect('/dashboard');
-  }
+  return { success: true };
 }
 
 async function logActivity(
@@ -425,7 +424,7 @@ export async function signOut() {
     console.error('Error during sign out logging:', error);
   } finally {
     (await cookies()).delete('session');
-    redirect('/sign-in');
+    return { success: true };
   }
 }
 

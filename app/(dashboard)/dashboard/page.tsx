@@ -13,8 +13,9 @@ import {
   verifyOTP,
   signOut,
 } from '@/app/(dashboard)/actions';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
+import { useRouter } from 'next/navigation';
 
 const fetcher = (url: string) =>
   fetch(url).then((res) => {
@@ -29,6 +30,7 @@ export default function DashboardPage() {
     isLoading,
     mutate,
   } = useSWR<User & { organization?: any }>('/api/user', fetcher);
+  const router = useRouter();
   const [otp, setOtp] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
   const [message, setMessage] = useState<{
@@ -36,6 +38,13 @@ export default function DashboardPage() {
     text: string;
   } | null>(null);
   const [isOnboardingComplete, setIsOnboardingComplete] = useState(false);
+
+  // Security check: Onboarding status
+  useEffect(() => {
+    if (!isLoading && user && !user.organization?.website) {
+      router.push('/onboarding');
+    }
+  }, [isLoading, user, router]);
 
   if (isLoading) {
     return (
@@ -168,8 +177,13 @@ export default function DashboardPage() {
     );
   }
 
-  // Branching based on role
-  if (user.role === 'admin') {
+  // Branching based on role (respecting local override for simulation)
+  const effectiveRole =
+    typeof window !== 'undefined'
+      ? localStorage.getItem('noxfolio_role_override') || user.role
+      : user.role;
+
+  if (effectiveRole === 'admin') {
     return <DashboardAdmin />;
   }
 

@@ -1,4 +1,5 @@
 import { desc, and, eq, isNull, count } from 'drizzle-orm';
+import { cache } from 'react';
 import { db } from './drizzle';
 import {
   activityLogs,
@@ -11,7 +12,7 @@ import {
 import { cookies } from 'next/headers';
 import { verifyToken } from '@/lib/auth/session';
 
-export async function getUser() {
+export const getUser = cache(async () => {
   const sessionCookie = (await cookies()).get('session');
   if (!sessionCookie || !sessionCookie.value) {
     return null;
@@ -41,7 +42,7 @@ export async function getUser() {
   }
 
   return user[0];
-}
+});
 
 export async function getOrganizationByStripeCustomerId(customerId: string) {
   const result = await db
@@ -111,7 +112,7 @@ export async function getActivityLogs() {
     .limit(10);
 }
 
-export async function getOrganizationForUser() {
+export const getOrganizationForUser = cache(async () => {
   const user = await getUser();
   if (!user) {
     return null;
@@ -157,7 +158,7 @@ export async function getOrganizationForUser() {
     ...organization,
     organizationMembers: members,
   };
-}
+});
 export async function getInvoicesForOrganization() {
   const organization = await getOrganizationForUser();
   if (!organization) return [];
@@ -208,27 +209,27 @@ export async function getDashboardStats() {
   const org = await getOrganizationForUser();
   if (!org) return null;
 
-  // 1. Get Member Count
-  const membersResult = await db
-    .select({ count: count() })
-    .from(organizationMembers)
-    .where(eq(organizationMembers.organizationId, org.id));
+  // 1. & 2. Fetch Member Count and Recent Activities in parallel
+  const [membersResult, recentActivities] = await Promise.all([
+    db
+      .select({ count: count() })
+      .from(organizationMembers)
+      .where(eq(organizationMembers.organizationId, org.id)),
+    db
+      .select({
+        id: activityLogs.id,
+        action: activityLogs.action,
+        timestamp: activityLogs.timestamp,
+        userName: users.name,
+      })
+      .from(activityLogs)
+      .leftJoin(users, eq(activityLogs.userId, users.id))
+      .where(eq(activityLogs.organizationId, org.id))
+      .orderBy(desc(activityLogs.timestamp))
+      .limit(5),
+  ]);
 
   const memberCount = Number(membersResult[0]?.count || 0);
-
-  // 2. Get Recent Activities
-  const recentActivities = await db
-    .select({
-      id: activityLogs.id,
-      action: activityLogs.action,
-      timestamp: activityLogs.timestamp,
-      userName: users.name,
-    })
-    .from(activityLogs)
-    .leftJoin(users, eq(activityLogs.userId, users.id))
-    .where(eq(activityLogs.organizationId, org.id))
-    .orderBy(desc(activityLogs.timestamp))
-    .limit(5);
 
   return {
     memberCount,

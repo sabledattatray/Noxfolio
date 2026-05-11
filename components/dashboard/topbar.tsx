@@ -29,6 +29,7 @@ import { useRouter } from 'next/navigation';
 import useSWR from 'swr';
 import { User as DBUser } from '@/lib/db/schema';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { cn } from '@/lib/utils';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -36,15 +37,22 @@ export function Topbar() {
   const { data: user } = useSWR<DBUser>('/api/user', fetcher);
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  const [effectiveRole, setEffectiveRole] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    if (user) {
+      setEffectiveRole(
+        localStorage.getItem('noxfolio_role_override') || user.role,
+      );
+    }
+  }, [user]);
 
   async function handleSignOut() {
+    localStorage.removeItem('noxfolio_role_override');
     await signOut();
     router.refresh();
-    router.push('/');
+    router.push('/sign-in');
   }
 
   return (
@@ -106,6 +114,34 @@ export function Topbar() {
         <Button
           variant="ghost"
           size="icon"
+          className={cn(
+            'rounded-xl transition-all duration-300',
+            effectiveRole === 'admin'
+              ? 'text-primary bg-primary/5 shadow-inner'
+              : 'text-muted-foreground hover:text-foreground',
+          )}
+          onClick={() => {
+            const currentRole =
+              localStorage.getItem('noxfolio_role_override') ||
+              user?.role ||
+              'member';
+            const nextRole = currentRole === 'admin' ? 'member' : 'admin';
+            localStorage.setItem('noxfolio_role_override', nextRole);
+            window.location.reload();
+          }}
+          title="Toggle Admin/User Simulation"
+        >
+          <Shield
+            className={cn(
+              'h-5 w-5',
+              effectiveRole === 'admin' && 'animate-pulse',
+            )}
+          />
+        </Button>
+
+        <Button
+          variant="ghost"
+          size="icon"
           className="text-muted-foreground hover:text-foreground rounded-xl"
           asChild
         >
@@ -113,6 +149,10 @@ export function Topbar() {
             <Settings className="h-5 w-5" />
           </Link>
         </Button>
+
+        <div className="bg-border mx-1 h-6 w-px" />
+
+        <ThemeToggle />
 
         {mounted ? (
           <DropdownMenu>
@@ -134,7 +174,7 @@ export function Topbar() {
                     {user?.name || user?.email?.split('@')[0] || 'John Doe'}
                   </span>
                   <span className="text-muted-foreground capitalize">
-                    {user?.role || 'Admin'}
+                    {effectiveRole || 'Member'}
                   </span>
                 </div>
               </Button>
