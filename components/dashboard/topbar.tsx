@@ -33,7 +33,7 @@ import { cn } from '@/lib/utils';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-export function Topbar() {
+export default function Topbar() {
   const { data: user } = useSWR<DBUser>('/api/user', fetcher);
   const router = useRouter();
   const [mounted, setMounted] = useState(false);

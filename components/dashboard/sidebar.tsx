@@ -33,7 +33,7 @@ import { Organization, User } from '@/lib/db/schema';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-export function Sidebar({ className }: { className?: string }) {
+export default function Sidebar({ className }: { className?: string }) {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
