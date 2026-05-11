@@ -61,7 +61,7 @@ const chartData = [
   { month: 'Dec', requests: 695000 },
 ];
 
-export function DashboardUser() {
+export function DashboardUser({ user }: { user: any }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopyKey = () => {

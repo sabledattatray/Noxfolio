@@ -47,7 +47,7 @@ function UserActions() {
   );
 }
 
-export function MarketingNav() {
+export default function MarketingNav() {
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
